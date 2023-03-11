@@ -10,7 +10,8 @@ export default {
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: 'color' },
-    placeholder: { control: "" }
+    placeholder: { control: "" },
+    type: { control: { type: 'text' } },
   },
 } as ComponentMeta<typeof Form>;
 

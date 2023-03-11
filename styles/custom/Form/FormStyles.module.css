@@ -18,15 +18,16 @@
 
 .form_wrap input {
     outline: none;
-    width: 100%;
+    width: calc( 100% - 2rem );
     height: 100%;
-    background-color: var(--bg);
+    background-color: transparent;
     border: none;
     font-family: "Switzer";
     font-size: var(--font-size);
     font-weight: normal;
     margin: 0 1rem;
     color: var(--font-color);
+    z-index: 3;
 }
 
 .form_wrap input::placeholder {
@@ -37,17 +38,29 @@
 .form_label {
     position: absolute;
     font-size: var(--font-size);
-    left: 1rem;
+    left: 2rem;
     top: 50%;
     transform: translate(-50%, -50%);
     font-family: "Switzer";
     font-size: var(--font-size);
     font-weight: normal;
     transition: all 300ms ease;
+    padding: 0 1rem;
+    background-color: var(--bg);
+    z-index: 2;
 }
 
 .form_wrap:active .form_label,  
 .form_wrap:focus-within .form_label,
 input:not( :placeholder-shown ) + .form_label {
-    transform: translate(0, -100%);
+    top: -.25rem;
+    /* transform: translate(0, calc( -100% - .5rem )); */
+}
+
+.form_wrap:valid {
+    border-color: var(--green);
+}
+
+.form_wrap:valid .form_label {
+    color: var(--green)
 }
