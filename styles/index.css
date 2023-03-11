@@ -1,0 +1,53 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #272727;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --light-grey: #363636;
+  --dark-grey: #2C2C2C;
+  --bg: #272727;
+  --font-color: white;
+  --border-1: .1rem;
+  --border-2: .3rem;
+  --font-size: .8rem;
+  --title-size: 1.3rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url( "../public/Switzer/Switzer-Black.otf" );
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url( "../public/Switzer/Switzer-Bold.otf" );
+  font-weight: bolder;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url( "../public/Switzer/Switzer-Medium.otf" );
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url( "../public/Switzer/Switzer-Regular.otf" );
+  font-weight: normal;
+}

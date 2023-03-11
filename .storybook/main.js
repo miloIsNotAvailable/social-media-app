@@ -1,0 +1,30 @@
+const path = require( "path" )
+
+module.exports = {
+  "stories": [
+    "../src/**/*.stories.mdx",
+    "../src/**/*.stories.@(js|jsx|ts|tsx)"
+  ],
+  "addons": [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "storybook-css-modules"
+  ],
+  "framework": "@storybook/react",
+  "core": {
+    "builder": "@storybook/builder-webpack5"
+  },
+  "features": {
+    "storyStoreV7": true
+  },
+  "typescript": { "reactDocgen": false },
+  "webpackFinal": async ( config ) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@styles": path.resolve( __dirname, "../styles" )
+    }
+
+    return config
+  }
+}

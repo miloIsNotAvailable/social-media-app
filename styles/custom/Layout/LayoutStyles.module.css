@@ -1,0 +1,6 @@
+.page_wrap {
+    display: flex;
+    margin: auto;
+    width: calc( 100vw - 2rem );
+    height:100%;
+}
