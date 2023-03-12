@@ -1,0 +1,10 @@
+.navbar_wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 1rem 0;
+    width: calc(100% - 2rem);
+    height: 3rem;
+    border-bottom: 1px solid var(--dark-grey);
+}

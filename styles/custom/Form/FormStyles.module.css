@@ -45,7 +45,7 @@
     font-size: var(--font-size);
     font-weight: normal;
     transition: all 300ms ease;
-    padding: 0 1rem;
+    padding: 0 .5rem;
     background-color: var(--bg);
     z-index: 2;
 }

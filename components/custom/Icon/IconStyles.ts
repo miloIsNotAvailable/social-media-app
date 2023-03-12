@@ -1,0 +1,1 @@
+export { default as styles } from '@styles/custom/Icon/IconStyles.module.css'
