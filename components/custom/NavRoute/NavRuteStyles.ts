@@ -1,0 +1,1 @@
+export { default as styles } from '@styles/custom/NavRoute/NavRoute.module.css'

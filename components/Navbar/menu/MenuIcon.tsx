@@ -1,11 +1,9 @@
 import { FC } from "react";
 import Icon from "../../custom/Icon";
-import { styles } from "../build/NavbarStyles";
 
 const MenuIcon: FC = () => {
 
     return (
-      <nav className={ styles.navbar_wrap }>
         <Icon>
             <svg
                 width="18"
@@ -22,7 +20,6 @@ const MenuIcon: FC = () => {
             </g>
             </svg>
         </Icon>
-      </nav>
     );
 }
 
