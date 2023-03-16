@@ -9,7 +9,7 @@ type SectionRoutes = "communities"
 interface NavRouteProps {
     mainpage: Loose<MainpageRoutes, string>
     section: Loose<SectionRoutes, string>
-    element: string
+    element?: string
 }
 
 const NavRoute: FC<NavRouteProps> = ( { 

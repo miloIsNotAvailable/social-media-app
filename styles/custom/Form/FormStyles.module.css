@@ -38,9 +38,9 @@
 .form_label {
     position: absolute;
     font-size: var(--font-size);
-    left: 2rem;
+    left: 1rem;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(0%, -50%);
     font-family: "Switzer";
     font-size: var(--font-size);
     font-weight: normal;
