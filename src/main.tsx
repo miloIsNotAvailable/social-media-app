@@ -6,12 +6,12 @@ import '../styles/index.css'
 import { store } from '../redux/store'
 import { BrowserRouter, RouteObject, RouterProvider, createBrowserRouter, matchRoutes } from 'react-router-dom'
 import { StaticRouter } from 'react-router-dom/server'
-import { getPages } from './routes'
+import { getPages, routes } from './routes'
 
-const routes: RouteObject[] = getPages().map( ( { element: Element, path } ) => ( {
-  path, 
-  element: <Element/>
-} ) )
+// const routes: RouteObject[] = getPages().map( ( { element: Element, path } ) => ( {
+//   path, 
+//   element: <Element/>
+// } ) )
 
 const Render: FC = () => {
 
@@ -46,7 +46,7 @@ async function hydrate() {
   }
 }
 
-// hydrate()
+hydrate()
 
 // if( typeof window !== "undefined" ) {
 

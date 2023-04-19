@@ -1,6 +1,6 @@
 // import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
-import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, RouteObject, RouterProvider, Routes, createBrowserRouter, useLocation } from 'react-router-dom'
 
 export const getPages = () => {
     
@@ -20,6 +20,11 @@ export const getPages = () => {
 
     return routes
 }
+
+export const routes: RouteObject[] = getPages().map( ( e ) => ( {
+    ...e, 
+    element: <e.element/>
+} ) )
 
 const AppRoutes: FC = () => {
 
