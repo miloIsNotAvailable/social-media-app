@@ -1,25 +1,38 @@
 import { Default } from "@globals/Input";
 import { FC } from "react";
-import { styles } from "../build/LoginStyles";
 import Divide from "../scenes/Divide";
-import { Color as Submit } from "@globals/Button";
+import { Color as Submit, Outline as OAuth } from "@globals/Button";
 import NavRoute from "@globals/NavRoute";
 import Header from "../scenes/Header";
-import { Form } from "react-router-dom";
+import { Form, Outlet } from "react-router-dom";
+import Section from "./Section";
+import Redirect from "../redirects/RedirectToSignUp";
+import { styles } from "../styles";
 
 const FillOutForm: FC = () => {
 
     return (
-        <Form method="post" className={ styles.form_wrap }>
-            <NavRoute 
-                mainpage={ "user" } 
-                section={ "login" }
-            />
-            <Header/>
+        <Form method="post" action="signin" className={ styles.form_wrap }>
+            <Section>
+                <NavRoute 
+                    mainpage={ "user" } 
+                    section={ "login" }
+                />
+                <Header/>
+                <OAuth style={ { outlineColor: "var(--light-grey)" } }>
+                    Login with Google
+                </OAuth>
+            </Section>
             <Divide/>
-            <Default placeholder="email" required/>
-            <Default placeholder="password" required/>
-            <Submit>Login</Submit>
+            <Section>
+                <Default autoFocus placeholder="email" name="email" required/>
+                <Default placeholder="password" name="password" required/>
+                <Outlet/>
+            </Section>
+            <Section>
+                <Submit type="submit">Login</Submit>
+                <Redirect/>
+            </Section>
         </Form>
     )
 }

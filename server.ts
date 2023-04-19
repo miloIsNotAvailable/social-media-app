@@ -83,7 +83,7 @@ async function createServer() {
       //    e.g. ReactDOMServer.renderToString()
       const appHtml = await render( req )
         
-      const preload_css = glob.globSync( "./styles/**/*.css" )
+      const preload_css = glob.globSync( "../components/**/styles/*.css" )
       .map( file => `<link rel="stylesheet preload prefetch" href="${ file.replace( "./", "/" ) }" as="style"/>` )
       .join( "\n" )
 

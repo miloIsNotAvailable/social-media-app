@@ -48,23 +48,23 @@ async function hydrate() {
 
 hydrate()
 
-// if( typeof window !== "undefined" ) {
-
-//   const container = document.getElementById('root') as HTMLElement
-//   //@ts-ignore
-//   if( import.meta.hot || !container?.innerText ) {
-//     const root = ReactDOM.createRoot( container! )
-//     root.render( <Render/> )
-//   } else {
-//     console.log( "hello" )
-//     const container = document.getElementById('root') as HTMLElement
-//     ReactDOM.hydrateRoot( container!, <Render/> )
-//   }
-// }
-
 if( typeof window !== "undefined" ) {
 
   const container = document.getElementById('root') as HTMLElement
-  ReactDOM.hydrateRoot( container!, <Render/> )
+  //@ts-ignore
+  if( import.meta.hot || !container?.innerText ) {
+    const root = ReactDOM.createRoot( container! )
+    root.render( <Render/> )
+  } else {
+    console.log( "hello" )
+    const container = document.getElementById('root') as HTMLElement
+    ReactDOM.hydrateRoot( container!, <Render/> )
+  }
 }
+
+// if( typeof window !== "undefined" ) {
+
+//   const container = document.getElementById('root') as HTMLElement
+//   ReactDOM.hydrateRoot( container!, <Render/> )
+// }
 

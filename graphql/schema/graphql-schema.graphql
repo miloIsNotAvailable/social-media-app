@@ -4,6 +4,13 @@
 
 # clients can execute, along with the return type for each.
 
+type SignIn {
+  email: String
+  password: String
+}
+
 type Query {
   hello: String
+  signin( email: String, password: String ): SignIn
 }
+
