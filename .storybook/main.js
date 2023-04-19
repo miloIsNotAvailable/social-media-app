@@ -2,8 +2,9 @@ const path = require( "path" )
 
 module.exports = {
   "stories": [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(js|jsx|ts|tsx)"
+    "../components/**/*.stories.mdx",
+    "../components/**/*.stories.@(js|jsx|ts|tsx)",
+    "../globals/**/*.stories.@(js|jsx|ts|tsx)",
   ],
   "addons": [
     "@storybook/addon-links",
@@ -22,7 +23,8 @@ module.exports = {
   "webpackFinal": async ( config ) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@styles": path.resolve( __dirname, "../styles" )
+      "@styles": path.resolve( __dirname, "../styles" ),
+      "@globals": path.resolve( __dirname, "../globals" ),
     }
 
     return config

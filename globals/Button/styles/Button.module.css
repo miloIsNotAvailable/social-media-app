@@ -1,0 +1,36 @@
+.button_color, .button_outline {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    padding: .5rem 1rem;
+    font-size: var(--font-size);
+    border-radius: var(--border-1);
+    transition: all 100ms ease;
+    outline: none;
+    border: none;
+    font-family: "Switzer";
+    font-size: var(--font-size);
+    font-weight: normal;
+}
+
+.button_color {
+    color: var(--bg);
+    outline: 1px solid var(--green);
+    background-color: var(--green);
+} 
+
+.button_outline {
+    color: var(--light-grey);
+    outline: 1px solid var(--green);
+    background-color: var(--bg);
+} 
+
+.button_color:hover {
+    background-color: var(--bg);
+    color: var(--light-grey)
+}
+
+.button_outline:hover {
+    background-color: var(--green);
+    color: var(--bg);
+}
