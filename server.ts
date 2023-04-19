@@ -77,11 +77,11 @@ async function createServer() {
       //    your ESM source code to be usable in Node.js! There is no bundling
       //    required, and provides efficient invalidation similar to HMR.
       const { render } = await vite.ssrLoadModule('src/render.tsx')
-  
+
       // 4. render the app HTML. This assumes entry-server.js's exported `render`
       //    function calls appropriate framework SSR APIs,
       //    e.g. ReactDOMServer.renderToString()
-      const appHtml = await render(url)
+      const appHtml = await render( req )
         
       const preload_css = glob.globSync( "./styles/**/*.css" )
       .map( file => `<link rel="stylesheet preload prefetch" href="${ file.replace( "./", "/" ) }" as="style"/>` )

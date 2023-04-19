@@ -1,6 +1,25 @@
 // import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter, useLocation } from 'react-router-dom'
+
+export const getPages = () => {
+    
+    // @ts-ignore
+    const __routes__: any = import.meta.globEager( '/pages/**/[a-z[]*.tsx' )
+    
+    const routes = Object.keys(__routes__).map((route) => {
+        const path = route
+          .replace(/\/pages|index|\.tsx$/g, '')
+          .replace(/\[\.{3}.+\]/, '*')
+          .replace(/\[/g, ':')
+          .replace( /\]/g, "" )
+        //   .replace(/\[(.+)\]/, ':$1')
+      
+        return { path, element: __routes__[route].default }
+      })
+
+    return routes
+}
 
 const AppRoutes: FC = () => {
 
@@ -20,17 +39,33 @@ const AppRoutes: FC = () => {
     
     const location = useLocation()
 
+    const router = createBrowserRouter( 
+        //     getPages().map( ( { element: Element, path } ) => ( { 
+        //         path, 
+        //         element: <Element/>,
+        //         } ) 
+        //     ) 
+        // )
+        [
+            {
+                path: "/",
+                element: <div>hey</div>
+            }
+        ] ) || []
+        
+
     return (
         // <AnimatePresence mode="wait">
-            <Routes location={ location } key={ location.pathname }>
-                { routes.map( ( { component: Component, path } ) =>(
-                    <Route 
-                        path={ path } 
-                        element={ <Component/> }
-                        key={ path }
-                    />
-                ) ) }
-            </Routes>
+        <RouterProvider router={ router } fallbackElement={ null }/>
+        // <Routes location={ location } key={ location.pathname }>
+            //     { routes.map( ( { component: Component, path } ) =>(
+            //         <Route 
+            //             path={ path } 
+            //             element={ <Component/> }
+            //             key={ path }
+            //         />
+            //     ) ) }
+            // </Routes>
         // </AnimatePresence>
     )
 }
