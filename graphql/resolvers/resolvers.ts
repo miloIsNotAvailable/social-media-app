@@ -9,5 +9,13 @@ export const root: rootType = {
                 console.log( e ) 
             }
         },
+        async signin( _, args ) {
+            try {
+                console.log( args )
+                return args
+            } catch( e ) { 
+                console.log( e ) 
+            }
+        },
     }
 }

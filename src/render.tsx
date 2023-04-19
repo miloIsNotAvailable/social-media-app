@@ -10,9 +10,9 @@ import fetch, { Headers, Request, Response, RequestInit } from 'node-fetch'
 
 export const render = async ( request: express.Request ) =>  {
 
-    const routes = getPages().map( ( { element: Element, path } ) => ( {
-        path, 
-        element: <Element/>
+    const routes = getPages().map( ( e ) => ( {
+        ...e, 
+        element: <e.element/>,
       } ) )
 
     let { query, dataRoutes } = createStaticHandler( routes );

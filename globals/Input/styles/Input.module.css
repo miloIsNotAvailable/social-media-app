@@ -56,8 +56,8 @@ input:not( :placeholder-shown ) + .form_label {
     /* transform: translate(0, calc( -100% - .5rem )); */
 }
 
-.form_wrap:is(input:valid) {
-    outline-color: var(--green);
+.form_wrap input:valid, input:valid + label {
+    color: var(--green);
 }
 
 .form_wrap:valid .form_label {

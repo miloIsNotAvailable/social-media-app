@@ -1,21 +1,46 @@
 // import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
-import { BrowserRouter, Route, RouteObject, RouterProvider, Routes, createBrowserRouter, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, RouteObject, RouterProvider, Routes, createBrowserRouter, useLocation, useRouteError } from 'react-router-dom'
+import LoginPage from '../components/auth/modules/LoginPage'
 
 export const getPages = () => {
     
     // @ts-ignore
-    const __routes__: any = import.meta.globEager( '/pages/**/[a-z[]*.tsx' )
-    
-    const routes = Object.keys(__routes__).map((route) => {
+    const __routes__: any = import.meta.globEager( '/pages/*.tsx' )
+    // @ts-ignore
+    const __outlets__: any = import.meta.globEager( '/pages/[a-z]+/*.tsx' )
+
+    const outlets = Object.keys(__outlets__).map((route) => {
+        
         const path = route
           .replace(/\/pages|index|\.tsx$/g, '')
           .replace(/\[\.{3}.+\]/, '*')
           .replace(/\[/g, ':')
           .replace( /\]/g, "" )
-        //   .replace(/\[(.+)\]/, ':$1')
-      
-        return { path, element: __routes__[route].default }
+    
+        return { path, element: __outlets__[route].default, action: __outlets__[route].action }
+      })
+
+    const routes = Object.keys(__routes__).map((route) => {
+        
+        const path = route
+          .replace(/\/pages|index|\.tsx$/g, '')
+          .replace( /\./, "/" )
+          .replace(/\[\.{3}.+\]/, '*')
+          .replace(/\[/g, ':')
+          .replace( /\]/g, "" )
+    
+        let children = outlets.filter( ( { path: p } ) => p.match( path ) )
+        children = children.map( ( { element: Element, path: p, action } ) => {
+
+        return {
+                path: p.replace( path, "" ).replace( "/", "" ),
+                element: <Element/>,
+                action
+            }
+        } )
+
+        return { path, element: __routes__[route].default, children }
       })
 
     return routes
@@ -23,7 +48,7 @@ export const getPages = () => {
 
 export const routes: RouteObject[] = getPages().map( ( e ) => ( {
     ...e, 
-    element: <e.element/>
+    element: <e.element/>,
 } ) )
 
 const AppRoutes: FC = () => {

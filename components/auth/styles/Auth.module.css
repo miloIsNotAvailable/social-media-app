@@ -3,9 +3,9 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-    max-width: 27%;
+    max-width: 100%;
     padding: 1rem;
-    height: 34rem;
+    /* height: 34rem; */
     border-radius: var(--border-2);
     border: 1px solid var(--dark-grey);
 }
@@ -19,31 +19,6 @@
     font-weight: normal;
     border-bottom: 1px solid var(--dark-grey);
     color: var(--light-grey);
-}
-
-button {
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
-    width: 100%;
-    padding: .5rem;
-    background-color: var(--bg);
-    font-family: "Switzer";
-    font-size: var(--font-size);
-    font-weight: normal;
-    border-radius: var(--border-1);
-    border: 1px solid var(--dark-grey);
-    color: var(--light-grey);
-    outline: none;
-    transition: all 300ms ease;
-}
-
-button:hover {
-    background-color: var(--light-grey);
-    color: var(--bg)
 }
 
 .section {
@@ -69,4 +44,26 @@ button:hover {
     font-family: "Switzer";
     font-size: var(--font-size);
     color: var(--light-grey);
+}
+
+.redirect {
+    display: inline-flex;
+    place-self: center;
+    font-family: "Switzer";
+    font-size: var(--font-size-small);
+    font-weight: normal;
+    color: var(--light-grey);
+    white-space: pre-wrap;
+    
+}
+
+.redirect a {
+    color: var(--green)
+}
+
+.login_page {
+    display: grid;
+    grid-template-columns: 25% auto;
+    width: 100vw;
+    height: 100vh;
 }

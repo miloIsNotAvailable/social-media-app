@@ -21,7 +21,11 @@ const router = ( args: any ) => createBrowserRouter( [ {
     console.error( (error as any)?.data );
 
     return <div>hey</div>
-  }
+  },
+  children: [{ 
+    path: "signup",
+    element: <div>hey</div>
+   }]
 } ] )
 const Template: ComponentStory<typeof Form> = (args) => <RouterProvider router={ router( args ) }/>
 
