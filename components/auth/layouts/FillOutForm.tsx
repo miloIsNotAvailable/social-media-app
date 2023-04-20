@@ -8,6 +8,16 @@ import { Form, Outlet } from "react-router-dom";
 import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
+import { gql } from "graphql-request";
+import { useSignInQuery } from "../../../graphql/codegen/gql/gql";
+import { GraphQLClient } from 'graphql-request'
+
+const SIGNIN_QUERY = gql`query SignIn($email: String, $password: String) {
+    signin(email: $email, password: $password) {
+      email
+      password
+    }
+  }`
 
 const FillOutForm: FC = () => {
 
