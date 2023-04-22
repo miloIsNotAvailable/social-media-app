@@ -63,6 +63,35 @@ export default class Lexer {
         return types ? types[0] : null
     }
 
+    getRelationTable = ( attr: string[] | null, col: string ) => {
+    
+        if( !attr ) return
+    
+        const relation = attr.find( e => e.match( /@relation/ ) )
+        if( !relation ) return
+    
+        const foreignTableName = this.getColType( col )!.replace( "?", "" ).trim()
+    
+        const fields = relation.replace(" ", "").match( /\[[a-z]+\]/ig )
+    
+        const foreignKey = fields![0].replace( /\[|\]/g, "" )
+        const tableKey = fields![1].replace( /\[|\]/g, "" )
+    
+        return { foreignTableName, foreignKey, tableKey }
+    }
+
+    getConstraintName = ( col: string ) => {
+    
+        const colType = this.getColType( col )
+        const colName = this.getColName( col )    
+    
+        const match = colType && colType.replace( " ", "" ).match( new RegExp( this.tableNames.map( e => e + "\\[\\]" ).join( "|" ), "ig" ) )
+    
+        if( !match ) return
+    
+        return colName
+    }
+
     getColAttr = ( col: string ) => {
         return col.match( /@[a-z]+(\((.*)\)|\.[a-z]+)*/ig ) as string[] | null
     }    
