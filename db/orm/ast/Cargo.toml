@@ -1,0 +1,12 @@
+[package]
+name = "ast"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pest = "2.5.7"
+pest_derive = "2.5.7"
+rule = "0.1.6"
+tracing = "0.1.37"
