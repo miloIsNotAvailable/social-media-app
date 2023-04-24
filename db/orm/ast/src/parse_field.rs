@@ -24,6 +24,6 @@ pub mod parse {
             }        
         }
 
-        println!( "{:?}", field_type.field );
+        // println!( "{:?}", field_type.field );
     }
 }

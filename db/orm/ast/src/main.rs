@@ -6,11 +6,14 @@ mod parse_model;
 mod parse_field;
 mod parse_field_type;
 mod parse_base_type;
+mod parse_expression;
 
 use crate::parse_field_type::parse;
-use crate::parse_base_type::parse as base_type;
 use crate::parse_model::parse::parse_model;
 use crate::parse_field::parse::parse_field;
+
+use crate::parse_base_type::parse as base_type;
+use crate::parse_expression::parse as expression;
 
 pub mod schema {
     
