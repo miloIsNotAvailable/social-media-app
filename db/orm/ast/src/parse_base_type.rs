@@ -44,6 +44,7 @@ pub mod parse {
             },
             _ => {}
         }
-        return field
+        
+        field
     }
 }

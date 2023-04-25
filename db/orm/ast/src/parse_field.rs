@@ -18,7 +18,11 @@ pub mod parse {
     
             match curr.as_rule() {
                 Rule::field_declaration => {
-                    field_type.field.push(parse_field_type( curr.into_inner() ) );
+                    // field_type.field.push(
+                    println!( "{:?}", 
+                        parse_field_type( curr.into_inner() )
+                    );
+                    // );
                 },
                 _ => {}
             }        

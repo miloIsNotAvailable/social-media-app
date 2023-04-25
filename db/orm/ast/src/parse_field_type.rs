@@ -2,64 +2,41 @@ pub mod parse {
 
     use crate::schema::{ Pairs, Rule, Pair };
     use crate::base_type::{ parse_base_type, BaseType };
-    use crate::expression::{ parse_expression, Expression };
+    use crate::expression::{ parse_arg_list, Arguments };
 
     #[derive(Debug)]
     pub struct FieldType {
-        pub name: Option<String>,
+        pub name: String,
         pub field: BaseType,
         pub attributes: Vec<FieldAttrType>
     }
     
     #[derive(Debug)]
     pub struct FieldAttrType {
-        pub path: Option<String>,
-        // pub arg_list: Options<FieldArgListType>
-    }
-
-    pub fn parse_field_arg_list( pairs: Pairs<'_, Rule> ) -> FieldAttrType {
-
-        let mut field_attrs = FieldAttrType {
-            path: None
-        };
-
-        for curr in pairs {
-            
-            match curr.as_rule() {
-                Rule::path => {
-                    field_attrs.path = Some( curr.as_str().to_string() );
-                },
-                Rule::arguments_list => {
-                    parse_expression( curr.into_inner() );
-                    // println!( "{:?}", curr.into_inner() );
-                },
-                _ => {}
-            }
-        }
-
-        return field_attrs
+        pub path: String,
+        pub arguments_list: Arguments
     }
 
     pub fn parse_field_attribute( pairs: Pairs<'_, Rule> ) -> FieldAttrType {
 
-        let mut field_attrs = FieldAttrType {
-            path: None
-        };
+        let mut path: Option<String> = None;
+
+        let mut arguments_list: Arguments = Arguments::default();
 
         for curr in pairs {
             
             match curr.as_rule() {
                 Rule::path => {
-                    field_attrs.path = Some( curr.as_str().to_string() );
+                    path = Some( curr.as_str().to_string() );
                 },
                 Rule::arguments_list => {
-                    parse_expression( curr.into_inner() );
+                    let e = parse_arg_list( curr.into_inner(), &mut arguments_list );
                 },
                 _ => {}
             }
         }
-
-        return field_attrs
+        
+        FieldAttrType { path: path.unwrap(), arguments_list }
     }
 
     pub fn parse_field_type( pairs: Pairs<'_, Rule> ) -> FieldType {
@@ -84,16 +61,14 @@ pub mod parse {
                     attributes.push(
                         parse_field_attribute( curr.into_inner() )
                     );
-                    // println!(  "{}", curr.into_inner() );
                 },
                 Rule::identifier => {
                     name = Some( curr.as_str().to_string() );
-                    // println!( "{:?}", curr.as_str() );
                 },
                 _ => {}
             }
         }
         // println!( "{:?}", attributes );
-        return FieldType { name, field, attributes };
+        FieldType { name: name.unwrap(), field, attributes }
     }
 }
