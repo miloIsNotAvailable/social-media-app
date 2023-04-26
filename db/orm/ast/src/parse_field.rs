@@ -8,26 +8,22 @@ pub mod parse {
         pub field: Vec<FieldType>
     }
     
-    pub fn parse_field( pairs: Pairs<'_, Rule> ) {
+    pub fn parse_field( pairs: Pairs<'_, Rule> ) -> Field {
     
-        let mut field_type = Field {
-            field: Vec::new()
-        };
-    
+        let mut field: Vec<FieldType> = vec![];
+
         for curr in pairs {
     
             match curr.as_rule() {
                 Rule::field_declaration => {
-                    // field_type.field.push(
-                    println!( "{:?}", 
+                    field.push(
                         parse_field_type( curr.into_inner() )
                     );
-                    // );
                 },
                 _ => {}
             }        
         }
 
-        // println!( "{:?}", field_type.field );
+        Field { field } 
     }
 }

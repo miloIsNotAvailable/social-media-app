@@ -1,6 +1,7 @@
 pub mod parse {
         
     use crate::schema::{ Pairs, Rule, Pair };
+    use std::fmt;
 
     #[derive(Debug)]
     pub struct Argument { 
@@ -15,6 +16,18 @@ pub mod parse {
         Function( String, Vec<String> ),
         Arr( Vec<Expr> ),
         // Relation( Expr::ConstantValue( String ), Expr )
+    }
+
+    impl fmt::Display for Expr {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Expr::NumericValue( val ) => fmt::Display::fmt( val, f ),
+                Expr::ConstantValue( val ) => fmt::Display::fmt( val, f ),
+                // Expr::Function( val ) => fmt::Display::fmt( val, f ),
+                // Expr::ConstantValue( val ) => fmt::Display::fmt( val, f ),
+                _ =>  todo!()
+            }
+        }
     }
 
     fn unreachable(pair: &Pair<'_, Rule>) -> ! {

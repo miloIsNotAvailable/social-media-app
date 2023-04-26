@@ -10,7 +10,7 @@ mod parse_expression;
 
 use crate::parse_field_type::parse;
 use crate::parse_model::parse::parse_model;
-use crate::parse_field::parse::parse_field;
+use crate::parse_field::parse as field;
 
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
@@ -60,7 +60,8 @@ fn main() {
         for pair in inner.into_inner() {
             match pair.as_rule() {
                 Rule::model_declaration => {
-                    parse_model( pair.into_inner() );
+                    let e = parse_model( pair.into_inner() );
+                    println!( "{:?}", e );
                 },
                 _ => {}
             }
