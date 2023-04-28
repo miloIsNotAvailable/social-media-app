@@ -18,7 +18,7 @@ tokio-test = "0.4.2"
 tracing = "0.1.37"
 tokio = { version = "1.27", features = ["io-util", "full"] }
 tokio-util = { version = "0.7", features = ["codec"] }
-quaint = "*"
+sqlx = {version="0.6.3", features=["runtime-tokio-rustls", "postgres", "macros"]}
 
 [dev-dependencies]
 futures-executor = "0.3"

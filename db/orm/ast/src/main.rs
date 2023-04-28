@@ -58,7 +58,8 @@ fn main() {
 
     let pairs = IdentParser::parse(Rule::schema, TABLES).unwrap_or_else(|e| panic!("{}", e));
 
-    parse_schema::connect();
+    let z = parse_schema::connect();
+    println!( "{:?}", z );
 
     for inner in pairs {
 
