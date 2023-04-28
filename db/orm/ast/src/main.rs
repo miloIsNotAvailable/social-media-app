@@ -7,8 +7,11 @@ mod parse_field;
 mod parse_field_type;
 mod parse_base_type;
 mod parse_expression;
+mod sql_schema;
+// mod sql_schema::parse_sql_schema;
 
 use crate::parse_field_type::parse;
+use crate::sql_schema::parse_sql_schema::parse_schema;
 use crate::parse_model::parse::parse_model;
 use crate::parse_field::parse as field;
 
@@ -54,6 +57,8 @@ model Post {
 fn main() {
 
     let pairs = IdentParser::parse(Rule::schema, TABLES).unwrap_or_else(|e| panic!("{}", e));
+
+    parse_schema::connect();
 
     for inner in pairs {
 
