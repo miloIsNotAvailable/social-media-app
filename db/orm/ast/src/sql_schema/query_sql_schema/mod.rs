@@ -16,9 +16,9 @@ use crate::sql_schema::query_sql_schema::query_sql_relations::QuerySqlRelations:
 
 #[derive(sqlx::FromRow, Debug)]
 pub struct QuerySqlSchema {
-    table: QueryTableName,
-    columns: Vec<QuerySqlColumn>,
-    constraints: Vec<QuerySqlRelation>
+    pub table: QueryTableName,
+    pub columns: Vec<QuerySqlColumn>,
+    pub constraints: Vec<QuerySqlRelation>
 }
 
 impl QuerySqlSchema {

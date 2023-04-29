@@ -11,11 +11,11 @@ pub mod QuerySqlColumns {
 
     #[derive(sqlx::FromRow, Debug)]
     pub struct QuerySqlColumn { 
-        column_name: String, 
-        column_default: Option<String>, 
-        is_nullable: String, 
-        data_type: String, 
-        udt_name: String, 
+        pub column_name: String, 
+        pub column_default: Option<String>, 
+        pub is_nullable: String, 
+        pub data_type: String, 
+        pub udt_name: String, 
     }
 
     impl QuerySqlColumn {
