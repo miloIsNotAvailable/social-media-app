@@ -1,9 +1,25 @@
 pub mod ParseColumns {
 
     use crate::sql_schema::parse_sql_schema::Schema;
+    use crate::sql_schema::query_sql_schema::QuerySqlSchema;
 
     impl Schema {
-        pub fn columns( &self ) {
+
+        pub fn columns_parsed( table: QuerySqlSchema ) -> String {
+
+            let table_name = Schema::Table( table.table ).table();
+            let cols = Schema::Columns( table.columns ).columns();
+            let constraints = Schema::Constraints( table.constraints ).constraints();
+        
+            format!( 
+                "{} (\n{},\n{}\n) tablespace pg_default;",
+                table_name,
+                cols, 
+                constraints
+            )
+        }
+
+        pub fn columns( &self ) -> String {
             
             let mut cols: Vec<String> = vec![];
             
@@ -13,7 +29,7 @@ pub mod ParseColumns {
                     for col in val {
                         cols.push( 
                             format!( 
-                                "{} {} {}{}",
+                                "\t{} {} {}{}",
                                 &col.column_name,
                                 &col.data_type,
                                 parse_is_nullable( &col.is_nullable ).trim(),
@@ -25,10 +41,10 @@ pub mod ParseColumns {
                 _ => todo!()
             }
 
-            println!( "{:?}", cols.join( ",\n" ) );
+            cols.join( ",\n" )
         }
 
-        pub fn constraints( &self ) {
+        pub fn constraints( &self ) -> String {
             
             let mut cols: Vec<String> = vec![];
             
@@ -40,7 +56,7 @@ pub mod ParseColumns {
                             Some( foreign_table ) => {
                                 cols.push(
                                     format!(
-                                        "constraint {} foreign key({}) references \"{}\"({}) on update cascade on delete restrict",
+                                        "\tconstraint {} foreign key({}) references \"{}\"({}) on update cascade on delete restrict",
                                         &constraint.constraint_name,
                                         &constraint.column_name,
                                         foreign_table,
@@ -51,7 +67,7 @@ pub mod ParseColumns {
                             _ => {
                                 cols.push(
                                     format!(
-                                        "constraint {} key({})",
+                                        "\tconstraint {} key({})",
                                         &constraint.constraint_name,
                                         &constraint.column_name
                                     )
@@ -63,7 +79,7 @@ pub mod ParseColumns {
                 _ => todo!()
             }
 
-            println!( "{:?}", cols.join( ",\n" ) );
+            cols.join( ",\n" )
         }
     }
 
