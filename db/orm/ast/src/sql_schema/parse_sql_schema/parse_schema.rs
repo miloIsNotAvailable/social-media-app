@@ -2,24 +2,42 @@ use sqlx::postgres::PgConnectOptions;
 use sqlx::ConnectOptions;
 use sqlx::PgConnection;
 use sqlx::Connection;
+use std::error::Error;
 
-struct Domain {
-    id: i64,
-    name: String
-  }
+// use crate::sql_schema::parse_sql_schema::query_table_data;
+use crate::sql_schema::query_sql_schema::query_table_data::QueryTableData::query_data;
+
+// #[derive(sqlx::FromRow, Debug)]
+// pub struct ParseSqlSchema {}
+
+// impl ParseSqlSchema {
+//     pub async fn connect() -> Option<PgConnection> {
+//         let mut pool = PgConnection::connect("postgres://postgres:Trzciano31A@db.mqifkoalnglfauiiliet.supabase.co:5432/postgres").await;    
+//         pool.ok()
+//     } 
+// }
 
 #[tokio::main]
-pub async fn connect() -> Result<(), Box<dyn std::error::Error>> {
+pub async fn main() {
     
-    let db_url: &str = "postgres://postgres:Trzciano31A@db.mqifkoalnglfauiiliet.supabase.co:5432/postgres";
-    
-    let mut pool = PgConnection::connect("postgres://postgres:Trzciano31A@db.mqifkoalnglfauiiliet.supabase.co:5432/postgres").await?;
+    // let mut pool = ParseSqlSchema::connect().await;
+    // match pool {
+    //     Some( db ) => {
+    //         let row = QueryTableData::query_sql_columns( 
+    //             db, 
+    //             "Item".to_string() 
+    //         );
+        
+    //         println!( "{:?}", row.await );
+    //     },
+    //     _ => {}
+    // }
 
-    let row: (String,) = sqlx::query_as("SELECT * from _prisma_migrations")
-    .bind("")
-    .fetch_one(&mut pool).await?;
+    let rows = query_data().await;
+    println!( "{:?}", rows );
+    // let row = sqlx::query_as::<_, ParseSqlColumns>("SELECT * FROM information_schema.columns WHERE table_name ='Item';")
+    // .bind("")
+    // .fetch_all(&mut pool).await?;
 
-    println!( "{:?}", row );
-
-    Ok(())
+    // Ok(())
 }
