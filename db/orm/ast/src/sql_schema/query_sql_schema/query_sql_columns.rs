@@ -1,12 +1,13 @@
 pub mod QuerySqlColumns {
     
     use crate::sql_schema::query_sql_schema::QuerySqlSchema;
-    use crate::sql_schema::query_sql_schema::query_sql_relations::QuerySqlRelations::{ QuerySqlRelation };
 
     use sqlx::postgres::PgConnectOptions;
     use sqlx::ConnectOptions;
     use sqlx::PgConnection;
     use sqlx::Connection;
+    use sqlx::postgres::{ PgRow };
+    use sqlx::Row;
 
     #[derive(sqlx::FromRow, Debug)]
     pub struct QuerySqlColumn { 
@@ -26,8 +27,6 @@ pub mod QuerySqlColumns {
 
                     match row.await {
                         Ok( r ) => {
-                            let e = QuerySqlRelation::query_relation( table.to_string() );
-                            println!( "sfsf {:?}", e.await );
                             Some( r )
                         },
                         Err( e ) => {

@@ -5,7 +5,7 @@ use sqlx::Connection;
 use std::error::Error;
 
 // use crate::sql_schema::parse_sql_schema::query_table_data;
-use crate::sql_schema::query_sql_schema::query_table_data::QueryTableData::query_data;
+use crate::sql_schema::query_sql_schema::QuerySqlSchema;
 
 // #[derive(sqlx::FromRow, Debug)]
 // pub struct ParseSqlSchema {}
@@ -33,7 +33,7 @@ pub async fn main() {
     //     _ => {}
     // }
 
-    let rows = query_data().await;
+    let rows = QuerySqlSchema::get_sql_schema().await;
     println!( "{:?}", rows );
     // let row = sqlx::query_as::<_, ParseSqlColumns>("SELECT * FROM information_schema.columns WHERE table_name ='Item';")
     // .bind("")

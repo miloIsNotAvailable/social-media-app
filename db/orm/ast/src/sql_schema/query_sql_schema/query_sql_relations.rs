@@ -11,36 +11,40 @@ pub mod QuerySqlRelations {
 
     #[derive(Debug)]
     pub struct QuerySqlRelation {
-        conname: String,
-        contype: String
+        constraint_name: String,
+        constraint_type: String,
+        // parent: String,
+        table_name: Option<String>
     }
 
     impl sqlx::FromRow<'_, sqlx::postgres::PgRow> for QuerySqlRelation {
         fn from_row( row: &PgRow ) -> Result<Self, sqlx::Error> {
             
-            let mut bytes: Vec<i8> = vec![];
-            bytes.push( row.try_get( "contype" )? );
-            
+            let mut table_name: Option<String> = None;
+
+            let t_name: String = row.try_get( "table_name" )?;
+            let parent: String = row.try_get( "parent" )?;
+
+            if( t_name != parent ) {
+                table_name = Some( t_name );
+            }
+
             Ok(
                 Self {
-                    conname: row.try_get( "conname" )?,
-                    // convert i8 type to String type
-                    contype: String::from_utf8(
-                        bytes
-                        .iter()
-                        .map(|&c| c as u8).collect()
-                    ).unwrap()
+                    constraint_name: row.try_get( "constraint_name" )?,
+                    constraint_type: row.try_get( "constraint_type" )?,
+                    table_name: table_name,
                 }
             )
         }
     }
 
     impl QuerySqlRelation {
-        pub async fn query_relation( table: String ) -> Option<Vec<QuerySqlRelation>> {
+        pub async fn query_relation( table: &String ) -> Option<Vec<QuerySqlRelation>> {
             let mut pool = QuerySqlSchema::connect().await;
             match pool {
                 Some( db ) => {
-                    let row = query_sql_relations( db, table );
+                    let row = query_sql_relations( db, table.to_string() );
                 
                     match row.await {
                         Ok( r ) => Some( r ),
@@ -60,14 +64,15 @@ pub mod QuerySqlRelations {
         table_name: String 
     ) -> Result<Vec<QuerySqlRelation>, sqlx::Error> {
         
-        let row = sqlx::query_as::<_, QuerySqlRelation>("SELECT con.*
-        FROM pg_catalog.pg_constraint con
-             INNER JOIN pg_catalog.pg_class rel
-                        ON rel.oid = con.conrelid
-             INNER JOIN pg_catalog.pg_namespace nsp
-                        ON nsp.oid = connamespace
-        WHERE nsp.nspname = 'public'
-              AND rel.relname = $1;")
+        let row = sqlx::query_as::<_, QuerySqlRelation>("SELECT
+        tc.constraint_name, tc.constraint_type, kcu.table_name as parent, ccu.table_name, kcu.column_name
+        FROM 
+        information_schema.table_constraints AS tc 
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.table_name=$1;")
         .bind( table_name )
         .fetch_all(&mut pool).await;
     
