@@ -12,7 +12,8 @@ pub mod ParseColumns {
             let constraints = Schema::Constraints( table.constraints ).constraints();
         
             format!( 
-                "{} (\n{},\n{}\n) tablespace pg_default;",
+                // "{} (\n{},\n{}\n) tablespace pg_default;",
+                "{} (\n{},\n{}\n);",
                 table_name,
                 cols, 
                 constraints
