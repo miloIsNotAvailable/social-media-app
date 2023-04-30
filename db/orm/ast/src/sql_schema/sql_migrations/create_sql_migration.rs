@@ -23,42 +23,20 @@ pub struct Arg {
     val: String
 }
 
-//ColumnDef { 
-    // name: Ident { value: "id", quote_style: None }, 
-    // data_type: CharacterVarying(Some(CharacterLength { length: 36, unit: None })), 
-    // collation: None, 
-    // options: [ColumnOptionDef { name: None, option: NotNull }] 
-// }
-
 impl core::convert::From<&ColumnDef> for FieldType {
     fn from( column: &ColumnDef ) -> FieldType {
-        
-        // let mut d_type: Option<String> = None;
-        // let mut d_attr: Option<String> = None;
-        // let mut d_arg_list: Option<u64> = None;
 
         let mut attr: Vec<FieldAttrType> = vec![];
-        let mut arg: Vec<Argument> = vec![];
 
-        // let mut d_type = SchemaTypes::parse_types( &column.data_type );
-        // SchemaTypes::match_col_opts( &column.options );
+        let field_attr = SchemaTypes::match_col_opts( column.clone() );
 
-        arg.push( Argument {
-            identifier: Some(Expr::ConstantValue( "".to_string() )),
-            expression: Expr::ConstantValue( "".to_string() )
-        } );
-
-        attr.push(
-            FieldAttrType {
-                path: "".to_string(),
-                arguments_list: Arguments {
-                    arguments_list: arg
-                }
-            } 
-        );
+        match field_attr {
+            Some( a ) => attr.push( a ),
+            _ => {}
+        }
 
         FieldType { 
-            name: "".to_string(),
+            name: column.name.value.to_string(),
             field: SchemaTypes::parse_to_base_type( &column ),
             attributes: attr
         }

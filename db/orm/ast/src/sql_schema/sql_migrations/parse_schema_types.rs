@@ -53,20 +53,23 @@ pub mod SchemaTypes {
         is_nullable
     }
 
-    pub fn match_col_opts( col_opts: Vec<ColumnOptionDef> ) -> Vec<Argument> {
+    pub fn match_col_opts( col_opts: ColumnDef ) -> Option<FieldAttrType> {
 
         let mut args: Vec<Argument> = vec![];
+        let mut path: Option<String> = None;
 
-        for opt in col_opts {
+        for opt in col_opts.options {
             match opt.option {
                 ColumnOption::Default( val ) => {
                     match val {
                         ParserExpr::Function( v ) => {
+                            path = Some( "default".to_string() );
                             let e = parse_default_object_name( v.name );
                             // println!( "fun {:?}", e );
                             args.push( e );
                         },
                         ParserExpr::Value( val ) => {
+                            path = Some( "default".to_string() );
                             let e = parse_default_value( val );
                             // println!( "fun {:?}", e );
                             args.push( e );
@@ -78,10 +81,16 @@ pub mod SchemaTypes {
             }
         }
 
-        args
+        match path {
+            Some( p ) => Some( FieldAttrType {
+                path: p,
+                arguments_list: Arguments {
+                    arguments_list: args
+                }
+            } ),
+            _ => None
+        }
     }
-
-    //FieldType { name: "published", field: BaseType { base_type: Some("Boolean"), optional_type: None, list_type: None }, attributes: [FieldAttrType { path: "default", arguments_list: Arguments { arguments_list: [Argument { identifier: None, expression: ConstantValue("false") }] } }] }
 
     pub fn parse_default_value( val: sqlparser::ast::Value ) -> Argument {
         
