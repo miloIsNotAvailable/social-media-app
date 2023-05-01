@@ -68,7 +68,7 @@ pub mod ParseColumns {
                             _ => {
                                 cols.push(
                                     format!(
-                                        "\tconstraint {} key({})",
+                                        "\tconstraint {} primary key({})",
                                         &constraint.constraint_name,
                                         &constraint.column_name
                                     )

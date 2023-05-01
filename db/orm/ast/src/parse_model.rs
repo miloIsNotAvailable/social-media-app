@@ -33,6 +33,17 @@ pub mod parse {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match self {
                 ParseModelSchema::Name( val ) => fmt::Display::fmt( val, f ),
+                ParseModelSchema::Fields( val ) => {
+                    
+                    let mut e: Vec<String> = vec![];
+
+                    for v in val {
+
+                        e.push( format!("{v:?}") )
+                    }
+
+                    write!( f, "{}", e.join( ",\n" ) )
+                },
                 _ =>  todo!()
             }
         }

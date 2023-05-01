@@ -1,5 +1,8 @@
 pub mod parse {
+    #![allow(non_snake_case)]
+
     use crate::schema::{ Pairs, Rule, Pair };
+    use std::fmt;
 
     #[derive(Debug, Clone, PartialEq)]
     pub struct Identifier {
@@ -18,6 +21,41 @@ pub mod parse {
         pub list_type: Option<bool>
     }
     
+    fn match_type( type__: String ) -> String {
+        match type__.as_str() {                    
+            "DateTime" => "timestamp with time zone".to_string(),
+            "Int" => "integer".to_string(),
+            "String" => "text".to_string(),
+            "Boolean" => "bool".to_string(),
+            _ => type__.to_string()
+        }
+    }
+
+    impl fmt::Display for BaseType {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            
+            let mut opt: String = "not null".to_string();
+    
+            match self.optional_type {
+                Some( v ) => opt = "null".to_string(),
+                _ => { opt = "not null".to_string() }
+            }
+
+            match &self.base_type {
+                Some( t ) => {
+                    println!( "{:?}", t.to_string() );
+                    // let mut type_: String = "".to_string();
+                    
+                    let type_ = match_type( t.to_string() );
+                    write!(f, "{} {}", type_, opt )
+                },
+                _ => { 
+                    write!(f, "" )
+                }
+            }
+        }
+    }    
+
     pub fn parse_base_type( pairs: Pair<'_, Rule> ) -> BaseType {
     
         let mut field: BaseType = BaseType {
@@ -35,12 +73,12 @@ pub mod parse {
             // get optional type recursively
             Rule::optional_type => {
                 field.optional_type = Some( true );
-                parse_base_type( pairs.into_inner().next().unwrap() );
+                field.base_type = parse_base_type( pairs.into_inner().next().unwrap() ).base_type;
             },
             // get list type recursively
             Rule::list_type => {
                 field.list_type = Some( true );
-                parse_base_type( pairs.into_inner().next().unwrap() );
+                field.base_type = parse_base_type( pairs.into_inner().next().unwrap() ).base_type;
             },
             _ => {}
         }

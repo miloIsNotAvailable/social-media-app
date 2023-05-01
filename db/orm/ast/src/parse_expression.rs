@@ -3,13 +3,13 @@ pub mod parse {
     use crate::schema::{ Pairs, Rule, Pair };
     use std::fmt;
 
-    #[derive(Debug)]
+    #[derive(Debug, Clone)]
     pub struct Argument { 
         pub identifier: Option<Expr>, 
         pub expression: Expr 
     }
 
-    #[derive(Debug)]
+    #[derive(Debug, Clone)]
     pub enum Expr {
         NumericValue( String ),
         ConstantValue( String ),
@@ -23,10 +23,31 @@ pub mod parse {
             match self {
                 Expr::NumericValue( val ) => fmt::Display::fmt( val, f ),
                 Expr::ConstantValue( val ) => fmt::Display::fmt( val, f ),
-                // Expr::Function( val ) => fmt::Display::fmt( val, f ),
-                // Expr::ConstantValue( val ) => fmt::Display::fmt( val, f ),
+                Expr::Function( val, call ) => {
+                    match val.as_str() {
+                        "autoincrement" => write!( f, "serial" ),
+                        "now" => write!( f, "CURRENT_TIMESTAMP" ),
+                        _ => todo!()
+                    }
+                },
+                Expr::Arr( val ) => fmt::Display::fmt( "{val:?}", f ),
                 _ =>  todo!()
             }
+        }
+    }
+
+    impl fmt::Display for Argument {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match &self.identifier {
+                Some( id ) => write!( f, "{}({})", 
+                    format!( "{}", id ), 
+                    format!( "{}", self.expression ) 
+                ),
+                _ => write!( f, "{}", 
+                    format!( "{}", self.expression ) 
+                ),
+            }
+
         }
     }
 

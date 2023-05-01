@@ -3,6 +3,7 @@ pub mod parse {
     use crate::schema::{ Pairs, Rule, Pair };
     use crate::base_type::{ parse_base_type, BaseType };
     use crate::expression::{ parse_arg_list, Arguments };
+    use std::fmt;
 
     #[derive(Debug)]
     pub struct FieldType {
@@ -11,6 +12,29 @@ pub mod parse {
         pub attributes: Vec<FieldAttrType>
     }
     
+    impl fmt::Display for FieldType {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            
+            let mut opt: String = "not null".to_string();
+
+            let a = String::from( "default" );
+            let b = String::from( "db.VarChar" );
+            let c = String::from( "relation" );
+
+            match &self.name {
+                b => {
+                    // let mut attrs = 
+                    let formatted = format!( "character varying({})", 255 );
+                },
+                a => opt = "def".to_string(),
+                c => opt = "var".to_string(),
+                _ => { opt = "sdfsdf".to_string() }
+            }
+
+            write!(f, "{} {}", format!( "{}", self.field), opt )
+        }
+    }
+
     #[derive(Debug)]
     pub struct FieldAttrType {
         pub path: String,

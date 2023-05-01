@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
@@ -13,10 +15,13 @@ mod sql_schema;
 use crate::parse_field_type::parse;
 use crate::sql_schema::sql_migrations::create_sql_migration;
 use crate::parse_model::parse::parse_model;
+use crate::parse_model::parse::ParseModelSchema;
 use crate::parse_field::parse as field;
 
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
+
+use std::fmt;
 
 pub mod schema {
     
@@ -59,6 +64,7 @@ fn main() {
     let pairs = IdentParser::parse(Rule::schema, TABLES).unwrap_or_else(|e| panic!("{}", e));
 
     create_sql_migration::parse_sql_file();
+    // create_sql_migration::generate_sql_file();
 
     for inner in pairs {
 
@@ -66,7 +72,17 @@ fn main() {
             match pair.as_rule() {
                 Rule::model_declaration => {
                     let e = parse_model( pair.into_inner() );
-                    println!( "{:?}", e );
+                    
+                    match e.fields {
+                        ParseModelSchema::Fields( val ) => {
+                            for v in val {
+                                // let z = a.field;
+                                let d = format!( "{v}" );
+                                println!( "vreve {:?}", d );
+                            }
+                        },
+                        _ => {}
+                    }
                 },
                 _ => {}
             }
