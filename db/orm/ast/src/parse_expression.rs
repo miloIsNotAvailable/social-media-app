@@ -26,11 +26,21 @@ pub mod parse {
                 Expr::Function( val, call ) => {
                     match val.as_str() {
                         "autoincrement" => write!( f, "serial" ),
+                        "uuid" => write!( f, "uuid_generate_v4()" ),
                         "now" => write!( f, "CURRENT_TIMESTAMP" ),
                         _ => todo!()
                     }
                 },
-                Expr::Arr( val ) => fmt::Display::fmt( "{val:?}", f ),
+                Expr::Arr( val ) => {
+
+                    let vec: Vec<String> = val
+                    .into_iter()
+                    .map(
+                        |expr| format!( "{expr}" )
+                    ).rev().collect();
+
+                    write!( f, "{}", vec.join( "," ) )
+                },
                 _ =>  todo!()
             }
         }
@@ -155,6 +165,18 @@ pub mod parse {
         pub arguments_list: Vec<Argument>
     }
 
+    impl fmt::Display for Arguments {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
+            let mut formatted: Vec<String> = vec![];
+
+            for arg in &self.arguments_list {
+                formatted.push( format!( "{arg}" ) );
+            }
+            
+            write!( f, "{}", formatted.join( "," ) )
+        }
+    }
     // takes following args:
     // { function_call | array_expression | numeric_literal | string_literal | path }
     pub fn parse_arg_list( mut pairs: Pairs<'_, Rule>, args: &mut Arguments ) {

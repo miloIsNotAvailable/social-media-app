@@ -63,7 +63,7 @@ fn main() {
 
     let pairs = IdentParser::parse(Rule::schema, TABLES).unwrap_or_else(|e| panic!("{}", e));
 
-    create_sql_migration::parse_sql_file();
+    // create_sql_migration::parse_sql_file();
     // create_sql_migration::generate_sql_file();
 
     for inner in pairs {
@@ -77,7 +77,7 @@ fn main() {
                         ParseModelSchema::Fields( val ) => {
                             for v in val {
                                 // let z = a.field;
-                                let d = format!( "{v}" );
+                                let d = format!( "{v:?}" );
                                 println!( "vreve {:?}", d );
                             }
                         },

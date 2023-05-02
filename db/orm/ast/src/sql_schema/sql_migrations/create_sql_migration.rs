@@ -20,186 +20,186 @@ pub fn generate_sql_file() {
     println!( "SQL migration file generated" );
 }
 
-#[derive(Debug)]
-pub enum CompileObjName<'a> {
-    ObjName( &'a ObjectName,  )
-}
+// #[derive(Debug)]
+// pub enum CompileObjName<'a> {
+//     ObjName( &'a ObjectName,  )
+// }
 
-#[derive(Debug)]
-pub enum CompileIdentVec<'a> {
-    ObjName( &'a Vec<Ident>,  )
-}
+// #[derive(Debug)]
+// pub enum CompileIdentVec<'a> {
+//     ObjName( &'a Vec<Ident>,  )
+// }
 
-impl fmt::Display for CompileIdentVec<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+// impl fmt::Display for CompileIdentVec<'_> {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         
-        let mut vecs: Vec<&str> = vec![];
+//         let mut vecs: Vec<&str> = vec![];
 
-        match self {
-            CompileIdentVec::ObjName( obj_name ) => {
-                let v: Vec<&str> = obj_name.into_iter().map( 
-                    |ident| ident.value .as_str()
-                ).rev().collect();
+//         match self {
+//             CompileIdentVec::ObjName( obj_name ) => {
+//                 let v: Vec<&str> = obj_name.into_iter().map( 
+//                     |ident| ident.value .as_str()
+//                 ).rev().collect();
 
-                vecs = v;
-            },
-            _ => {}
-        }
+//                 vecs = v;
+//             },
+//             _ => {}
+//         }
 
-        let mut joined = vecs.join( "," );
-        joined = joined.replace( "\"", "" );
+//         let mut joined = vecs.join( "," );
+//         joined = joined.replace( "\"", "" );
 
-        write!(f, "{joined:?}" )
-    }
-}
+//         write!(f, "{joined:?}" )
+//     }
+// }
 
-impl fmt::Display for CompileObjName<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+// impl fmt::Display for CompileObjName<'_> {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         
-        let mut vecs: Vec<&str> = vec![];
+//         let mut vecs: Vec<&str> = vec![];
 
-        match self {
-            CompileObjName::ObjName( obj_name ) => {
-                match obj_name {
-                    ObjectName( idents ) => {
-                        let v: Vec<&str> = idents.into_iter().map( 
-                            |ident| ident.value.as_str() 
-                        ).rev().collect();
+//         match self {
+//             CompileObjName::ObjName( obj_name ) => {
+//                 match obj_name {
+//                     ObjectName( idents ) => {
+//                         let v: Vec<&str> = idents.into_iter().map( 
+//                             |ident| ident.value.as_str() 
+//                         ).rev().collect();
 
-                        vecs = v;
-                    }
-                }
-            },
-            _ => {}
-        }
+//                         vecs = v;
+//                     }
+//                 }
+//             },
+//             _ => {}
+//         }
 
-        let mut joined = vecs.join( "," );
-        joined = joined.replace( "\"", "" );
+//         let mut joined = vecs.join( "," );
+//         joined = joined.replace( "\"", "" );
 
-        write!(f, "{:?}", joined)
-    }
-}
+//         write!(f, "{:?}", joined)
+//     }
+// }
 
-impl core::convert::From<&ColumnDef> for FieldType {
-    fn from( column: &ColumnDef ) -> FieldType {
+// impl core::convert::From<&ColumnDef> for FieldType {
+//     fn from( column: &ColumnDef ) -> FieldType {
 
-        let mut attr: Vec<FieldAttrType> = vec![];
+//         let mut attr: Vec<FieldAttrType> = vec![];
 
-        let field_attr = SchemaTypes::match_col_opts( column.clone() );
+//         let field_attr = SchemaTypes::match_col_opts( column.clone() );
 
-        match field_attr {
-            Some( a ) => attr.push( a ),
-            _ => {}
-        }
+//         match field_attr {
+//             Some( a ) => attr.push( a ),
+//             _ => {}
+//         }
 
-        FieldType { 
-            name: column.name.value.to_string(),
-            field: SchemaTypes::parse_to_base_type( &column ),
-            attributes: attr
-        }
-    }
-}
+//         FieldType { 
+//             name: column.name.value.to_string(),
+//             field: SchemaTypes::parse_to_base_type( &column ),
+//             attributes: attr
+//         }
+//     }
+// }
 
-#[derive(Debug)]
-pub struct ParseTable {}
+// #[derive(Debug)]
+// pub struct ParseTable {}
 
-impl ParseTable {
-    pub fn parse_model_name( obj_enum: Vec<ColumnDef> ) {
+// impl ParseTable {
+//     pub fn parse_model_name( obj_enum: Vec<ColumnDef> ) {
 
-        for obj in obj_enum {
-            // println!( "{:?}\n", FieldType::from( &obj ) );
-            // println!( "{:?}\n", obj );
-        }
-    }
+//         for obj in obj_enum {
+//             // println!( "{:?}\n", FieldType::from( &obj ) );
+//             // println!( "{:?}\n", obj );
+//         }
+//     }
 
-    pub fn parse_model_constraints( table: Statement ) {
-        let Statement::CreateTable { ref columns, constraints, .. } = table else { todo!() };
+//     pub fn parse_model_constraints( table: Statement ) {
+//         let Statement::CreateTable { ref columns, constraints, .. } = table else { todo!() };
         
-        let mut attr_path: Option<String> = None;
-        let mut relation: Option<FieldAttrType> = None;
+//         let mut attr_path: Option<String> = None;
+//         let mut relation: Option<FieldAttrType> = None;
 
-        for c in constraints {
-            match c {
-                sqlparser::ast::TableConstraint::Unique { name, is_primary, .. } => {
+//         for c in constraints {
+//             match c {
+//                 sqlparser::ast::TableConstraint::Unique { name, is_primary, .. } => {
                     
-                    match is_primary {
-                        true => attr_path = Some( "id".to_string() ),
-                        false => attr_path = Some( "unique".to_string() ),
-                        _ => {}
-                    }
-                },
-                sqlparser::ast::TableConstraint::ForeignKey { name, referred_columns, foreign_table, columns, .. } => {
+//                     match is_primary {
+//                         true => attr_path = Some( "id".to_string() ),
+//                         false => attr_path = Some( "unique".to_string() ),
+//                         _ => {}
+//                     }
+//                 },
+//                 sqlparser::ast::TableConstraint::ForeignKey { name, referred_columns, foreign_table, columns, .. } => {
                     
-                    let foreign_t = CompileObjName::ObjName::<'_>( &foreign_table );
-                    let cols = CompileIdentVec::ObjName::<'_>( &columns );
-                    let foreign_cols = CompileIdentVec::ObjName::<'_>( &referred_columns );
+//                     let foreign_t = CompileObjName::ObjName::<'_>( &foreign_table );
+//                     let cols = CompileIdentVec::ObjName::<'_>( &columns );
+//                     let foreign_cols = CompileIdentVec::ObjName::<'_>( &referred_columns );
                     
-                    // println!( "{:?}", format!( "@relation( fields:[{cols}] references:[{foreign_cols}]" ) );
-                    relation = Some(FieldAttrType {
-                        path: "relation".to_string(),
-                        arguments_list: Arguments {
-                            arguments_list: [
-                                Argument {
-                                    identifier: Some( Expr::ConstantValue( String::from("fields") ) ),
-                                    expression: Expr::Arr( [Expr::ConstantValue( format!( "{cols}" ) )].to_vec() )
-                                },
-                                Argument {
-                                    identifier: Some( Expr::ConstantValue( String::from("references") ) ),
-                                    expression: Expr::Arr( [Expr::ConstantValue( format!( "{foreign_cols}" ) )].to_vec() )
-                                }
-                            ].to_vec()
-                        }
-                    });
+//                     // println!( "{:?}", format!( "@relation( fields:[{cols}] references:[{foreign_cols}]" ) );
+//                     relation = Some(FieldAttrType {
+//                         path: "relation".to_string(),
+//                         arguments_list: Arguments {
+//                             arguments_list: [
+//                                 Argument {
+//                                     identifier: Some( Expr::ConstantValue( String::from("fields") ) ),
+//                                     expression: Expr::Arr( [Expr::ConstantValue( format!( "{cols}" ) )].to_vec() )
+//                                 },
+//                                 Argument {
+//                                     identifier: Some( Expr::ConstantValue( String::from("references") ) ),
+//                                     expression: Expr::Arr( [Expr::ConstantValue( format!( "{foreign_cols}" ) )].to_vec() )
+//                                 }
+//                             ].to_vec()
+//                         }
+//                     });
 
-                    // println!( "{:?}", e );
-                },
-                _ => {}
-            }
-        }
+//                     // println!( "{:?}", e );
+//                 },
+//                 _ => {}
+//             }
+//         }
         
-        for column in columns {
+//         for column in columns {
 
-            let mut attr: Vec<FieldAttrType> = vec![];
+//             let mut attr: Vec<FieldAttrType> = vec![];
     
-            let field_attr = SchemaTypes::match_col_opts( column.clone() );
+//             let field_attr = SchemaTypes::match_col_opts( column.clone() );
     
-            match field_attr {
-                Some( a ) => attr.push( a ),
-                _ => {}
-            }
+//             match field_attr {
+//                 Some( a ) => attr.push( a ),
+//                 _ => {}
+//             }
 
-            // match relation {
-            //     Some( r ) => attr.push( r ),
-            //     _ => {}
-            // }
+//             // match relation {
+//             //     Some( r ) => attr.push( r ),
+//             //     _ => {}
+//             // }
     
-            let e = FieldType { 
-                name: column.name.value.to_string(),
-                field: SchemaTypes::parse_to_base_type( &column ),
-                attributes: attr
-            };
+//             let e = FieldType { 
+//                 name: column.name.value.to_string(),
+//                 field: SchemaTypes::parse_to_base_type( &column ),
+//                 attributes: attr
+//             };
             
-            // println!( "{:?}", e );
-        }
-    }
-}
+//             // println!( "{:?}", e );
+//         }
+//     }
+// }
 
-pub fn parse_sql_file() -> std::io::Result<()> {
+// pub fn parse_sql_file() -> std::io::Result<()> {
     
-    let dialect = GenericDialect {};
+//     let dialect = GenericDialect {};
 
-    let mut file = File::open("sql_db.sql")?;
-    let mut contents = String::new();    
-    file.read_to_string(&mut contents)?;
+//     let mut file = File::open("sql_db.sql")?;
+//     let mut contents = String::new();    
+//     file.read_to_string(&mut contents)?;
 
-    let ast = Parser::parse_sql(&dialect, &contents).unwrap();
+//     let ast = Parser::parse_sql(&dialect, &contents).unwrap();
 
-    for table in ast {
-        // let Statement::CreateTable { ref columns, ref constraints, .. } = table else { todo!() };
-        // ParseTable::parse_model_name( columns.to_vec() );
-        ParseTable::parse_model_constraints( table );
-        // println!( "{:?}\n", constraints );
-    }
+//     for table in ast {
+//         // let Statement::CreateTable { ref columns, ref constraints, .. } = table else { todo!() };
+//         // ParseTable::parse_model_name( columns.to_vec() );
+//         ParseTable::parse_model_constraints( table );
+//         // println!( "{:?}\n", constraints );
+//     }
 
-    Ok( () )
-}
+//     Ok( () )
+// }
