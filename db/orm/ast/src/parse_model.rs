@@ -32,7 +32,7 @@ pub mod parse {
     impl fmt::Display for ParseModelSchema<'_> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match self {
-                ParseModelSchema::Name( val ) => write!( f, "create table if not exists {val}" ),
+                ParseModelSchema::Name( val ) => write!( f, "create table if not exists public.{val}" ),
                 ParseModelSchema::Fields( val ) => {
                     
                     let mut e: Vec<String> = vec![];

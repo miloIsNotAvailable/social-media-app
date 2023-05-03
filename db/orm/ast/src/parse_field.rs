@@ -15,7 +15,12 @@ pub mod parse {
             let mut parsed: Vec<String> = vec![];
 
             for field in &self.field {
-                parsed.push( format!( "{field}" ) );
+                // check for leftover empty strings
+                let formatted = format!( "{field}" );
+                if formatted.is_empty() == false {
+                    // format... format? and add tabs
+                    parsed.push( format!( "\t{formatted}" ) );
+                }
             }
             write!(f, "{}", parsed.join( ",\n" ) )
         }
@@ -30,7 +35,7 @@ pub mod parse {
             match curr.as_rule() {
                 Rule::field_declaration => {
                     field.push(
-                        parse_field_type( curr.into_inner() )
+                        parse_field_type( curr.clone().into_inner(), curr.clone() )
                     );
                 },
                 _ => {}

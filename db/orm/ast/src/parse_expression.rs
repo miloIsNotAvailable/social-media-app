@@ -27,7 +27,7 @@ pub mod parse {
                     match val.as_str() {
                         "autoincrement" => write!( f, "serial" ),
                         "uuid" => write!( f, "uuid_generate_v4()" ),
-                        "now" => write!( f, "CURRENT_TIMESTAMP" ),
+                        "now" => write!( f, "now()" ),
                         _ => todo!()
                     }
                 },

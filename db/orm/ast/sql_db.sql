@@ -1,17 +1,16 @@
-create table if not exists User(
-id text primary key,
-createdAt timestamp with time zone default CURRENT_TIMESTAMP,
-email text unique,
-name text,
-
+create table if not exists public.User(
+	id integer not null primary key,
+	createdAt timestamp with time zone not null default now(),
+	email text not null unique,
+	name text null
 );
 
-create table if not exists Post(
-id text primary key,
-createdAt timestamp with time zone default CURRENT_TIMESTAMP,
-updatedAt timestamp with time zone CURRENT_TIMESTAMP,
-published bool default false,
-title text,
-constraint foreign key(authorId) references User(id) on update cascade on delete restrict,
-authorId text
+create table if not exists public.Post(
+	id integer not null primary key,
+	createdAt timestamp with time zone not null default now(),
+	updatedAt timestamp with time zone not null default now(),
+	published bool not null default false,
+	title text not null,
+	constraint User_fkey foreign key(authorId) references public.User(id) on update cascade on delete restrict,
+	authorId integer null
 );
