@@ -1,35 +1,70 @@
 pub mod parse {
 
     use crate::schema::{ Pairs, Rule, Pair };
-    use crate::base_type::{ parse_base_type, BaseType };
+    use crate::base_type::{ parse_base_type, BaseType, BaseTypes, Optional, List, Types };
     use crate::expression::{ parse_arg_list, Arguments, Argument };
     use std::fmt;
 
     #[derive(Debug)]
-    pub struct FieldType {
-        pub name: String,
-        pub field: BaseType,
-        pub attributes: Vec<FieldAttrType>
+    pub enum FieldCompile<'a> {
+        DISPLAY_FIELD( &'a String, &'a Vec<AttrType<'a>>, &'a BaseTypes )
     }
-    
-    impl fmt::Display for FieldType {
+
+    impl fmt::Display for FieldCompile<'_> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Self::DISPLAY_FIELD( name, attrs, base ) => {
+
+                    if attrs.is_empty(){
+
+                        return match ( &name, &base.sql_type ) {
+                            ( name, Types::TABLE( val ) ) => write!( f, "{}", format!( "" ) ),
+                            ( name, base ) => write!( f, "{} {}", format!( "{name}" ), format!( "{base}" ) ),        
+                        }
+                    }
+                    
+                    let [ ref attributes, .. ] = attrs[..] else { todo!() };
+
+                    match ( &name, &attributes.path, &base.sql_type ) {
+                        // if varchar remove TEXT type
+                        ( 
+                            name, 
+                            Attr::VAR_CHAR( val ), 
+                            base 
+                        ) => write!( f, "{} {}", name, format!( "{attributes}" ) ),
+                        // if table constraint leave only the constraint
+                        // that'll remove the Table[] type from schema
+                        // since it has not attributes
+                        ( name, attr, Types::TABLE( val ) ) => write!( f, "{}", format!( "{attr}" ) ),
+                        ( name, attr, base ) => write!( f, "{} {} {}", name, format!( "{base}" ), format!( "{attr}" ) ),
+                    }
+                }
+            }
+        }
+    }
+
+    #[derive(Debug)]
+    pub struct FieldType<'a> {
+        pub name: String,
+        pub field: BaseTypes,
+        pub attributes: Vec<AttrType<'a>>
+    }
+
+    impl fmt::Display for FieldType<'_> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             
             let mut opt: String = "".to_string();
             let mut formatted_attrs: Vec<String> = vec![];
 
-            for attr in &self.attributes {
-                formatted_attrs.push( format!("{attr}") );
-            }
+            let display = FieldCompile::DISPLAY_FIELD( &self.name, &self.attributes, &self.field );
+            formatted_attrs.push( format!( "{display}" ) );
 
             let base_type_formatted = format!( "{}", self.field);
 
             if base_type_formatted.is_empty() { return write!( f, "" ) };
 
-            write!(f, "{} {} {}{}", 
-                self.name, 
-                base_type_formatted, 
-                opt,
+            write!(f, "{}", 
+                // display
                 formatted_attrs.join( " " ), 
             )
         }
@@ -59,7 +94,7 @@ pub mod parse {
     #[derive(Debug)]
     pub struct AttrType<'a> {
         path: Attr<'a>,
-        arguments_list: &'a Arguments
+        arguments_list: Arguments
     }
 
     impl<'a> Attr<'a> {
@@ -161,7 +196,9 @@ pub mod parse {
         }
     }
 
-    pub fn parse_field_attribute( mut pairs: &Pairs<'_, Rule>, base_type: &Option<String> ) -> FieldAttrType {
+    pub fn parse_field_attribute<'a>( 
+        mut pairs: &Pairs<'a, Rule>, 
+        base_type: &Option<String> ) -> AttrType<'a> {
 
         let mut path: Option<String> = None;
 
@@ -180,31 +217,31 @@ pub mod parse {
             }
         }
 
-        let e = AttrType {
-            path: Attr::<'_>::parse_to_enum( 
+        AttrType {
+            path: Attr::<'a>::parse_to_enum( 
                 path.unwrap(), 
                 pairs.clone(),
                 &arguments_list,
                 base_type
             ),
-            arguments_list: &arguments_list
-        };
+            arguments_list
+        }
         
-        println!( "{:?}", format!( "{}", e ) );
+        // println!( "{:?}", format!( "{}", e ) );
 
         // FieldAttrType { path: path.uwnrap(), arguments_list }
-        FieldAttrType { path: "".to_string(), arguments_list }
+        // FieldAttrType { path: "".to_string(), arguments_list }
     }
 
-    pub fn parse_field_type( pairs: Pairs<'_, Rule> ) -> FieldType {
+    pub fn parse_field_type<'a>( pairs: Pairs<'a, Rule> ) -> FieldType<'a> {
     
         let mut name: Option<String> = None;
         let mut base_type_name: Option<String> = None;
-        let mut attributes: Vec<FieldAttrType> = Vec::new();
-        let mut field: BaseType = BaseType {
-            base_type: None,
-            optional_type: None,
-            list_type: None        
+        let mut attributes: Vec<AttrType<'a>> = Vec::new();
+        let mut field: BaseTypes = BaseTypes {
+            sql_type: Types::TEXT,
+            is_optional: Optional::NOT_NULL,
+            is_list: List::SINGLE        
         };
             
         for curr in pairs {
@@ -214,7 +251,7 @@ pub mod parse {
                     // println!( "{:?}", curr.into_inner().next().unwrap() );
                     let e = &parse_base_type( curr.into_inner().next().unwrap() );
                     field = e.clone();
-                    base_type_name = e.clone().base_type;
+                    base_type_name = Some(format!( "{}", e.clone().sql_type ));
                 },
                 Rule::field_attribute => {
                     

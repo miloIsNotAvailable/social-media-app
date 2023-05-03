@@ -11,9 +11,9 @@ pub mod parse {
     }
     
     #[derive(Debug)]
-    pub struct Model {
-        pub name: ParseModelSchema,
-        pub fields: ParseModelSchema
+    pub struct Model<'a> {
+        pub name: ParseModelSchema<'a>,
+        pub fields: ParseModelSchema<'a>
     }
     
     #[derive(Debug)]
@@ -24,22 +24,22 @@ pub mod parse {
     }
     
     #[derive(Debug)]
-    pub enum ParseModelSchema {
+    pub enum ParseModelSchema<'a> {
         Name( String ),
-        Fields( Vec<Field> )
+        Fields( Vec<Field<'a>> )
     }
 
-    impl fmt::Display for ParseModelSchema {
+    impl fmt::Display for ParseModelSchema<'_> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match self {
-                ParseModelSchema::Name( val ) => fmt::Display::fmt( val, f ),
+                ParseModelSchema::Name( val ) => write!( f, "create table if not exists {val}" ),
                 ParseModelSchema::Fields( val ) => {
                     
                     let mut e: Vec<String> = vec![];
 
                     for v in val {
 
-                        e.push( format!("{v:?}") )
+                        e.push( format!("{v}") )
                     }
 
                     write!( f, "{}", e.join( ",\n" ) )
@@ -49,7 +49,7 @@ pub mod parse {
         }
     }
 
-    impl ParseModelSchema {
+    impl ParseModelSchema<'_> {
         pub fn name( &self ) -> String {
             match self {
                 ParseModelSchema::Name( val ) => val.to_string(),
@@ -58,7 +58,7 @@ pub mod parse {
         }
     }
 
-    pub fn parse_model( pairs: Pairs<'_, Rule> ) -> Model {
+    pub fn parse_model<'a>( pairs: Pairs<'a, Rule> ) -> Model {
     
         let mut name: Option<String> = None;
         let mut fields: Vec<Field> = vec![];
@@ -78,7 +78,7 @@ pub mod parse {
             }
         }
 
-        println!( "{}", ParseModelSchema::Name( name.clone().unwrap() ).name() );
+        // println!( "{}", ParseModelSchema::Name( name.clone().unwrap() ).name() );
 
         Model {
             name: ParseModelSchema::Name( name.unwrap() ),

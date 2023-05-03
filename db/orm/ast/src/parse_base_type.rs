@@ -26,12 +26,11 @@ pub mod parse {
         INT,
         TEXT,
         DATE_TIME,
+        BOOL,
         // Table type 
         // if its an array it implies it being 
         // useless to me in actual sql schema  
-        // so if its an array it'll get converted to string
-        // an/or removed alltogether
-        TABLE( List )
+        TABLE( String )
     }
 
     impl Types {
@@ -40,7 +39,8 @@ pub mod parse {
                 "Int" => Types::INT,
                 "String" => Types::TEXT,
                 "DateTime" => Types::DATE_TIME,
-                _ => Types::TEXT
+                "Boolean" => Types::BOOL,
+                val => Types::TABLE( val.to_string() )
             }
         }
     }
@@ -53,7 +53,7 @@ pub mod parse {
 
     #[derive(Debug,Clone)]
     pub enum List {
-        LIST,
+        ARRAY,
         SINGLE
     }
 
@@ -61,7 +61,7 @@ pub mod parse {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             
             match self {
-                Self::LIST => write!( f, "[]" ),
+                Self::ARRAY => write!( f, "[]" ),
                 Self::SINGLE => write!( f, "" ),
                 _ => write!( f, "" ),
             }
@@ -81,9 +81,35 @@ pub mod parse {
     
     #[derive(Debug,Clone)]
     pub struct BaseTypes {
-        sql_type: Types,
-        is_optional: Optional,
-        is_list: List
+        pub sql_type: Types,
+        pub is_optional: Optional,
+        pub is_list: List
+    }
+
+
+    impl fmt::Display for Types {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            
+            match self {
+                Self::TEXT => write!( f, "text" ),
+                Self::INT => write!( f, "text" ),
+                Self::DATE_TIME => write!( f, "timestamp with time zone" ),
+                Self::BOOL => write!( f, "bool" ),
+                Self::TABLE( val ) => write!( f, "{val}" ),
+                _ => write!( f, "" )
+            }
+        }
+    }
+    
+    impl fmt::Display for BaseTypes {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            
+            write!( f, "{}{} {}",
+                format!( "{}", self.sql_type ),
+                format!( "{}", self.is_list ),
+                format!( "{}", self.is_optional )
+            )
+        }
     }
 
     fn match_type( type__: String ) -> Option<String> {
@@ -122,29 +148,29 @@ pub mod parse {
         }
     }    
 
-    pub fn parse_base_type( pairs: Pair<'_, Rule> ) -> BaseType {
+    pub fn parse_base_type( pairs: Pair<'_, Rule> ) -> BaseTypes {
     
-        let mut field: BaseType = BaseType {
-            base_type: None,
-            optional_type: None,
-            list_type: None
+        let mut field: BaseTypes = BaseTypes {
+            sql_type: Types::TEXT,
+            is_optional: Optional::NOT_NULL,
+            is_list: List::SINGLE
         };
     
         match pairs.as_rule() {
             // get base type
             Rule::base_type => {
-                field.base_type = Some(pairs.as_str().to_string());
+                field.sql_type = Types::parse_to_enum(pairs.as_str().to_string());
                 // println!( "{}", pairs.as_str() );
             },
             // get optional type recursively
             Rule::optional_type => {
-                field.optional_type = Some( true );
-                field.base_type = parse_base_type( pairs.into_inner().next().unwrap() ).base_type;
+                field.is_optional = Optional::NULL;
+                field.sql_type = parse_base_type( pairs.into_inner().next().unwrap() ).sql_type;
             },
             // get list type recursively
             Rule::list_type => {
-                field.list_type = Some( true );
-                field.base_type = parse_base_type( pairs.into_inner().next().unwrap() ).base_type;
+                field.is_list = List::ARRAY;
+                field.sql_type = parse_base_type( pairs.into_inner().next().unwrap() ).sql_type;
             },
             _ => {}
         }

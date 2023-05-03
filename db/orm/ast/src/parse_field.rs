@@ -5,11 +5,11 @@ pub mod parse {
     use std::fmt;
 
     #[derive(Debug)]
-    pub struct Field {
-        pub field: Vec<FieldType>
+    pub struct Field<'a> {
+        pub field: Vec<FieldType<'a>>
     }
     
-    impl fmt::Display for Field {
+    impl fmt::Display for Field<'_> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             
             let mut parsed: Vec<String> = vec![];

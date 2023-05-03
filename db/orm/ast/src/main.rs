@@ -21,6 +21,9 @@ use crate::parse_field::parse as field;
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
 
+use std::fs::File;
+use std::io::prelude::*;
+
 use std::fmt;
 
 pub mod schema {
@@ -59,12 +62,19 @@ model Post {
     authorId  Int?
 }";
 
-fn main() {
+fn main() -> std::io::Result<()> {
 
-    let pairs = IdentParser::parse(Rule::schema, TABLES).unwrap_or_else(|e| panic!("{}", e));
+    let mut file = File::open("schema.prisma")?;
+    let mut contents = String::new();    
+    file.read_to_string(&mut contents)?;
+
+    let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
 
     // create_sql_migration::parse_sql_file();
     // create_sql_migration::generate_sql_file();
+
+    let mut schema_parsed: Vec<String> = vec![];
+    let mut file = File::create( "sql_db.sql" )?;
 
     for inner in pairs {
 
@@ -73,19 +83,14 @@ fn main() {
                 Rule::model_declaration => {
                     let e = parse_model( pair.into_inner() );
                     
-                    match e.fields {
-                        ParseModelSchema::Fields( val ) => {
-                            for v in val {
-                                // let z = a.field;
-                                let d = format!( "{v:?}" );
-                                println!( "vreve {:?}", d );
-                            }
-                        },
-                        _ => {}
-                    }
+                    let d = format!( "{}(\n{}\n);", e.name, e.fields );
+                    schema_parsed.push( d );
                 },
                 _ => {}
             }
         }
     }
+
+    file.write_all( schema_parsed.join( "\n\n" ).as_str().as_bytes() )?;
+    Ok(())
 }

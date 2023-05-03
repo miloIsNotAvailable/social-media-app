@@ -16,7 +16,7 @@ pub async fn main() -> std::io::Result<()> {
     let schema = QuerySqlSchema::get_sql_schema().await;
 
     let mut schema_parsed: Vec<String> = vec![];
-    let mut file = File::create( "sql_db.sql" )?;
+    let mut file = File::create( "sql_db_migration.sql" )?;
 
     for table in schema {
         let schema_table = Schema::columns_parsed( table );
