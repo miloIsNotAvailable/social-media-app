@@ -1,6 +1,5 @@
 pub mod FormatSql {
-    // TODO: create a bunch of general functions 
-    // for formatting sqlparser::ast structs
+
     pub struct CreateTable {}
     impl CreateTable {
         pub fn get_name( table: sqlparser::ast::Statement ) -> Option<String> {
@@ -14,11 +13,18 @@ pub mod FormatSql {
                 _ => None 
             }
         }
-        pub fn get_tables( table: sqlparser::ast::Statement ) -> Option<Vec<sqlparser::ast::ColumnDef>> {
+
+        // monads
+        pub fn get_columns( table: &sqlparser::ast::Statement ) -> Option<(
+            &sqlparser::ast::Statement, 
+            Vec<sqlparser::ast::ColumnDef>
+        )> {
             match table {
                 sqlparser::ast::Statement::CreateTable { columns, .. } => {
                     
-                    Some( columns )
+                    Some( 
+                        ( &table, columns.clone() ) 
+                    )
                 },
                 _ => None 
             }

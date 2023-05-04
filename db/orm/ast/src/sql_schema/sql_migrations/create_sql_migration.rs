@@ -8,6 +8,7 @@ use crate::parse_expression::parse::{ Expr, Argument, Arguments };
 use crate::sql_schema::sql_migrations::parse_schema_types::SchemaTypes;
 use crate::sql_schema::sql_migrations::format_sql::FormatSql;
 use crate::sql_schema::sql_migrations::compare::compare_tables;
+use crate::sql_schema::sql_migrations::compare_column_types::column_types;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -37,6 +38,20 @@ pub enum Changes {
     // whole table, altered column 
     DropColumn( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
     AddColumn( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
+    AlterColumnType( 
+        sqlparser::ast::Statement, 
+        sqlparser::ast::ColumnDef, 
+        // schema data type
+        sqlparser::ast::DataType, 
+        // sql data type in case you have to
+        // use USING [column]::[sql-type] to alter type
+        sqlparser::ast::DataType 
+    ),
+    AlterColumnOption( 
+        sqlparser::ast::Statement, 
+        sqlparser::ast::ColumnDef, 
+        column_types::SetOption 
+    ),
     AddConstraint( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
     DropConstraint( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
     DropTable( sqlparser::ast::Statement ),

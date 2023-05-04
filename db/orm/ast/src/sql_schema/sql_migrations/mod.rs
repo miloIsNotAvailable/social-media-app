@@ -2,6 +2,8 @@ pub mod create_sql_migration;
 pub mod parse_schema_types;
 pub mod format_sql;
 pub mod compare;
+pub mod compare_column_changes;
+pub mod compare_column_types;
 
 #[path = "../../parse_model.rs"]
 pub mod parse_model;
