@@ -6,18 +6,71 @@ use crate::parse_field_type::parse::{ FieldType, FieldAttrType };
 use crate::parse_base_type::parse::{ BaseType };
 use crate::parse_expression::parse::{ Expr, Argument, Arguments };
 use crate::sql_schema::sql_migrations::parse_schema_types::SchemaTypes;
+use crate::sql_schema::sql_migrations::format_sql::FormatSql;
+use crate::sql_schema::sql_migrations::compare::compare_tables;
 
 use std::fs::File;
 use std::io::prelude::*;
 use sqlparser::dialect::GenericDialect;
 use sqlparser::parser::Parser;
 use sqlparser::tokenizer::Tokenizer;
-use sqlparser::ast::{ Ident, ObjectName, Statement, ColumnDef, DataType };
 use std::fmt;
 
 pub fn generate_sql_file() {
     parse_schema::main();
     println!( "SQL migration file generated" );
+}
+
+fn load_file() -> std::io::Result<String>{ 
+    let mut file = File::open("sql_db.sql")?;
+    let mut contents = String::new();
+   
+    file.read_to_string(&mut contents);   
+
+    Ok( contents )
+}
+
+#[derive(Debug)]
+pub enum Changes {
+    CreateTable( sqlparser::ast::Statement ),
+    RenameTable( sqlparser::ast::Statement ),
+    // whole table, altered column 
+    DropColumn( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
+    AddColumn( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
+    AddConstraint( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
+    DropConstraint( sqlparser::ast::Statement, sqlparser::ast::ColumnDef ),
+    DropTable( sqlparser::ast::Statement ),
+}
+
+pub fn compare_files( to_compare: String ) {
+    
+    let dialect = GenericDialect {};  
+
+    let file = load_file();
+    let mut compare = compare_tables::Compare { registered_changes: vec![] };
+
+    match file {
+        Ok( file_ ) => {
+
+            let ast_file = Parser::parse_sql(&dialect, &file_).unwrap();
+            let ast_compare = Parser::parse_sql(&dialect, &to_compare).unwrap();
+
+            // println!( "{:?} {:?}", schema_tables, sql_tables );
+
+            compare.compare_tables( &ast_file, &ast_compare );
+
+            // for ast in ast_compare {
+            //     let name = FormatSql::CreateTable::get_name( ast );
+            //     println!( "{:?}", name );
+            // }
+
+            // println!( "{:?}", ast_file );
+            // println!( "{:?}", ast_compare );
+        },
+        Err( err ) => {
+            println!( "error" );
+        }
+    }
 }
 
 // #[derive(Debug)]

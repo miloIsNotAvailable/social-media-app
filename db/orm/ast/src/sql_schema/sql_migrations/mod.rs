@@ -1,5 +1,7 @@
 pub mod create_sql_migration;
 pub mod parse_schema_types;
+pub mod format_sql;
+pub mod compare;
 
 #[path = "../../parse_model.rs"]
 pub mod parse_model;

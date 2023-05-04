@@ -74,7 +74,8 @@ fn main() -> std::io::Result<()> {
     // create_sql_migration::generate_sql_file();
 
     let mut schema_parsed: Vec<String> = vec![];
-    let mut file = File::create( "sql_db.sql" )?;
+    // let mut file = File::create( "sql_db.sql" )?;
+    // let mut schema_as_sql: String = "".to_string();
 
     for inner in pairs {
 
@@ -83,14 +84,16 @@ fn main() -> std::io::Result<()> {
                 Rule::model_declaration => {
                     let e = parse_model( pair.into_inner() );
                     
-                    let d = format!( "{}(\n{}\n);", e.name, e.fields );
-                    schema_parsed.push( d );
+                    let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
+                    schema_parsed.push( schema_as_sql );
                 },
                 _ => {}
             }
         }
     }
 
-    file.write_all( schema_parsed.join( "\n\n" ).as_str().as_bytes() )?;
+    create_sql_migration::compare_files( schema_parsed.join( "\n" ) );
+
+    // file.write_all( schema_parsed.join( "\n\n" ).as_str().as_bytes() )?;
     Ok(())
 }
