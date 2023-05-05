@@ -95,7 +95,7 @@ pub mod column_changes {
                 }
             }
 
-            println!( "{:?}", registered_changes );
+
         }   
     }
 }

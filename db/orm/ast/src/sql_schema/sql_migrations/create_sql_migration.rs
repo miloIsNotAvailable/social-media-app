@@ -57,6 +57,77 @@ pub enum Changes {
     DropTable( sqlparser::ast::Statement ),
 }
 
+impl fmt::Display for Changes {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::CreateTable( table ) => write!( 
+                f, "{}", 
+                format!( "{}", table ) 
+            ),
+            Self::DropTable( table ) => {
+                let table_name = FormatSql::CreateTable::get_name( 
+                    table.clone() 
+                ).unwrap();
+
+                write!( f, "drop public.{}", table_name )
+            },
+            Self::DropColumn( table, col ) => {
+                let table_name = FormatSql::CreateTable::get_name( 
+                    table.clone() 
+                ).unwrap();
+
+                write!( 
+                    f, "alter table public.{} drop column {}", 
+                    table_name,
+                    col.name
+                )
+            },
+            Self::AddColumn( table, col ) => {
+                let table_name = FormatSql::CreateTable::get_name( 
+                    table.clone() 
+                ).unwrap();
+
+                write!( 
+                    f, "alter table public.{} add column {}", 
+                    table_name,
+                    format!( "{col}" )
+                )
+            },
+            Self::AlterColumnType( table, col, schema_d_type, sql_d_type ) => {
+                let table_name = FormatSql::CreateTable::get_name( 
+                    table.clone() 
+                ).unwrap();
+
+                write!( 
+                    f, "alter table public.{} alter column {} type {} using {}::{}", 
+                    table_name,
+                    col.name,
+                    format!( "{}", schema_d_type ),
+                    col.name,
+                    format!( "{}", schema_d_type )
+                )
+            },
+            Self::AlterColumnOption( 
+                table, 
+                col, 
+                option 
+            ) => {
+                let table_name = FormatSql::CreateTable::get_name( 
+                    table.clone() 
+                ).unwrap();
+
+                write!( 
+                    f, "alter table public.{} alter column {} {}", 
+                    table_name,
+                    col.name,
+                    format!( "{option}" ),
+                )
+            },
+            _ => write!( f, "hey" )
+        }
+    }
+}
+
 pub fn compare_files( to_compare: String ) {
     
     let dialect = GenericDialect {};  
@@ -73,6 +144,14 @@ pub fn compare_files( to_compare: String ) {
             // println!( "{:?} {:?}", schema_tables, sql_tables );
 
             compare.compare_tables( &ast_file, &ast_compare );
+            
+            let mut joins: Vec<String> = vec![];
+
+            for change in compare.registered_changes {
+                joins.push( format!( "{change}" ) );
+            }
+
+            println!( "{};", joins.join( ";\n" ) );
 
             // for ast in ast_compare {
             //     let name = FormatSql::CreateTable::get_name( ast );

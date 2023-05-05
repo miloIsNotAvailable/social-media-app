@@ -5,17 +5,36 @@ pub mod column_types {
     use crate::sql_schema::sql_migrations::format_sql::FormatSql;
     
     use std::collections::HashMap;
+    use std::fmt;
 
     #[derive(Debug, PartialEq, Eq)]
     pub enum DefaultOption {
-        Value( sqlparser::ast::Value ),
+        Value( sqlparser::ast::Value ), 
         Function( sqlparser::ast::ObjectName )
+    }
+
+    impl fmt::Display for DefaultOption {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Self::Value( value ) => write!( f, "{}", format!( "{}", value ) ),
+                Self::Function( object_name ) => write!( f, "{}", format!( "{}", object_name ) )
+            }
+        }
     }
 
     #[derive(Debug, PartialEq, Eq)]
     pub enum SetOption {
         Null( sqlparser::ast::ColumnOption ),
         Default( DefaultOption ),
+    }
+
+    impl fmt::Display for SetOption {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Self::Null( value ) => write!( f, "set {}", format!( "{}", value ) ),
+                Self::Default( val ) => write!( f, "set {}", format!( "{}", val ) )
+            }
+        }
     }
 
     fn get_column_data_type( col: &sqlparser::ast::ColumnDef ) -> ( 
@@ -96,6 +115,16 @@ pub mod column_types {
                 );
             }
 
+            if schema_default != sql_default {
+                registered_changes.push( 
+                    Changes::AlterColumnOption(
+                        table_schema.clone(),
+                        schema_col.clone(),
+                        schema_default.unwrap(),
+                    )
+                );
+            }
+
             if schema_d_type != sql_d_type {
                 registered_changes.push( 
                     Changes::AlterColumnType(
@@ -106,7 +135,7 @@ pub mod column_types {
                     )
                 );
             }
-            
+
         }   
     }
 }
