@@ -23,7 +23,7 @@ pub fn generate_sql_file() {
 }
 
 fn load_file() -> std::io::Result<String>{ 
-    let mut file = File::open("sql_db.sql")?;
+    let mut file = File::open("sql_db_migration.sql")?;
     let mut contents = String::new();
    
     file.read_to_string(&mut contents);   
@@ -69,7 +69,7 @@ impl fmt::Display for Changes {
                     table.clone() 
                 ).unwrap();
 
-                write!( f, "drop public.{}", table_name )
+                write!( f, "drop table public.{}", table_name )
             },
             Self::DropColumn( table, col ) => {
                 let table_name = FormatSql::CreateTable::get_name( 
@@ -128,7 +128,7 @@ impl fmt::Display for Changes {
     }
 }
 
-pub fn compare_files( to_compare: String ) {
+pub fn compare_files( to_compare: String ) -> Result<String, ()> {
     
     let dialect = GenericDialect {};  
 
@@ -151,18 +151,10 @@ pub fn compare_files( to_compare: String ) {
                 joins.push( format!( "{change}" ) );
             }
 
-            println!( "{};", joins.join( ";\n" ) );
-
-            // for ast in ast_compare {
-            //     let name = FormatSql::CreateTable::get_name( ast );
-            //     println!( "{:?}", name );
-            // }
-
-            // println!( "{:?}", ast_file );
-            // println!( "{:?}", ast_compare );
+            Ok(format!( "{};", joins.join( ";\n" ) ))
         },
         Err( err ) => {
-            println!( "error" );
+            Err(println!( "error" ))
         }
     }
 }

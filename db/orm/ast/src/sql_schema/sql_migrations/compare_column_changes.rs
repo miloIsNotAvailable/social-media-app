@@ -33,11 +33,11 @@ pub mod column_changes {
                 
                 cache_schema.insert(
                     // one way to avoid partial moves
-                    get_column_name( column ),
+                    get_column_name( column ).to_lowercase(),
                     column.clone()
                 );
                 (
-                    get_column_name( column ),
+                    get_column_name( column ).to_lowercase(),
                     column.clone()
                 )
             } ).rev().collect();
@@ -50,11 +50,11 @@ pub mod column_changes {
             .map( |ref column| {
 
                 cache_sql.insert(
-                    get_column_name( column ),
+                    get_column_name( column ).to_lowercase(),
                     column.clone()
                 );
                 (
-                    get_column_name( column ),
+                    get_column_name( column ).to_lowercase(),
                     column.clone()
                 )
             } ).rev().collect();

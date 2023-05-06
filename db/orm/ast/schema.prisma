@@ -1,29 +1,6 @@
 model User {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    email     String   @unique
-    name      Int
-    posts     Post[]
-    a         Another[]
-}
-
-model Post {
-    id           Int      @id @default(autoincrement())
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
-    published    Boolean  @default(false)
-    title        String   
-    author       User?    @relation(fields: [authorId], references: [id])
-    authorId     Int?
-    serialNumber Int?
-}
-
-model Another {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    published Boolean  @default(false)
-    title     String   
-    author    User?    @relation(fields: [authorId], references: [id])
-    authorId  Int?
+    id        String      @id @default(uuid())
+    createdAt DateTime    @default(now())
+    email     String      @unique
+    name      String
 }

@@ -23,7 +23,7 @@ pub struct QuerySqlSchema {
 
 impl QuerySqlSchema {
     pub async fn connect() -> Option<PgConnection> {
-        let mut pool = PgConnection::connect("postgres://postgres:Trzciano31A@db.mqifkoalnglfauiiliet.supabase.co:5432/postgres").await;    
+        let mut pool = PgConnection::connect("postgresql://postgres:Trzciano31A@db.pwfvdtvduwysiswsbyio.supabase.co:5432/postgres").await;    
         pool.ok()
     } 
 

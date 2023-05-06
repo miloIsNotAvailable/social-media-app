@@ -13,4 +13,4 @@ create table if not exists public.Post(
 	title text not null,
 	constraint User_fkey foreign key(authorId) references public.User(id) on update cascade on delete restrict,
 	authorId integer null
-);
+);CREATE TABLE IF NOT EXISTS public.User (id TEXT NOT NULL PRIMARY KEY, createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), email TEXT NOT NULL UNIQUE, name TEXT NULL);

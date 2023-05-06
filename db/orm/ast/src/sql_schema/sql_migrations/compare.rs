@@ -32,11 +32,15 @@ pub mod compare_tables {
             .map( |name| {
     
                 cache_schema.insert(
-                    FormatSql::CreateTable::get_name( name.clone() ),
+                    Some( FormatSql::CreateTable::get_name( name.clone() )
+                    .expect("REASON")
+                    .to_lowercase() ),
                     name.clone()
                 );
                 (
-                    FormatSql::CreateTable::get_name( name.clone() ),
+                    Some( FormatSql::CreateTable::get_name( name.clone() )
+                    .expect("REASON")
+                    .to_lowercase() ),
                     name.clone()
                 )
             }
@@ -50,11 +54,15 @@ pub mod compare_tables {
             .into_iter()
             .map( |name| {
                 cache_sql.insert(
-                    FormatSql::CreateTable::get_name( name.clone() ),
+                    Some( FormatSql::CreateTable::get_name( name.clone() )
+                    .expect("REASON")
+                    .to_lowercase() ),
                     name.clone()
                 );
                 (
-                    FormatSql::CreateTable::get_name( name.clone() ),
+                    Some( FormatSql::CreateTable::get_name( name.clone() )
+                    .expect("REASON")
+                    .to_lowercase() ),
                     name.clone()
                 )
             }

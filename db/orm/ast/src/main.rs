@@ -10,6 +10,7 @@ mod parse_field_type;
 mod parse_base_type;
 mod parse_expression;
 mod sql_schema;
+mod parse_schema;
 // mod sql_schema::parse_sql_schema;
 
 use crate::parse_field_type::parse;
@@ -17,12 +18,14 @@ use crate::sql_schema::sql_migrations::create_sql_migration;
 use crate::parse_model::parse::parse_model;
 use crate::parse_model::parse::ParseModelSchema;
 use crate::parse_field::parse as field;
+use crate::parse_schema as schema_parser;
 
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
 
 use std::fs::File;
 use std::io::prelude::*;
+use std::fs::OpenOptions;
 
 use std::fmt;
 
@@ -92,8 +95,27 @@ fn main() -> std::io::Result<()> {
         }
     }
 
-    create_sql_migration::compare_files( schema_parsed.join( "\n" ) );
+    schema_parser::schema::parse_schema();
 
-    // file.write_all( schema_parsed.join( "\n\n" ).as_str().as_bytes() )?;
+    // let migration = create_sql_migration::compare_files( schema_parsed.join( "\n" ) );
+    // match migration {
+    //     Ok( m ) => {
+    //         let mut sql_db_file = OpenOptions::new()
+    //         .write(true)
+    //         .append(true)
+    //         .open("sql_db_migration_tracker.sql");
+            
+    //         match sql_db_file {
+    //             Ok( mut sql_db_f ) => {
+    //                 writeln!( sql_db_f, "\n{}\n", m );
+    //             },
+    //             Err( err ) => {
+    //                 let mut file = File::create( "sql_db_migration_tracker.sql" )?;
+    //                 file.write_all( m.as_str().as_bytes() )?;
+    //             }
+    //         }
+    //     },
+    //     Err( err ) => println!( "error" ),
+    // }
     Ok(())
 }
