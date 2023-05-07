@@ -27,6 +27,21 @@ pub mod parse_base_type {
                 val => Types::Table( val.to_string() )
             }
         }
+
+        pub fn key_default_type( &self ) -> (String, String) {
+            match self {
+                Self::Int => ("serial".to_string(), "".to_string()),
+                Self::Text => ("uuid".to_string(), "default generate_uuid_v4()".to_string()),
+                _ => (format!( "{self}" ), "".to_string())
+            }
+        }
+
+        pub fn table_type_sql( &self ) -> bool {
+            match self {
+                Self::Table( _ ) => true,
+                _ => false
+            }
+        }
     }
 
     #[derive(Debug, Clone)]

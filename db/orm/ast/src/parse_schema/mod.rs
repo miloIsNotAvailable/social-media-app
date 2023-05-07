@@ -21,7 +21,7 @@ pub mod schema {
     #[grammar = "./ident.pest"]
     pub struct IdentParser;
     
-    pub fn parse_schema() -> std::io::Result<()> {
+    pub fn parse_schema() -> std::io::Result<String> {
         let mut file = File::open("schema.prisma")?;
         let mut contents = String::new();    
         file.read_to_string(&mut contents)?;
@@ -37,16 +37,16 @@ pub mod schema {
                     Rule::model_declaration => {
                         let e = parse_model_schema::parse_model( pair.into_inner() );
                         
-                        println!( "{:?}", e );
-
-                        // let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
-                        // schema_parsed.push( schema_as_sql );
+                        
+                        let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
+                        // println!( "{}", schema_as_sql );
+                        schema_parsed.push( schema_as_sql );
                     },
                     _ => {}
                 }
             }
         }
 
-        Ok( () )
+        Ok( schema_parsed.join( "\n\n" ) )
     }
 }

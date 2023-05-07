@@ -29,7 +29,7 @@ pub mod parse_field_type {
         UpdatedAt,
         Unique,
         VarChar( String ),
-        Relation( Option<String> )
+        Relation
     }
     
     impl Attr {
@@ -43,8 +43,29 @@ pub mod parse_field_type {
                 "updatedAt" => Attr::UpdatedAt,
                 "unique" => Attr::Unique,
                 "db.VarChar" => Attr::VarChar( format!( "{}", args_list.clone() ) ),
+                "relation" => Attr::Relation,
                 _ => todo!()
             }
+        }
+    }
+
+    impl fmt::Display for Attr {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Self::PrimaryKey => write!( f, "{}", format!( "primary key" ) ),
+                Self::Unique => write!( f, "{}", format!( "unique" ) ),
+                Self::Default( val ) => write!( f, "{}", format!( "default {val}" ) ),
+                Self::UpdatedAt => write!( f, "{}", "default now()" ),
+                _ => todo!()
+            }
+        }
+    }
+
+    impl fmt::Display for AttrType {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            // format only path since arguments list gets compiled 
+            // when converting to enum
+            write!( f, "{}", format!( "{}", self.path ) )
         }
     }
 

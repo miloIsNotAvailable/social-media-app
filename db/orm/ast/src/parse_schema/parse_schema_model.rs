@@ -2,11 +2,13 @@ pub mod parse_model_schema {
 
     use crate::parse_schema::schema::{ Pairs, Rule };
     use crate::parse_schema::parse_schema_fields::parse_fields;
+    use crate::parse_schema::parse_schema_fields::parse_fields::{ Field };
+    use std::fmt;
 
     #[derive(Debug)]
     pub enum ParseModelSchema {
         Name( String ),
-        // Fields( Vec<Field<'a>> )
+        Fields( Vec<Field> )
     }
 
     #[derive(Debug)]
@@ -15,10 +17,37 @@ pub mod parse_model_schema {
         pub fields: ParseModelSchema
     }
 
-    pub fn parse_model( pairs: Pairs<'_, Rule> ) {
+    impl fmt::Display for ParseModelSchema {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                Self::Name( name ) => write!( f, "create table if not exists public.{name}" ),
+                Self::Fields( fields ) => {
+
+                    let mut formatted: Vec<String> = vec![];
+
+                    for field in fields {
+                        for field_ in field.field.iter() {
+                            
+                            let f_ = format!( "{}", field_ );
+                            if( !f_.is_empty() ) {
+                                // println!( "rewtwe {field_}" );
+                                formatted.push( format!( "\t{field_}" ) );
+                            }
+                        }
+
+                        // formatted.push( f_.join( ",\n" ) );
+                    }
+            
+                    write!( f, "{}", formatted.join( ",\n" ) )
+                }
+            }
+        }
+    }
+
+    pub fn parse_model( pairs: Pairs<'_, Rule> ) -> Model {
         
         let mut name: Option<String> = None;
-        // let mut fields: Vec<Field> = vec![];
+        let mut fields: Vec<Field> = vec![];
     
         for curr in pairs {
             match curr.as_rule() {
@@ -29,16 +58,17 @@ pub mod parse_model_schema {
                 Rule::MODEL_KEYWORD => {}, 
                 Rule::model_contents => {
                     // println!( "{:?}", curr.into_inner() );
-                    // fields.push(  );
-                    parse_fields::parse_field( curr.into_inner() );
+                    fields.push(
+                        parse_fields::parse_field( curr.into_inner() )
+                    );
                 }, 
                 _ => {}
             }
         }
 
-        // Model {
-        //     name: ParseModelSchema::Name( name.unwrap() ),
-        //     fields: ParseModelSchema::Fields( fields )
-        // }
+        Model {
+            name: ParseModelSchema::Name( name.unwrap() ),
+            fields: ParseModelSchema::Fields( fields )
+        }
     }
 }

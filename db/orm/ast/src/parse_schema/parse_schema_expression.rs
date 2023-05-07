@@ -24,8 +24,8 @@ pub mod parse_expression {
                 Expr::ConstantValue( val ) => fmt::Display::fmt( val, f ),
                 Expr::Function( val, call ) => {
                     match val.as_str() {
-                        "autoincrement" => write!( f, "serial" ),
-                        "uuid" => write!( f, "uuid_generate_v4()" ),
+                        "autoincrement" => write!( f, "0" ),
+                        "uuid" => write!( f, "generate_uuid_v4()" ),
                         "now" => write!( f, "now()" ),
                         _ => todo!()
                     }

@@ -32,7 +32,7 @@ pub mod column_types {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match self {
                 Self::Null( value ) => write!( f, "set {}", format!( "{}", value ) ),
-                Self::Default( val ) => write!( f, "set {}", format!( "{}", val ) )
+                Self::Default( val ) => write!( f, "set default {}", format!( "{}", val ) )
             }
         }
     }
