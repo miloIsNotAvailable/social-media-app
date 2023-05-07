@@ -95,9 +95,9 @@ fn main() -> std::io::Result<()> {
         }
     }
 
-    // match schema_parser::schema::parse_schema() {
-    //     Ok( schema__ ) => {
-    //         println!( "{}", schema__ );
+    match schema_parser::schema::parse_schema() {
+        Ok( schema__ ) => {
+            println!( "{}", schema__ );
     //         let migration = create_sql_migration::compare_files( schema__ );
     //         match migration {
     //             Ok( m ) => {
@@ -118,9 +118,9 @@ fn main() -> std::io::Result<()> {
     //             },
     //             Err( err ) => println!( "error" ),
     //         }
-    //     },
-    //     Err( _ ) => {}
-    // }
+        },
+        Err( _ ) => {}
+    }
 
     let migration = create_sql_migration::compare_files( schema_parsed.join( "\n\n" ) );
     match migration {

@@ -3,6 +3,8 @@ pub mod parse_model_schema {
     use crate::parse_schema::schema::{ Pairs, Rule };
     use crate::parse_schema::parse_schema_fields::parse_fields;
     use crate::parse_schema::parse_schema_fields::parse_fields::{ Field };
+    use crate::parse_schema::parse_schema_field_type::parse_field_type::{ FieldData };
+    
     use std::fmt;
 
     #[derive(Debug)]
@@ -19,6 +21,7 @@ pub mod parse_model_schema {
 
     impl fmt::Display for ParseModelSchema {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            
             match self {
                 Self::Name( name ) => write!( f, "create table if not exists public.{name}" ),
                 Self::Fields( fields ) => {
@@ -26,16 +29,10 @@ pub mod parse_model_schema {
                     let mut formatted: Vec<String> = vec![];
 
                     for field in fields {
-                        for field_ in field.field.iter() {
-                            
-                            let f_ = format!( "{}", field_ );
-                            if( !f_.is_empty() ) {
-                                // println!( "rewtwe {field_}" );
-                                formatted.push( format!( "\t{field_}" ) );
-                            }
+                        for f in &field.field {
+                            let mut compiled = f.get_rows_compiled();
+                            formatted.append( &mut compiled );
                         }
-
-                        // formatted.push( f_.join( ",\n" ) );
                     }
             
                     write!( f, "{}", formatted.join( ",\n" ) )

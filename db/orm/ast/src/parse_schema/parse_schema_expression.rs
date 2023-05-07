@@ -25,7 +25,7 @@ pub mod parse_expression {
                 Expr::Function( val, call ) => {
                     match val.as_str() {
                         "autoincrement" => write!( f, "0" ),
-                        "uuid" => write!( f, "generate_uuid_v4()" ),
+                        "uuid" => write!( f, "uuid_v4s()" ),
                         "now" => write!( f, "now()" ),
                         _ => todo!()
                     }

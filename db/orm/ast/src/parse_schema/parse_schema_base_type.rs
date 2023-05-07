@@ -31,7 +31,7 @@ pub mod parse_base_type {
         pub fn key_default_type( &self ) -> (String, String) {
             match self {
                 Self::Int => ("serial".to_string(), "".to_string()),
-                Self::Text => ("uuid".to_string(), "default generate_uuid_v4()".to_string()),
+                Self::Text => ("uuid".to_string(), "default uuid_v4s()".to_string()),
                 _ => (format!( "{self}" ), "".to_string())
             }
         }
