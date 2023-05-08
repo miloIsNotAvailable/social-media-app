@@ -21,7 +21,15 @@ pub mod parse_field_type {
     impl FieldData {
         pub fn get_rows_compiled( &self ) -> Vec<String> {
             let mut fields: Vec<String> = vec![];
+            let mut constraints: Vec<String> = vec![];
+            let mut res: Vec<String> = vec![];
             // let mut row_type: Option<RowType> = None;
+
+            if !self.base_type.sql_type.table_type_sql() {
+                fields.push(
+                    format!( "{} {}", self.name, self.base_type )
+                );
+            }
 
             self.attributes
             .iter()
@@ -33,25 +41,41 @@ pub mod parse_field_type {
 
                 match e {
                     RowType::Constraint( v ) => {
-                        fields.push( v );
+                        constraints.push( v );
                     },
                     RowType::Row( v ) => {
                         if !self.base_type.sql_type.table_type_sql() {
                             fields.push(
-                                format!( "{} {} {}", self.name, self.base_type, v )
+                                format!( "{}", v )
                             );
                         }
                     },
                 }
             } );
             
-            if fields.is_empty() && !self.base_type.sql_type.table_type_sql() {
-                fields.push(
-                    format!( "{} {}", self.name, self.base_type )
-                );
+            // if fields.is_empty() && !self.base_type.sql_type.table_type_sql() {
+            //     fields.push(
+            //         format!( "{} {}", self.name, self.base_type )
+            //     );
+            // }
+            let joined_fields: Vec<String> = fields.into_iter()
+            .map( |x| format!( "{x}" ) )
+            .collect();
+
+            let joined_constraints: Vec<String> = constraints.into_iter()
+            .map( |x| format!( "{x}" ) )
+            .collect();
+
+            // println!( "{},\n{}", joined_fields.join( " " ), joined_constraints.join( ",\n" ) );
+            
+            // println!( "fields {:?}", joined_fields.join( " " ) );
+            res.push( joined_fields.join( " " ) );
+            
+            if !joined_constraints.is_empty() {
+                res.push( joined_constraints.join( ",\n" ) );
             }
 
-            return fields.into_iter().map( |x| format!( "\t{x}" ) ).collect()
+            return [res.join( ",\n" )].to_vec()
         }
     }
 
@@ -122,7 +146,7 @@ pub mod parse_field_type {
             // or primary keys with the same name
             const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                                     abcdefghijklmnopqrstuvwxyz\
-                                    0123456789_-";
+                                    0123456789";
             const PASSWORD_LEN: usize = 4;
             let mut rng = rand::thread_rng();
         
@@ -146,13 +170,11 @@ pub mod parse_field_type {
                 // are generated otherwise only constraint 
                 // would be generated
                 Self::Unique => {
-                    RowType::Row( format!( 
-                        ",\n\t{}",
+                    RowType::Constraint( 
                         format!(
                             "constraint {}_{}_as_uniq unique({})", 
                             name.clone(), password, name.clone()
-                        ) 
-                    ) )
+                        ) )
                 },
                 Self::Relation( pk, fk ) => {
                     RowType::Constraint( format!(

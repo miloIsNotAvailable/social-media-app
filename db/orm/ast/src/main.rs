@@ -74,7 +74,7 @@ fn main() -> std::io::Result<()> {
     let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
 
     // create_sql_migration::parse_sql_file();
-    // create_sql_migration::generate_sql_file();
+    create_sql_migration::generate_sql_file();
 
     let mut schema_parsed: Vec<String> = vec![];
     // let mut file = File::create( "sql_db.sql" )?;
@@ -96,52 +96,52 @@ fn main() -> std::io::Result<()> {
     }
 
     match schema_parser::schema::parse_schema() {
-        Ok( schema__ ) => {
+        Ok( (uuids, schema__) ) => {
             println!( "{}", schema__ );
-    //         let migration = create_sql_migration::compare_files( schema__ );
-    //         match migration {
-    //             Ok( m ) => {
-    //                 let mut sql_db_file = OpenOptions::new()
-    //                 .write(true)
-    //                 .append(true)
-    //                 .open("sql_db_migration_tracker.sql");
+            let migration = create_sql_migration::compare_files( schema__ );
+            match migration {
+                Ok( m ) => {
+                    let mut sql_db_file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open("sql_db_migration_tracker.sql");
                     
-    //                 match sql_db_file {
-    //                     Ok( mut sql_db_f ) => {
-    //                         writeln!( sql_db_f, "\n{}\n", m );
-    //                     },
-    //                     Err( err ) => {
-    //                         let mut file = File::create( "sql_db_migration_tracker.sql" )?;
-    //                         file.write_all( m.as_str().as_bytes() )?;
-    //                     }
-    //                 }
-    //             },
-    //             Err( err ) => println!( "error" ),
-    //         }
+                    match sql_db_file {
+                        Ok( mut sql_db_f ) => {
+                            writeln!( sql_db_f, "\n{}\n", m );
+                        },
+                        Err( err ) => {
+                            let mut file = File::create( "sql_db_migration_tracker.sql" )?;
+                            file.write_all( m.as_str().as_bytes() )?;
+                        }
+                    }
+                },
+                Err( err ) => println!( "error" ),
+            }
         },
         Err( _ ) => {}
     }
 
-    let migration = create_sql_migration::compare_files( schema_parsed.join( "\n\n" ) );
-    match migration {
-        Ok( m ) => {
-            let mut sql_db_file = OpenOptions::new()
-            .write(true)
-            .append(true)
-            .open("sql_db_migration_tracker.sql");
+    // let migration = create_sql_migration::compare_files( schema_parsed.join( "\n\n" ) );
+    // match migration {
+    //     Ok( m ) => {
+    //         let mut sql_db_file = OpenOptions::new()
+    //         .write(true)
+    //         .append(true)
+    //         .open("sql_db_migration_tracker.sql");
             
-            match sql_db_file {
-                Ok( mut sql_db_f ) => {
-                    writeln!( sql_db_f, "\n{}\n", m );
-                },
-                Err( err ) => {
-                    let mut file = File::create( "sql_db_migration_tracker.sql" )?;
-                    file.write_all( m.as_str().as_bytes() )?;
-                }
-            }
-        },
-        Err( err ) => println!( "error" ),
-    }
+    //         match sql_db_file {
+    //             Ok( mut sql_db_f ) => {
+    //                 writeln!( sql_db_f, "\n{}\n", m );
+    //             },
+    //             Err( err ) => {
+    //                 let mut file = File::create( "sql_db_migration_tracker.sql" )?;
+    //                 file.write_all( m.as_str().as_bytes() )?;
+    //             }
+    //         }
+    //     },
+    //     Err( err ) => println!( "error" ),
+    // }
 
     Ok(())
 }

@@ -21,7 +21,7 @@ pub mod schema {
     #[grammar = "./ident.pest"]
     pub struct IdentParser;
     
-    pub fn parse_schema() -> std::io::Result<String> {
+    pub fn parse_schema() -> std::io::Result<(String, String)> {
         let mut file = File::open("schema.prisma")?;
         let mut contents = String::new();    
         file.read_to_string(&mut contents)?;
@@ -89,11 +89,11 @@ pub mod schema {
                 '-', encode(h4, 'hex'), '-', encode(h5, 'hex')
             ));
         END;
-        $h1$ LANGUAGE plpgsql;";
+        $h1$ LANGUAGE plpgsql;".to_string();
 
-        Ok( format!( 
-            "{custom_uuid_v4}\n\n{}", 
-            schema_parsed.join( "\n\n" ) 
+        Ok( (
+            custom_uuid_v4, 
+            schema_parsed.join( "\n\n" )
         ) )
     }
 }

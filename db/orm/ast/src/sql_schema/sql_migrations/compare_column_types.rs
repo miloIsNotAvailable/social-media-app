@@ -17,7 +17,7 @@ pub mod column_types {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match self {
                 Self::Value( value ) => write!( f, "{}", format!( "{}", value ) ),
-                Self::Function( object_name ) => write!( f, "{}", format!( "{}", object_name ) )
+                Self::Function( object_name ) => write!( f, "{}()", format!( "{}", object_name ) )
             }
         }
     }
