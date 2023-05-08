@@ -11,6 +11,7 @@ mod parse_base_type;
 mod parse_expression;
 mod sql_schema;
 mod parse_schema;
+mod tests;
 // mod sql_schema::parse_sql_schema;
 
 use crate::parse_field_type::parse;
@@ -19,6 +20,7 @@ use crate::parse_model::parse::parse_model;
 use crate::parse_model::parse::ParseModelSchema;
 use crate::parse_field::parse as field;
 use crate::parse_schema as schema_parser;
+use crate::tests::*;
 
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
@@ -95,7 +97,7 @@ fn main() -> std::io::Result<()> {
         }
     }
 
-    match schema_parser::schema::parse_schema() {
+    match schema_parser::schema::parse_schema( "schema.prisma" ) {
         Ok( (uuids, schema__) ) => {
             println!( "{}", schema__ );
             let migration = create_sql_migration::compare_files( schema__ );

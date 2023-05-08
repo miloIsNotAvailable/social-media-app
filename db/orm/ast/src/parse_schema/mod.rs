@@ -21,8 +21,8 @@ pub mod schema {
     #[grammar = "./ident.pest"]
     pub struct IdentParser;
     
-    pub fn parse_schema() -> std::io::Result<(String, String)> {
-        let mut file = File::open("schema.prisma")?;
+    pub fn parse_schema<'a>( schema_path: &'a str ) -> std::io::Result<(String, String)> {
+        let mut file = File::open( schema_path )?;
         let mut contents = String::new();    
         file.read_to_string(&mut contents)?;
     

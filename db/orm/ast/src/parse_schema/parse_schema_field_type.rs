@@ -19,7 +19,7 @@ pub mod parse_field_type {
     // and defaults etc. get attached to compiled name and base type
     // of the row
     impl FieldData {
-        pub fn get_rows_compiled( &self ) -> Vec<String> {
+        pub fn get_rows_compiled( &self ) -> Option<Vec<String>> {
             let mut fields: Vec<String> = vec![];
             let mut constraints: Vec<String> = vec![];
             let mut res: Vec<String> = vec![];
@@ -53,11 +53,10 @@ pub mod parse_field_type {
                 }
             } );
             
-            // if fields.is_empty() && !self.base_type.sql_type.table_type_sql() {
-            //     fields.push(
-            //         format!( "{} {}", self.name, self.base_type )
-            //     );
-            // }
+            if fields.is_empty() && constraints.is_empty() {
+                return None
+            }
+
             let joined_fields: Vec<String> = fields.into_iter()
             .map( |x| format!( "{x}" ) )
             .collect();
@@ -66,16 +65,17 @@ pub mod parse_field_type {
             .map( |x| format!( "{x}" ) )
             .collect();
 
-            // println!( "{},\n{}", joined_fields.join( " " ), joined_constraints.join( ",\n" ) );
+            // res.push( joined_fields.join( " " ) );
             
-            // println!( "fields {:?}", joined_fields.join( " " ) );
-            res.push( joined_fields.join( " " ) );
-            
+            if !joined_fields.is_empty() {
+                res.push( joined_fields.join( " " ) );
+            }
+
             if !joined_constraints.is_empty() {
                 res.push( joined_constraints.join( ",\n" ) );
             }
 
-            return [res.join( ",\n" )].to_vec()
+            return Some([res.join( ",\n" )].to_vec())
         }
     }
 

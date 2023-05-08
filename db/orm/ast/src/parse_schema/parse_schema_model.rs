@@ -31,7 +31,12 @@ pub mod parse_model_schema {
                     for field in fields {
                         for f in &field.field {
                             let mut compiled = f.get_rows_compiled();
-                            formatted.append( &mut compiled );
+                            
+                            match compiled {
+                                Some( mut c ) => formatted.append( &mut c ),
+                                None => {}
+                            }
+                            
                         }
                     }
             
