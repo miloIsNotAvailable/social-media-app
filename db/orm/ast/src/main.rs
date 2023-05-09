@@ -98,7 +98,7 @@ fn main() -> std::io::Result<()> {
     }
 
     match schema_parser::schema::parse_schema( "schema.prisma" ) {
-        Ok( (uuids, schema__) ) => {
+        Ok( ( uuids, schema__, ts_types ) ) => {
             println!( "{}", schema__ );
             let migration = create_sql_migration::compare_files( schema__ );
             match migration {
@@ -120,30 +120,12 @@ fn main() -> std::io::Result<()> {
                 },
                 Err( err ) => println!( "error" ),
             }
+
+            let mut ts_file = File::create( "types.ts" )?;
+            ts_file.write_all( ts_types.as_str().as_bytes() )?;
         },
         Err( _ ) => {}
     }
-
-    // let migration = create_sql_migration::compare_files( schema_parsed.join( "\n\n" ) );
-    // match migration {
-    //     Ok( m ) => {
-    //         let mut sql_db_file = OpenOptions::new()
-    //         .write(true)
-    //         .append(true)
-    //         .open("sql_db_migration_tracker.sql");
-            
-    //         match sql_db_file {
-    //             Ok( mut sql_db_f ) => {
-    //                 writeln!( sql_db_f, "\n{}\n", m );
-    //             },
-    //             Err( err ) => {
-    //                 let mut file = File::create( "sql_db_migration_tracker.sql" )?;
-    //                 file.write_all( m.as_str().as_bytes() )?;
-    //             }
-    //         }
-    //     },
-    //     Err( err ) => println!( "error" ),
-    // }
-
+    
     Ok(())
 }

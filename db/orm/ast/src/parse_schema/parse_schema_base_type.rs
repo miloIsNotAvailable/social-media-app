@@ -42,6 +42,16 @@ pub mod parse_base_type {
                 _ => false
             }
         }
+
+        pub fn type_to_ts( &self ) -> String {
+            match self {
+                Self::Int => "number".to_string(),
+                Self::Text | Self::DateTime => "string".to_string(),
+                Self::Bool => "boolean".to_string(),
+                Self::Table( val ) => val.to_string(),
+                _ => "".to_string()            
+            }
+        }
     }
 
     #[derive(Debug, Clone)]
@@ -54,6 +64,16 @@ pub mod parse_base_type {
     pub enum List {
         Vector,
         Scalar
+    }
+
+    impl List {
+        pub fn as_ts_type( &self ) -> String {
+            match self {
+                Self::Vector => "[]".to_string(),
+                Self::Scalar => "".to_string(),
+                _ => "".to_string(),
+            }
+        }
     }
 
     impl fmt::Display for List {
@@ -78,6 +98,16 @@ pub mod parse_base_type {
         }
     }
     
+    impl Optional {
+        pub fn as_ts_type( &self ) -> String {
+            match self {
+                Self::Null => "?".to_string(),
+                Self::NotNull => "".to_string(),
+                _ => "".to_string(),
+            }
+        }
+    }
+
     #[derive(Debug, Clone)]
     pub struct BaseTypes {
         pub sql_type: Types,

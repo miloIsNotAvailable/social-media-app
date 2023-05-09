@@ -21,14 +21,22 @@ pub mod schema {
     #[grammar = "./ident.pest"]
     pub struct IdentParser;
     
-    pub fn parse_schema<'a>( schema_path: &'a str ) -> std::io::Result<(String, String)> {
+    pub fn parse_schema<'a>( schema_path: &'a str ) -> std::io::Result<(
+        String, 
+        String,
+        String
+    )> {
+        
         let mut file = File::open( schema_path )?;
         let mut contents = String::new();    
+
         file.read_to_string(&mut contents)?;
     
-        let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
+        let pairs = IdentParser::parse(Rule::schema, &contents)
+        .unwrap_or_else(|e| panic!("{}", e));
     
         let mut schema_parsed: Vec<String> = vec![];
+        let mut types_parsed: Vec<String> = vec![];
     
         for inner in pairs {
     
@@ -37,9 +45,14 @@ pub mod schema {
                     Rule::model_declaration => {
                         let e = parse_model_schema::parse_model( pair.into_inner() );
                         
-                        
+                        types_parsed.push(
+                            format!( "export type {} = {{\n{}\n}}", 
+                                e.name.generate_ts_types(),
+                                e.fields.generate_ts_types()
+                            )
+                        );
+                        // println!( "{}", e.fields.generate_ts_types() );
                         let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
-                        // println!( "{}", schema_as_sql );
                         schema_parsed.push( schema_as_sql );
                     },
                     _ => {}
@@ -93,7 +106,8 @@ pub mod schema {
 
         Ok( (
             custom_uuid_v4, 
-            schema_parsed.join( "\n\n" )
+            schema_parsed.join( "\n\n" ),
+            types_parsed.join( "\n\n" )
         ) )
     }
 }

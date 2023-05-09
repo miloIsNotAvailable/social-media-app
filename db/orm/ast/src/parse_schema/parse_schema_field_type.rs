@@ -77,6 +77,19 @@ pub mod parse_field_type {
 
             return Some([res.join( ",\n" )].to_vec())
         }
+
+        pub fn name_as_ts_type( &self ) -> String {
+            "".to_owned() + &self.name
+        }
+
+        pub fn conv_to_ts( &self ) -> String {
+            format!( "\t{}{}: {}{}",
+                self.name_as_ts_type(),
+                self.base_type.is_optional.as_ts_type(),
+                self.base_type.sql_type.type_to_ts(),
+                self.base_type.is_list.as_ts_type()
+            )
+        }
     }
 
     #[derive(Debug)]
