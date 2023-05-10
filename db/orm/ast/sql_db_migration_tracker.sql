@@ -31,3 +31,11 @@ alter table public.User alter column name set NULL;
 alter table public.Post alter column published type bool using published::bool;
 alter table public.User alter column name set NULL;
 
+
+alter table public.Post alter column published type bool using published::bool;
+alter table public.User alter column name set NULL;
+
+
+alter table public.Post alter column published type bool using published::bool;
+alter table public.User alter column name set NULL;
+

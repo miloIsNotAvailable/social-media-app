@@ -31,4 +31,10 @@ impl QuerySqlSchema {
         let schema = QueryTableData::query_data().await;
         schema
     }
+
+    pub async fn exec( query: String ) {
+        let mut pool = QuerySqlSchema::connect().await;
+
+        sqlx::query( &query ).execute( &mut pool.unwrap() ).await;
+    }
 }

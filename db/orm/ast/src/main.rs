@@ -21,6 +21,7 @@ use crate::parse_model::parse::ParseModelSchema;
 use crate::parse_field::parse as field;
 use crate::parse_schema as schema_parser;
 use crate::tests::*;
+use crate::sql_schema::query_sql_schema::QuerySqlSchema;
 
 use crate::parse_base_type::parse as base_type;
 use crate::parse_expression::parse as expression;
@@ -103,6 +104,9 @@ fn main() -> std::io::Result<()> {
             let migration = create_sql_migration::compare_files( schema__ );
             match migration {
                 Ok( m ) => {
+
+                    QuerySqlSchema::exec( format!( "{} {}", uuids, m ) );
+
                     let mut sql_db_file = OpenOptions::new()
                     .write(true)
                     .append(true)
