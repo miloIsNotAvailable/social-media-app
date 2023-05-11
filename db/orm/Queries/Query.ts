@@ -1,4 +1,6 @@
+import { ExcludeExcept, IncludeExcept } from "../../../interfaces/custom";
 import { Connect } from "./Connect";
+import { Insert } from "./interfaces";
 
 export class Query<T> extends Connect {
     
@@ -11,10 +13,14 @@ export class Query<T> extends Connect {
         this.relations = relations
     }
 
-    insert = ( data: T, include: T ) => {
+    insert: <T, K extends keyof T>( 
+        data_obj: Insert<T, K>
+    ) => any = ( 
+        d
+    ) => {
 
-        let data_keys = Object.keys( data as object );
-        let data_vals = Object.values( data as object );
+        let data_keys = Object.keys( d.data as object );
+        let data_vals = Object.values( d.data as object );
 
         return `insert into ${ this.table } (${ data_keys }) values(${ data_vals })`
     }
