@@ -2,15 +2,13 @@ import { ExcludeExcept, IncludeExcept } from "../../../interfaces/custom";
 import { Connect } from "./Connect";
 import { Insert } from "./interfaces";
 
-export class Query<T> extends Connect {
+export default class Query<T> extends Connect {
     
     table: string
-    relations: string[]
     
-    constructor( table: string, relations: string[] ) {
+    constructor( table: string ) {
         super()
         this.table = table
-        this.relations = relations
     }
 
     insert: <T, K extends keyof T>( 

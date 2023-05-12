@@ -24,6 +24,7 @@ pub mod schema {
     pub fn parse_schema<'a>( schema_path: &'a str ) -> std::io::Result<(
         String, 
         String,
+        String,
         String
     )> {
         
@@ -37,6 +38,7 @@ pub mod schema {
     
         let mut schema_parsed: Vec<String> = vec![];
         let mut types_parsed: Vec<String> = vec![];
+        let mut classes_parsed: Vec<String> = vec![];
     
         for inner in pairs {
     
@@ -49,6 +51,14 @@ pub mod schema {
                             format!( "export type {} = {{\n{}\n}}", 
                                 e.name.generate_ts_types(),
                                 e.fields.generate_ts_types()
+                            )
+                        );
+
+                        classes_parsed.push(
+                            format!( "get {}() {{ return new Query<Types.{}>( '{}' ) }}", 
+                                e.name.generate_ts_class().to_lowercase(),
+                                e.name.generate_ts_class(),
+                                e.name.generate_ts_class()
                             )
                         );
                         // println!( "{}", e.fields.generate_ts_types() );
@@ -107,7 +117,8 @@ pub mod schema {
         Ok( (
             custom_uuid_v4, 
             schema_parsed.join( "\n\n" ),
-            types_parsed.join( "\n\n" )
+            types_parsed.join( "\n\n" ),
+            classes_parsed.join( "\n\n" )
         ) )
     }
 }

@@ -80,6 +80,7 @@ fn main() -> std::io::Result<()> {
     create_sql_migration::generate_sql_file();
 
     let mut schema_parsed: Vec<String> = vec![];
+    let mut get_classes_vec: Vec<String> = vec![];
     // let mut file = File::create( "sql_db.sql" )?;
     // let mut schema_as_sql: String = "".to_string();
 
@@ -99,8 +100,15 @@ fn main() -> std::io::Result<()> {
     }
 
     match schema_parser::schema::parse_schema( "schema.prisma" ) {
-        Ok( ( uuids, schema__, ts_types ) ) => {
+        Ok( ( 
+            uuids, 
+            schema__, 
+            ts_types, 
+            ts_get_classes 
+        ) ) => {
+            
             println!( "{}", schema__ );
+
             let migration = create_sql_migration::compare_files( schema__ );
             match migration {
                 Ok( m ) => {
@@ -125,11 +133,20 @@ fn main() -> std::io::Result<()> {
                 Err( err ) => println!( "error" ),
             }
 
+            get_classes_vec.push( format!( "\t{}", ts_get_classes ) );
+
             let mut ts_file = File::create( "types.ts" )?;
             ts_file.write_all( ts_types.as_str().as_bytes() )?;
         },
         Err( _ ) => {}
     }
     
+    let wrap_classes = format!( "import Query from './Queries/Query'\nimport * as Types from '../orm/ast/types'\n\nexport class Generated {{\n{}\n}}", 
+        get_classes_vec.join( "\n\n" ) 
+    );
+
+    let mut ts_generated_class_file = File::create( "../generated.ts" )?;
+    ts_generated_class_file.write_all( wrap_classes.as_str().as_bytes() )?;
+
     Ok(())
 }

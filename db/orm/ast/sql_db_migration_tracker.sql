@@ -6,36 +6,3 @@ alter table public.User alter column id set default uuid_v4s();
 
 alter table public.Post alter column published type bool using published::bool;
 alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-
-
-alter table public.Post alter column published type bool using published::bool;
-alter table public.User alter column name set NULL;
-

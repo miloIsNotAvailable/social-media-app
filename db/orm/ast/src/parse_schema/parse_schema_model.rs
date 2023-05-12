@@ -26,7 +26,6 @@ pub mod parse_model_schema {
             // let type_name: Option<String> = None;
             let mut type_fields: Vec<String> = vec![];
 
-
             match self {
                 Self::Name( name ) => name.to_string(),
                 Self::Fields( fields_vec ) => {
@@ -42,6 +41,16 @@ pub mod parse_model_schema {
             }
 
             // println!( "type {type_name} {}",  );
+        }
+
+        pub fn generate_ts_class( &self ) -> String {
+
+            let mut type_fields: Vec<String> = vec![];
+
+            match self {
+                Self::Name( name ) => name.to_string(),
+                Self::Fields( fields_vec ) => "".to_string() 
+            }
         }
     }
 
