@@ -128,7 +128,7 @@ impl fmt::Display for Changes {
     }
 }
 
-pub fn compare_files( to_compare: String ) -> Result<String, ()> {
+pub fn compare_files( to_compare: String ) -> Result<Vec<String>, ()> {
     
     let dialect = GenericDialect {};  
 
@@ -151,7 +151,7 @@ pub fn compare_files( to_compare: String ) -> Result<String, ()> {
                 joins.push( format!( "{change}" ) );
             }
 
-            Ok(format!( "{};", joins.join( ";\n" ) ))
+            Ok( joins )
         },
         Err( err ) => {
             Err(println!( "error" ))

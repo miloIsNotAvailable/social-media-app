@@ -9,8 +9,9 @@ import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
 import { gql } from "graphql-request";
-import { useSignInQuery } from "../../../graphql/codegen/gql/gql";
+import { SignInQueryVariables, SignInResolvers, fetcher, useSignInQuery } from "../../../graphql/codegen/gql/gql";
 import { GraphQLClient } from 'graphql-request'
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 
 const SIGNIN_QUERY = gql`query SignIn($email: String, $password: String) {
     signin(email: $email, password: $password) {
@@ -19,7 +20,21 @@ const SIGNIN_QUERY = gql`query SignIn($email: String, $password: String) {
     }
   }`
 
+const client = new GraphQLClient( "/api/graphiql" )
+
 const FillOutForm: FC = () => {
+
+    // const { data } = useQuery( {
+    //     queryKey: ['films'], 
+    //     queryFn: fetcher<SignInResolvers, SignInQueryVariables>( 
+    //         client, 
+    //         SIGNIN_QUERY,
+    //         { email: "hey", password: "ji" } 
+    //     )
+    // } )
+
+    // // const { data } = useSignInQuery( client, { email: "", password: "hey" } )
+    // console.log( data )
 
     return (
         <Form method="post" action="signin" className={ styles.form_wrap }>

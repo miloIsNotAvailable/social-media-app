@@ -175,3 +175,4 @@ export const useSignInQuery = <
       fetcher<SignInQuery, SignInQueryVariables>(client, SignInDocument, variables, headers),
       options
     );
+export { fetcher }

@@ -29,6 +29,7 @@ use crate::parse_expression::parse as expression;
 use std::fs::File;
 use std::io::prelude::*;
 use std::fs::OpenOptions;
+use futures::executor::block_on;
 
 use std::fmt;
 
@@ -74,79 +75,81 @@ fn main() -> std::io::Result<()> {
     let mut contents = String::new();    
     file.read_to_string(&mut contents)?;
 
-    let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
+    // let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
 
     // create_sql_migration::parse_sql_file();
     create_sql_migration::generate_sql_file();
 
-    let mut schema_parsed: Vec<String> = vec![];
-    let mut get_classes_vec: Vec<String> = vec![];
-    // let mut file = File::create( "sql_db.sql" )?;
-    // let mut schema_as_sql: String = "".to_string();
+    // let mut schema_parsed: Vec<String> = vec![];
+    // let mut get_classes_vec: Vec<String> = vec![];
+    // // let mut file = File::create( "sql_db.sql" )?;
+    // // let mut schema_as_sql: String = "".to_string();
 
-    for inner in pairs {
+    // for inner in pairs {
 
-        for pair in inner.into_inner() {
-            match pair.as_rule() {
-                Rule::model_declaration => {
-                    let e = parse_model( pair.into_inner() );
+    //     for pair in inner.into_inner() {
+    //         match pair.as_rule() {
+    //             Rule::model_declaration => {
+    //                 let e = parse_model( pair.into_inner() );
                     
-                    let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
-                    schema_parsed.push( schema_as_sql );
-                },
-                _ => {}
-            }
-        }
-    }
+    //                 let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
+    //                 schema_parsed.push( schema_as_sql );
+    //             },
+    //             _ => {}
+    //         }
+    //     }
+    // }
 
-    match schema_parser::schema::parse_schema( "schema.prisma" ) {
-        Ok( ( 
-            uuids, 
-            schema__, 
-            ts_types, 
-            ts_get_classes 
-        ) ) => {
+    // match schema_parser::schema::parse_schema( "schema.prisma" ) {
+    //     Ok( ( 
+    //         uuids, 
+    //         schema__, 
+    //         ts_types, 
+    //         ts_get_classes 
+    //     ) ) => {
             
-            println!( "{}", schema__ );
+    //         println!( "{}", schema__ );
 
-            let migration = create_sql_migration::compare_files( schema__ );
-            match migration {
-                Ok( m ) => {
+    //         let migration = create_sql_migration::compare_files( schema__ );
+    //         match migration {
+    //             Ok( m ) => {
 
-                    QuerySqlSchema::exec( format!( "{} {}", uuids, m ) );
+    //                 // println!( "{}", m );
+    //                 let execute = QuerySqlSchema::exec( format!( "{} {}", uuids, m ) );
+    //                 block_on( execute );
 
-                    let mut sql_db_file = OpenOptions::new()
-                    .write(true)
-                    .append(true)
-                    .open("sql_db_migration_tracker.sql");
+    //                 let mut sql_db_file = OpenOptions::new()
+    //                 .write(true)
+    //                 .append(true)
+    //                 .open("sql_db_migration_tracker.sql");
                     
-                    match sql_db_file {
-                        Ok( mut sql_db_f ) => {
-                            writeln!( sql_db_f, "\n{}\n", m );
-                        },
-                        Err( err ) => {
-                            let mut file = File::create( "sql_db_migration_tracker.sql" )?;
-                            file.write_all( m.as_str().as_bytes() )?;
-                        }
-                    }
-                },
-                Err( err ) => println!( "error" ),
-            }
+    //                 match sql_db_file {
+    //                     Ok( mut sql_db_f ) => {
+    //                         writeln!( sql_db_f, "\n{}\n", m );
+    //                     },
+    //                     Err( err ) => {
+    //                         let mut file = File::create( "sql_db_migration_tracker.sql" )?;
+    //                         file.write_all( m.as_str().as_bytes() )?;
+    //                     }
+    //                 }
+    //             },
+    //             Err( err ) => println!( "error" ),
+    //         }
 
-            get_classes_vec.push( format!( "\t{}", ts_get_classes ) );
+    //         get_classes_vec.push( format!( "\t{}", ts_get_classes ) );
 
-            let mut ts_file = File::create( "types.ts" )?;
-            ts_file.write_all( ts_types.as_str().as_bytes() )?;
-        },
-        Err( _ ) => {}
-    }
+    //         let mut ts_file = File::create( "types.ts" )?;
+    //         ts_file.write_all( ts_types.as_str().as_bytes() )?;
+    //     },
+    //     Err( _ ) => {}
+    // }
     
-    let wrap_classes = format!( "import Query from './Queries/Query'\nimport * as Types from '../orm/ast/types'\n\nexport class Generated {{\n{}\n}}", 
-        get_classes_vec.join( "\n\n" ) 
-    );
+    // let wrap_classes = format!( "import Query from './Queries/Query'\nimport * as Types from '../orm/ast/types'\n\nexport class Generated {{\n{}\n}}", 
+    //     get_classes_vec.join( "\n\n" ) 
+    // );
 
-    let mut ts_generated_class_file = File::create( "../generated.ts" )?;
-    ts_generated_class_file.write_all( wrap_classes.as_str().as_bytes() )?;
+    // let mut ts_generated_class_file = File::create( "../generated.ts" )?;
+    // ts_generated_class_file.write_all( wrap_classes.as_str().as_bytes() )?;
 
     Ok(())
 }

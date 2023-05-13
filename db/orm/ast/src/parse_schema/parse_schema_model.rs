@@ -11,7 +11,7 @@ pub mod parse_model_schema {
     #[derive(Debug)]
     pub enum ParseModelSchema {
         Name( String ),
-        Fields( Vec<Field> )
+        Fields( Vec<Field>, String )
     }
 
     #[derive(Debug)]
@@ -28,7 +28,7 @@ pub mod parse_model_schema {
 
             match self {
                 Self::Name( name ) => name.to_string(),
-                Self::Fields( fields_vec ) => {
+                Self::Fields( fields_vec, _ ) => {
                     for field in fields_vec {
                         
                         for field_type in &field.field {
@@ -49,7 +49,7 @@ pub mod parse_model_schema {
 
             match self {
                 Self::Name( name ) => name.to_string(),
-                Self::Fields( fields_vec ) => "".to_string() 
+                Self::Fields( fields_vec, _ ) => "".to_string() 
             }
         }
     }
@@ -59,13 +59,13 @@ pub mod parse_model_schema {
             
             match self {
                 Self::Name( name ) => write!( f, "create table if not exists public.{name}" ),
-                Self::Fields( fields ) => {
+                Self::Fields( fields, name ) => {
 
                     let mut formatted: Vec<String> = vec![];
 
                     for field in fields {
                         for f in &field.field {
-                            let mut compiled = f.get_rows_compiled();
+                            let mut compiled = f.get_rows_compiled( &name );
                             
                             match compiled {
                                 Some( mut c ) => formatted.append( &mut c ),
@@ -104,8 +104,8 @@ pub mod parse_model_schema {
         }
 
         Model {
-            name: ParseModelSchema::Name( name.unwrap() ),
-            fields: ParseModelSchema::Fields( fields )
+            name: ParseModelSchema::Name( name.clone().unwrap() ),
+            fields: ParseModelSchema::Fields( fields, name.clone().unwrap() )
         }
     }
 }

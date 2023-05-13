@@ -19,7 +19,7 @@ pub mod parse_field_type {
     // and defaults etc. get attached to compiled name and base type
     // of the row
     impl FieldData {
-        pub fn get_rows_compiled( &self ) -> Option<Vec<String>> {
+        pub fn get_rows_compiled( &self, name: &String ) -> Option<Vec<String>> {
             let mut fields: Vec<String> = vec![];
             let mut constraints: Vec<String> = vec![];
             let mut res: Vec<String> = vec![];
@@ -35,7 +35,8 @@ pub mod parse_field_type {
             .iter()
             .for_each( |x| {
                 let e = x.path.get_row_types( 
-                    &self.name, 
+                    name, 
+                    &self.name,
                     &format!( "{}", self.base_type.sql_type ) 
                 ); 
 
@@ -149,32 +150,15 @@ pub mod parse_field_type {
         pub fn get_row_types( 
             &self, 
             name: &String, 
+            col_name: &String, 
             base_type: &String 
         ) -> RowType {
-            use rand::Rng;
-
-            // get random id for each constraint
-            // in case there's multiple relations 
-            // in one table
-            // or primary keys with the same name
-            const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-                                    abcdefghijklmnopqrstuvwxyz\
-                                    0123456789";
-            const PASSWORD_LEN: usize = 4;
-            let mut rng = rand::thread_rng();
-        
-            let password: String = (0..PASSWORD_LEN)
-                .map(|_| {
-                    let idx = rng.gen_range(0..CHARSET.len());
-                    CHARSET[idx] as char
-                })
-            .collect();
 
             match self {
                 Self::PrimaryKey( val ) => {
                     RowType::Constraint( format!(
                         "constraint {}_{}_as_pkey primary key({})", 
-                        name.clone(), password, name.clone()
+                        name.clone(), col_name, col_name.clone()
                     ) )
                 },
                 // weird workaround 
@@ -186,13 +170,13 @@ pub mod parse_field_type {
                     RowType::Constraint( 
                         format!(
                             "constraint {}_{}_as_uniq unique({})", 
-                            name.clone(), password, name.clone()
+                            name.clone(), col_name, col_name.clone()
                         ) )
                 },
                 Self::Relation( pk, fk ) => {
                     RowType::Constraint( format!(
                         "constraint {}_{}_fkey foreign key({fk}) references public.{}({pk}) on update cascade on delete restrict", 
-                        base_type.clone(), password, base_type.clone()
+                        base_type.clone(), col_name, base_type.clone()
                     ) )
                 }
                 Self::Default( val ) => RowType::Row( format!( "default {val}" ) ),

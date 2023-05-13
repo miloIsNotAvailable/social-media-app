@@ -81,7 +81,7 @@ pub mod schema {
         LANGUAGE 'sql'
         VOLATILE
         SET search_path = 'pg_catalog';
-        
+        -- split
         CREATE OR REPLACE FUNCTION uuid_v4s()
         RETURNS text AS $h1$
         DECLARE h1 bytea;

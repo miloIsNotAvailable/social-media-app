@@ -32,9 +32,35 @@ impl QuerySqlSchema {
         schema
     }
 
-    pub async fn exec( query: String ) {
+    pub async fn exec(  query: Vec<String> ) {
         let mut pool = QuerySqlSchema::connect().await;
+        
+        println!( "running queries" );
 
-        sqlx::query( &query ).execute( &mut pool.unwrap() ).await;
+        match pool {
+            Some( mut db ) => {
+
+                // let e = sqlx::query( 
+                //     &format!( "{uuids}" ) 
+                // );
+
+                for q in query {
+
+                    println!( "{q}" );
+
+                    let e = sqlx::query( 
+                        &format!( "{q}" ) 
+                    )
+                    .execute( &mut db ).await;
+                 
+                    match e {
+                        Ok( succ ) => println!( "success" ),
+                        Err( err ) => println!( "error {:?}", err ),
+                    }
+                }                
+            },
+            None => {  println!( "error" ); }
+        }
+        
     }
 }
