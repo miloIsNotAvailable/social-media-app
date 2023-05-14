@@ -125,7 +125,7 @@ pub mod parse_base_type {
                 },
                 Self::Int => write!( f, "integer" ),
                 Self::DateTime => write!( f, "timestamp with time zone" ),
-                Self::Bool => write!( f, "bool" ),
+                Self::Bool => write!( f, "boolean" ),
                 Self::Table( val ) => write!( f, "{val}" ),
                 _ => write!( f, "" )
             }

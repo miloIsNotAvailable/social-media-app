@@ -12,14 +12,14 @@ export const root: rootType = {
                     data: {
                         id: "hey"
                     },
-                    // include: {
-                    //     posts: [{
-                    //         id: 1       
-                    //     }]
-                    // }
+                    include: {
+                        posts: {
+                           createdAt: "" 
+                        }
+                    }
                 } )
 
-                console.log( data )
+                // console.log( data )
 
                 return "Hey"
             } catch( e ) { 

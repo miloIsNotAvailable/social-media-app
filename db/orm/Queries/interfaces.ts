@@ -1,4 +1,8 @@
-import { ExcludeExcept, ExcludeMatchingProperties, IncludeExcept } from "../../../interfaces/custom"
+import { ArrayElement, ExcludeExcept, ExcludeMatchingProperties, IncludeExcept } from "../../../interfaces/custom"
+
+/**
+ * types for the orm query functions itself
+ */
 
 export type IncludeMatchingProperties<T, V> = Pick<
 T,
@@ -7,11 +11,16 @@ T,
 
 type Primitives = string | number | bigint | boolean | symbol | null | undefined
 
-type IncludeMatchingPropertiesNested<T> = {
-    [ K in keyof T ]: IncludeMatchingProperties<K, Primitives>
-}
-
-export type Insert<T, K extends keyof T> = {
+export type Insert<T> = {
+    // data 
     data: Partial<IncludeMatchingProperties<T, Primitives>>
-    include?: ExcludeMatchingProperties<T, Primitives>
+    // include aka table objects 
+    // make all their properties optional
+    include?: {
+        // type
+        [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
+        // rmeove array type
+        // make object partial
+        Partial<ArrayElement<ExcludeMatchingProperties<T, Primitives>[K]>>
+    }
 }

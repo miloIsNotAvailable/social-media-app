@@ -49,7 +49,27 @@ pub mod parse_model_schema {
 
             match self {
                 Self::Name( name ) => name.to_string(),
-                Self::Fields( fields_vec, _ ) => "".to_string() 
+                Self::Fields( fields_vec, _ ) => {
+                    
+                    let mut table_vec: Vec<String> = vec![];
+                    
+                    for field in fields_vec {
+                        for field_type in &field.field {
+                            
+                            if field_type.base_type.sql_type.table_type_sql() {
+
+                                table_vec.push(
+                                    format!( "{}: '{}'",
+                                        field_type.name,
+                                        field_type.base_type.sql_type,
+                                    )
+                                );
+                            }                            
+                        }
+                    }
+
+                    format!( "{}", table_vec.join( ", " ) )
+                } 
             }
         }
     }

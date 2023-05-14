@@ -43,3 +43,12 @@ export type ExcludeMatchingProperties<T, V> = Pick<
 T,
 { [K in keyof T]-?: T[K] extends V ? never : K }[keyof T]
 >;
+
+/**
+ * @param ArrayType is array type 
+ * @description removes array type from type
+ * @example ```ts
+ * type A = ArrayElement<User[]> // same as User
+ * ```
+ */
+export type ArrayElement<ArrayType extends unknown> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

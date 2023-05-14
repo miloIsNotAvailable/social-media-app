@@ -20,17 +20,23 @@ pub mod parse_field_type {
     // of the row
     impl FieldData {
         pub fn get_rows_compiled( &self, name: &String ) -> Option<Vec<String>> {
+
             let mut fields: Vec<String> = vec![];
             let mut constraints: Vec<String> = vec![];
             let mut res: Vec<String> = vec![];
-            // let mut row_type: Option<RowType> = None;
 
+            // push type if it's not a table type
+            // ie. author User etc.
             if !self.base_type.sql_type.table_type_sql() {
                 fields.push(
                     format!( "{} {}", self.name, self.base_type )
                 );
             }
 
+            // look for attributes such as row 
+            // defaults and constraints,
+            // add defaults to the row and create another row
+            // for constraints
             self.attributes
             .iter()
             .for_each( |x| {
@@ -161,11 +167,6 @@ pub mod parse_field_type {
                         name.clone(), col_name, col_name.clone()
                     ) )
                 },
-                // weird workaround 
-                // but it makes it so 
-                // both row and constraints for unique
-                // are generated otherwise only constraint 
-                // would be generated
                 Self::Unique => {
                     RowType::Constraint( 
                         format!(

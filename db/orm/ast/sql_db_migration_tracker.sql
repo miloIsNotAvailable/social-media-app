@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS public.Post (id INTEGER NOT NULL DEFAULT 0, createdAt
 CREATE TABLE IF NOT EXISTS public.User (id TEXT NOT NULL DEFAULT uuid_v4s(), createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), email TEXT NOT NULL, name TEXT NULL, CONSTRAINT User_id_as_pkey PRIMARY KEY (id), CONSTRAINT User_email_as_uniq UNIQUE (email));
 CREATE TABLE IF NOT EXISTS public.Post (id INTEGER NOT NULL DEFAULT 0, createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), published bool NOT NULL DEFAULT false, title TEXT NOT NULL, authorId TEXT NULL, CONSTRAINT Post_id_as_pkey PRIMARY KEY (id), CONSTRAINT User_author_fkey FOREIGN KEY (authorId) REFERENCES public.User(id) ON DELETE RESTRICT ON UPDATE CASCADE);
 
+
+alter table public.Post alter column published type bool using published::bool;
+
+
+alter table public.Post alter column published type bool using published::bool;
+
+
+;
+

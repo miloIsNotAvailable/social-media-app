@@ -55,10 +55,11 @@ pub mod schema {
                         );
 
                         classes_parsed.push(
-                            format!( "get {}() {{ return new Query<Types.{}>( '{}' ) }}", 
+                            format!( "get {}() {{ return new Query<Types.{}>( '{}', {{ {} }} ) }}", 
                                 e.name.generate_ts_class().to_lowercase(),
                                 e.name.generate_ts_class(),
-                                e.name.generate_ts_class()
+                                e.name.generate_ts_class(),
+                                e.fields.generate_ts_class()
                             )
                         );
                         // println!( "{}", e.fields.generate_ts_types() );
