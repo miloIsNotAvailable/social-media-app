@@ -7,8 +7,11 @@ import glob from 'glob'
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import { app, httpServer } from './server/build'
+import dotenv from 'dotenv' 
 
 async function createServer() {
+
+  dotenv.config()
 
   app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }))
   const publicDirectoryPath = path.join(__dirname, '../public/')

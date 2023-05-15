@@ -19,8 +19,37 @@ export type Insert<T> = {
     include?: {
         // type
         [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
-        // rmeove array type
+        // remove array type
         // make object partial
         Partial<ArrayElement<ExcludeMatchingProperties<T, Primitives>[K]>>
+    }
+}
+
+export type Like<T> = { LIKE: T }
+
+export type Select<T> = {
+    // pick data to select
+    data: {
+        [V in keyof 
+            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
+    }
+    // where statamenet
+    where?: {
+        [V in keyof 
+        Partial<IncludeMatchingProperties<T, Primitives>>]: 
+        Partial<IncludeMatchingProperties<T, Primitives>>[V] 
+        | Like<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
+    }
+    // if include make it an inner join
+    include?: {
+        [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
+        // remove array type
+        // make object partial and a boolean
+        { [
+            V in keyof 
+            Partial<ArrayElement<
+            ExcludeMatchingProperties<T, Primitives>[K]
+            >>
+        ]?: boolean }
     }
 }
