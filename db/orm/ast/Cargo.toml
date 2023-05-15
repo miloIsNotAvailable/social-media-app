@@ -5,8 +5,34 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[workspace]
+resolver = "2"
+
 [dependencies]
+futures = "0.3.28"
+openssl = "0.10.52"
 pest = "2.5.7"
 pest_derive = "2.5.7"
+postgres = "0.19.5"
+postgres-openssl = "0.5.0"
 rule = "0.1.6"
+tokio-postgres = "0.7.8"
+tokio-test = "0.4.2"
 tracing = "0.1.37"
+tokio = { version = "1.27", features = ["io-util", "full"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+sqlx = {version="0.6.3", features=["runtime-tokio-rustls", "postgres", "macros"]}
+sqlparser = "0.33.0"
+rand = "0.8.5"
+
+[dev-dependencies]
+futures-executor = "0.3"
+criterion = "0.4"
+env_logger = "0.10"
+tokio = { version = "1.0", features = [
+    "macros",
+    "net",
+    "rt",
+    "rt-multi-thread",
+    "time",
+] }

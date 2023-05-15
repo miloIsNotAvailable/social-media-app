@@ -1,15 +1,56 @@
+#![allow(non_snake_case)]
+
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use pest::Parser;
-use pest::iterators::Pairs;
+mod parse_model;
+mod parse_field;
+mod parse_field_type;
+mod parse_base_type;
+mod parse_expression;
+mod sql_schema;
+mod parse_schema;
+mod tests;
+// mod sql_schema::parse_sql_schema;
 
-#[derive(Parser)]
-#[grammar = "./ident.pest"]
-struct IdentParser;
+use crate::parse_field_type::parse;
+use crate::sql_schema::sql_migrations::create_sql_migration;
+use crate::parse_model::parse::parse_model;
+use crate::parse_model::parse::ParseModelSchema;
+use crate::parse_field::parse as field;
+use crate::parse_schema as schema_parser;
+use crate::tests::*;
+use crate::sql_schema::query_sql_schema::QuerySqlSchema;
 
-static tables: &str = r"
+use crate::parse_base_type::parse as base_type;
+use crate::parse_expression::parse as expression;
+
+use std::fs::File;
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+use futures::executor::block_on;
+
+use std::fmt;
+
+pub mod schema {
+    
+    pub use pest::Parser;
+    pub use pest::iterators::Pairs;
+    pub use pest::iterators::Pair;
+
+    #[derive(Parser)]
+    #[grammar = "./ident.pest"]
+    pub struct IdentParser;
+}
+
+use crate::schema::{ Parser, Rule, IdentParser };
+
+// #[derive(Parser)]
+// #[grammar = "./ident.pest"]
+// pub struct IdentParser;
+
+static TABLES: &str = r"
 model User {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
@@ -28,157 +69,87 @@ model Post {
     authorId  Int?
 }";
 
-// fn parse_schema() {}
+fn main() -> std::io::Result<()> {
 
-#[derive(Debug, Clone, PartialEq)]
-struct Identifier {
-    pub name: String,
-}
+    let mut file = File::open("schema.prisma")?;
+    let mut contents = String::new();    
+    file.read_to_string(&mut contents)?;
 
-#[derive(Debug)]
-struct Model {
-    pub name: Identifier
-}
+    // let pairs = IdentParser::parse(Rule::schema, &contents).unwrap_or_else(|e| panic!("{}", e));
 
-#[derive(Debug)]
-struct BaseType {
-    pub base_type: Option<String>,
-    pub optional_type: Option<bool>,
-    pub list_type: Option<bool>
-}
+    // create_sql_migration::parse_sql_file();
+    create_sql_migration::generate_sql_file();
 
-use pest::iterators::Pair;
-fn parse_base_type( mut pairs: Pair<'_, Rule> ) -> BaseType {
+    // let mut schema_parsed: Vec<String> = vec![];
+    // let mut get_classes_vec: Vec<String> = vec![];
+    // // let mut file = File::create( "sql_db.sql" )?;
+    // // let mut schema_as_sql: String = "".to_string();
 
-    let mut field: BaseType = BaseType {
-        base_type: None,
-        optional_type: None,
-        list_type: None
-    };
+    // for inner in pairs {
 
-    match pairs.as_rule() {
-        // get base type
-        Rule::base_type => {
-            field.base_type = Some(pairs.as_str().to_string());
-            // println!( "{}", pairs.as_str() );
-        },
-        // get optional type recursively
-        Rule::optional_type => {
-            field.optional_type = Some( true );
-            parse_base_type( pairs.into_inner().next().unwrap() );
-        },
-        // get list type recursively
-        Rule::list_type => {
-            field.list_type = Some( true );
-            parse_base_type( pairs.into_inner().next().unwrap() );
-        },
-        _ => {}
-    }
-    return field
-}
+    //     for pair in inner.into_inner() {
+    //         match pair.as_rule() {
+    //             Rule::model_declaration => {
+    //                 let e = parse_model( pair.into_inner() );
+                    
+    //                 let schema_as_sql = format!( "{}(\n{}\n);", e.name, e.fields );
+    //                 schema_parsed.push( schema_as_sql );
+    //             },
+    //             _ => {}
+    //         }
+    //     }
+    // }
 
-#[derive(Debug)]
-struct FieldType {
-    pub name: Option<String>,
-    pub field: BaseType
-}
+    // match schema_parser::schema::parse_schema( "schema.prisma" ) {
+    //     Ok( ( 
+    //         uuids, 
+    //         schema__, 
+    //         ts_types, 
+    //         ts_get_classes 
+    //     ) ) => {
+            
+    //         println!( "{}", schema__ );
 
-fn parse_field_type( pairs: Pairs<'_, Rule> ) -> FieldType {
+    //         let migration = create_sql_migration::compare_files( schema__ );
+    //         match migration {
+    //             Ok( m ) => {
 
-    let mut name: Option<String> = None;
-    let mut field: BaseType = BaseType {
-        base_type: None,
-        optional_type: None,
-        list_type: None
-    };
+    //                 // println!( "{}", m );
+    //                 let execute = QuerySqlSchema::exec( format!( "{} {}", uuids, m ) );
+    //                 block_on( execute );
 
-    for curr in pairs {
+    //                 let mut sql_db_file = OpenOptions::new()
+    //                 .write(true)
+    //                 .append(true)
+    //                 .open("sql_db_migration_tracker.sql");
+                    
+    //                 match sql_db_file {
+    //                     Ok( mut sql_db_f ) => {
+    //                         writeln!( sql_db_f, "\n{}\n", m );
+    //                     },
+    //                     Err( err ) => {
+    //                         let mut file = File::create( "sql_db_migration_tracker.sql" )?;
+    //                         file.write_all( m.as_str().as_bytes() )?;
+    //                     }
+    //                 }
+    //             },
+    //             Err( err ) => println!( "error" ),
+    //         }
 
-        match curr.as_rule() {
-            Rule::field_type => {
-                // println!( "{:?}", curr.into_inner().next().unwrap() );
-                field = parse_base_type( curr.into_inner().next().unwrap() );
-            },
-            Rule::field_attribute => {
-                
-                // println!(  "{}", curr.into_inner() );
-            },
-            Rule::identifier => {
-                name = Some( curr.as_str().to_string() );
-                // println!( "{:?}", curr.as_str() );
-            },
-            _ => {}
-        }
-    }
-    // println!( "{:?}", field );
-    return FieldType { name, field };
-}
+    //         get_classes_vec.push( format!( "\t{}", ts_get_classes ) );
 
-#[derive(Debug)]
-struct Field {
-    pub field: Vec<FieldType>
-}
+    //         let mut ts_file = File::create( "types.ts" )?;
+    //         ts_file.write_all( ts_types.as_str().as_bytes() )?;
+    //     },
+    //     Err( _ ) => {}
+    // }
+    
+    // let wrap_classes = format!( "import Query from './Queries/Query'\nimport * as Types from '../orm/ast/types'\n\nexport class Generated {{\n{}\n}}", 
+    //     get_classes_vec.join( "\n\n" ) 
+    // );
 
-fn parse_field( mut pairs: Pairs<'_, Rule> ) {
+    // let mut ts_generated_class_file = File::create( "../generated.ts" )?;
+    // ts_generated_class_file.write_all( wrap_classes.as_str().as_bytes() )?;
 
-    let mut field_type = Field {
-        field: Vec::new()
-    };
-
-    for curr in pairs {
-
-        match curr.as_rule() {
-            Rule::field_declaration => {
-                
-                field_type.field.push(parse_field_type( curr.into_inner() ) );
-            },
-            _ => {}
-        }        
-    }
-}
-
-fn parse_model( pairs: Pairs<'_, Rule> ) {
-
-    let mut name: Option<Identifier> = None;
-
-    for curr in pairs {
-        match curr.as_rule() {
-            Rule::identifier => name = Some(  Identifier { 
-                name: curr.as_str().to_string() 
-            } ),
-            // model keyword
-            Rule::MODEL_KEYWORD => {
-                // println!( "{:?}", curr.as_str() );
-            }, 
-            Rule::model_contents => {
-                // println!( "{:?}", curr.into_inner() );
-                parse_field( curr.into_inner() );
-            }, 
-            _ => {}
-        }
-    }
-
-    match name {
-        Some( name ) => {
-            println!( "{:?}", name );
-        },
-        _ => {}
-    }
-}
-
-fn main() {
-
-    let pairs = IdentParser::parse(Rule::schema, tables).unwrap_or_else(|e| panic!("{}", e));
-
-    for inner in pairs {
-
-        for pair in inner.into_inner() {
-            match pair.as_rule() {
-                Rule::model_declaration => {
-                    parse_model( pair.into_inner() );
-                },
-                _ => {}
-            }
-        }
-    }
+    Ok(())
 }

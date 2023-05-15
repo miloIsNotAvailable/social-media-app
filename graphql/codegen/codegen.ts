@@ -10,7 +10,13 @@ const config: CodegenConfig = {
             'typescript', 
             'typescript-resolvers', 
             'typescript-operations', 
-            'typescript-react-query'
+            'typescript-react-query',
+            {
+              'add': {
+                placement: "append",
+                content: "export { fetcher }"
+              }
+            }
         ],
         config: {
             preset: "client",
