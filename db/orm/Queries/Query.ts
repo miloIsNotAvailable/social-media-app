@@ -1,3 +1,4 @@
+import { QueryResult } from "pg";
 import { ExcludeExcept, IncludeExcept } from "../../../interfaces/custom";
 import { Connect } from "./Connect";
 import { Insert, Like, Select } from "./interfaces";
@@ -11,6 +12,24 @@ export default class Query<T> extends Connect {
         super()
         this.table = `public.${table}`
         this.relations = relations
+    }
+
+    private is_test(): boolean {
+        return process.env.JEST_WORKER_ID !== undefined
+    }
+
+    private test_env = ( query: string ) => {
+        return this.is_test() ? 
+        `begin;\n${query};\nrollback;` : 
+        query
+    }
+
+    private test_env_result = ( res: QueryResult<any> | QueryResult<any>[] ) => {
+        
+        if( !this.is_test() ) return (res as QueryResult<any>).rows
+        
+        const [ , query_rows ] = res as QueryResult<any>[];
+        return query_rows.rows
     }
 
     private _insert = ( 
@@ -43,10 +62,12 @@ export default class Query<T> extends Connect {
                 res.push( ...data_keys_include )
             }
     
-            console.log( res.join( ";\n" ) )
-            let rows = await client.query( res.join( ";\n" ) )    
+            let query = this.test_env( res.join( ";\n" ) )
 
-            return rows.rows
+            console.log( query )
+            let rows = await client.query( query )    
+
+            return this.test_env_result( rows )  
 
         } catch( e ) {
             console.log( e )

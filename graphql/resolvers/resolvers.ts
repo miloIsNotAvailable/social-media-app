@@ -22,8 +22,8 @@ export const root: rootType = {
 
                 const data = await orm.user.insert( {
                     data: {
-                        email: "hi",
-                        name: "hey"
+                        email: "heyyyy",
+                        name: "heknn"
                     }
                 } )
 

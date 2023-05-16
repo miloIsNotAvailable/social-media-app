@@ -3,6 +3,7 @@ export default {
     transform: {
       "^.+\\.(ts|js)x?$": "@swc/jest"  
     },
+    setupFiles: ['dotenv/config'],
     testMatch: [
       '<rootDir>/src/tests/__test__/*.test.js',
       '<rootDir>/src/tests/__test__/*.test.tsx',
