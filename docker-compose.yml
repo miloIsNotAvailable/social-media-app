@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  web:
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - "5173:5173"
+    environment:
+      DATABASE_URL: postgresql://postgres:Trzciano31A@db.pwfvdtvduwysiswsbyio.supabase.co:5432/postgres 
+    volumes:
+      - vite:/dapp
+
+volumes:
+  vite:
+    external: true
