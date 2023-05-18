@@ -11,8 +11,8 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:Trzciano31A@db.pwfvdtvduwysiswsbyio.supabase.co:5432/postgres 
     volumes:
+      - /dapp/node_modules
       - vite:/dapp
-
 volumes:
   vite:
     external: true
