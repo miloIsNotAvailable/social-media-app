@@ -1,7 +1,7 @@
 import { QueryResult } from "pg";
 import { ExcludeExcept, IncludeExcept } from "../../../interfaces/custom";
 import { Connect } from "./Connect";
-import { Insert, Like, Select } from "./interfaces";
+import { Delete, Insert, Like, Select, Where } from "./interfaces";
 
 export default class Query<T> extends Connect {
     
@@ -90,7 +90,7 @@ export default class Query<T> extends Connect {
         return `LIKE '${ (like as Like<T>).LIKE }'`
     }
 
-    private _select_where = ( where: Select<T>[ "where" ] ) => {
+    private _select_where = ( where?: Where<T> ) => {
 
         if( !where ) return ""
 
@@ -117,7 +117,7 @@ export default class Query<T> extends Connect {
         const keys = Object.keys( include )
         .map( x => {
             let table = this.relations[ x ]
-            return `inner join ${ table } on ${ this.table }.${ Object.keys( where ).join( "" ) } = public.${ table }.${ Object.keys( (include as any)[ x ] ).join( "" ) }`
+            return `inner join public.${ table } on ${ this.table }.${ Object.keys( where ).join( "" ) } = public.${ table }.${ Object.keys( (include as any)[ x ] ).join( "" ) }`
         } )
 
         return keys.join( "\n" )
@@ -132,7 +132,9 @@ export default class Query<T> extends Connect {
             const where_ = this._select_where( where ) 
             const incl = this._select_include( include, where )
     
-            const query = `select ${ Object.keys( data ).join( ", " ) } from ${ this.table } ${ incl } ${ where_ }`
+            const select_keys = `${Object.keys( data ).map( x => `${ this.table }.${x}` ).join( ", " )}${ include ? `, ${ Object.keys( include ).map( x => `public.${ this.relations[ x ] }.*` ).join( ", " ) }` : "" }`
+
+            const query = `select ${ select_keys } from ${ this.table } ${ incl } ${ where_ }`
             
             console.log( query )
             const rows = await client.query( query )
@@ -141,5 +143,26 @@ export default class Query<T> extends Connect {
         } catch( e ) {
             console.log( e )
         }
+    }
+
+    delete = async( { where, returning }: Delete<T> ) => {
+
+        const client = await this.connect();
+
+        try {
+
+            const where_ = this._select_where( where )
+            const returning_ = !returning ? "" : `returning ${ Object.keys( returning ) }`
+    
+            const query = `delete from ${ this.table } ${ where_ } ${ returning_ }`
+    
+            console.log( query )
+            const rows = await client.query( this.test_env( query ) )
+    
+            const res = this.test_env_result( rows )
+            return res
+    
+        } catch( e ) { console.log( e ) }
+
     }
 }

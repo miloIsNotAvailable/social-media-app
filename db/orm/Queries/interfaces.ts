@@ -26,6 +26,12 @@ export type Insert<T> = {
 }
 
 export type Like<T> = { LIKE: T }
+export type Where<T> =  {
+    [V in keyof 
+    Partial<IncludeMatchingProperties<T, Primitives>>]: 
+    Partial<IncludeMatchingProperties<T, Primitives>>[V] 
+    | Like<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
+}
 
 export type Select<T> = {
     // pick data to select
@@ -34,12 +40,7 @@ export type Select<T> = {
             Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
     }
     // where statamenet
-    where?: {
-        [V in keyof 
-        Partial<IncludeMatchingProperties<T, Primitives>>]: 
-        Partial<IncludeMatchingProperties<T, Primitives>>[V] 
-        | Like<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
-    }
+    where?: Where<T>
     // if include make it an inner join
     include?: {
         [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
@@ -52,4 +53,14 @@ export type Select<T> = {
             >>
         ]?: boolean }
     }
+}
+
+export type Delete<T> = {
+    // pick data to select
+    returning?: {
+        [V in keyof 
+            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
+    }
+    // where statamenet
+    where?: Where<T>
 }

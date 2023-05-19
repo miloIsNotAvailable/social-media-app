@@ -176,7 +176,7 @@ pub mod parse_field_type {
                 },
                 Self::Relation( pk, fk ) => {
                     RowType::Constraint( format!(
-                        "constraint {}_{}_fkey foreign key({fk}) references public.{}({pk}) on update cascade on delete restrict", 
+                        "constraint {}_{}_fkey foreign key({fk}) references public.{}({pk}) on update cascade on delete cascade", 
                         base_type.clone(), col_name, base_type.clone()
                     ) )
                 }

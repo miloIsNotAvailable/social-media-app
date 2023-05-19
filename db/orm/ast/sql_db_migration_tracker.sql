@@ -41,3 +41,15 @@ alter table public.Post alter column published type bool using published::bool;
 
 ;
 
+
+alter table public.Post alter column authorId set NOT NULL;
+
+
+alter table public.Post alter column authorId set NULL;
+
+
+drop table public.post;
+
+
+CREATE TABLE IF NOT EXISTS public.Post (id INTEGER NOT NULL DEFAULT 0, createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), published BOOLEAN NOT NULL DEFAULT false, title TEXT NOT NULL, authorId TEXT NULL, CONSTRAINT Post_id_as_pkey PRIMARY KEY (id), CONSTRAINT User_author_fkey FOREIGN KEY (authorId) REFERENCES public.User(id) ON DELETE CASCADE ON UPDATE CASCADE);
+
