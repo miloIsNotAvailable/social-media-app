@@ -8,9 +8,6 @@ import { Form, Outlet } from "react-router-dom";
 import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
-import { gql } from "graphql-request";
-import { GraphQLClient } from 'graphql-request'
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 
 const FillOutForm: FC = () => {
 
