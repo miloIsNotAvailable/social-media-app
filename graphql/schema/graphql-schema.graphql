@@ -4,13 +4,24 @@
 
 # clients can execute, along with the return type for each.
 
+type SignUp {
+  email: String
+  password: String
+  username: String
+}
+
 type SignIn {
   email: String
   password: String
 }
 
+union Auth = SignIn | SignUp
+
 type Query {
   hello: String
-  signin( email: String, password: String ): SignIn
+}
+
+type Mutation {
+  signin( email: String!, password: String!, username: String ): Auth
 }
 

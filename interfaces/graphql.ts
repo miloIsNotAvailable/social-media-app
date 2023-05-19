@@ -1,7 +1,7 @@
 import { ExpressContextFunctionArgument } from '@apollo/server/express4'
 
 type funcType = {
-    [name: string]: ( parents: any, args: any, context: contextType ) => any | Promise<any>
+    [name: string]: <T=any>( parents: any, args: T, context: contextType ) => any | Promise<T>
 } 
 
 export type rootType = {

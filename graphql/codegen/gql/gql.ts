@@ -1,20 +1,10 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { GraphQLClient } from 'graphql-request';
-import { GraphQLClientRequestHeaders }from 'graphql-request/src/types';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-
-function fetcher<TData, TVariables extends { [key: string]: any }>(client: GraphQLClient, query: string, variables?: TVariables, requestHeaders?: RequestInit['headers']) {
-  return async (): Promise<TData> => client.request({
-    document: query,
-    variables,
-    requestHeaders
-  });
-}
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -24,22 +14,36 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  hello?: Maybe<Scalars['String']>;
-  signin?: Maybe<SignIn>;
+export type Auth = SignIn | SignUp;
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  signin?: Maybe<Auth>;
 };
 
 
-export type QuerySigninArgs = {
-  email?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
+export type MutationSigninArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+  username?: InputMaybe<Scalars['String']>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  hello?: Maybe<Scalars['String']>;
 };
 
 export type SignIn = {
   __typename?: 'SignIn';
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type SignUp = {
+  __typename?: 'SignUp';
+  email?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
 };
 
 
@@ -109,27 +113,48 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes = {
+  Auth: ( SignIn ) | ( SignUp );
+};
 
+/** Mapping of union parent types */
+export type ResolversUnionParentTypes = {
+  Auth: ( SignIn ) | ( SignUp );
+};
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Auth: ResolverTypeWrapper<ResolversUnionTypes['Auth']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   SignIn: ResolverTypeWrapper<SignIn>;
+  SignUp: ResolverTypeWrapper<SignUp>;
   String: ResolverTypeWrapper<Scalars['String']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Auth: ResolversUnionParentTypes['Auth'];
   Boolean: Scalars['Boolean'];
+  Mutation: {};
   Query: {};
   SignIn: SignIn;
+  SignUp: SignUp;
   String: Scalars['String'];
+};
+
+export type AuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['Auth'] = ResolversParentTypes['Auth']> = {
+  __resolveType: TypeResolveFn<'SignIn' | 'SignUp', ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  signin?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'email' | 'password'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  signin?: Resolver<Maybe<ResolversTypes['SignIn']>, ParentType, ContextType, Partial<QuerySigninArgs>>;
 };
 
 export type SignInResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignIn'] = ResolversParentTypes['SignIn']> = {
@@ -138,41 +163,17 @@ export type SignInResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
-  SignIn?: SignInResolvers<ContextType>;
+export type SignUpResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignUp'] = ResolversParentTypes['SignUp']> = {
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-
-export type SignInQueryVariables = Exact<{
-  email?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type SignInQuery = { __typename?: 'Query', signin?: { __typename?: 'SignIn', email?: string | null, password?: string | null } | null };
-
-
-export const SignInDocument = `
-    query SignIn($email: String, $password: String) {
-  signin(email: $email, password: $password) {
-    email
-    password
-  }
-}
-    `;
-export const useSignInQuery = <
-      TData = SignInQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient,
-      variables?: SignInQueryVariables,
-      options?: UseQueryOptions<SignInQuery, TError, TData>,
-      headers?: RequestInit['headers']
-    ) =>
-    useQuery<SignInQuery, TError, TData>(
-      variables === undefined ? ['SignIn'] : ['SignIn', variables],
-      fetcher<SignInQuery, SignInQueryVariables>(client, SignInDocument, variables, headers),
-      options
-    );
-export { fetcher }
+export type Resolvers<ContextType = any> = {
+  Auth?: AuthResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
+  SignIn?: SignInResolvers<ContextType>;
+  SignUp?: SignUpResolvers<ContextType>;
+};

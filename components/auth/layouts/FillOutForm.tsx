@@ -9,18 +9,8 @@ import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
 import { gql } from "graphql-request";
-import { SignInQueryVariables, SignInResolvers, fetcher, useSignInQuery } from "../../../graphql/codegen/gql/gql";
 import { GraphQLClient } from 'graphql-request'
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-
-const SIGNIN_QUERY = gql`query SignIn($email: String, $password: String) {
-    signin(email: $email, password: $password) {
-      email
-      password
-    }
-  }`
-
-const client = new GraphQLClient( "/api/graphiql" )
 
 const FillOutForm: FC = () => {
 

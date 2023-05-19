@@ -33,11 +33,20 @@ export const root: rootType = {
             } catch( e ) { 
                 console.log( e ) 
             }
-        },
-        async signin( _, args ) {
+        }
+    },
+    Mutation: {
+        async signin( _, args: any ) {
             try {
-                console.log( args )
-                return args
+                if( !!args?.username ) return {
+                    __typename: "SignUp",
+                    ...args
+                }
+
+                return {
+                    __typename: "SignIn",
+                    ...args
+                }
             } catch( e ) { 
                 console.log( e ) 
             }
