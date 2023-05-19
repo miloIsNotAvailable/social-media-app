@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router-dom";
+import { RouteObject, redirect } from "react-router-dom";
 
 import { GraphQLClient, gql } from "graphql-request";
 import { Auth, AuthResolvers, SignIn, SignUp } from "../../../graphql/codegen/gql/gql";
@@ -20,22 +20,22 @@ const SIGNIN_QUERY = gql`mutation UserAuth($email: String!, $password: String!, 
 
 export const action: RouteObject["action"] = async( { params, request } ) => {
     
-    const data = await request.formData()
+  const data = await request.formData()
 
-    if( !(data.get( "email" ) as string)!.match( "@" ) || !data.get( "password" ) ) throw new Response( "invalid email or password", { status: 400 } ) 
+  if( !(data.get( "email" ) as string)!.match( "@" ) || !data.get( "password" ) ) throw new Response( "invalid email or password", { status: 400 } ) 
+  
+  const query = await queryClient.fetchQuery( {
+      queryKey: [ "fn" ],
+      queryFn: fetcher<AuthResolvers, Auth>( 
+          client, 
+          SIGNIN_QUERY,
+          { 
+              email: data.get( "email" ) as string, 
+              password: data.get( "password" ) as string,
+              username: data.get( "username" ) as string
+          } 
+      )
+  } )
 
-    const query = queryClient.fetchQuery( {
-        queryKey: [ "fn" ],
-        queryFn: fetcher<AuthResolvers, Auth>( 
-            client, 
-            SIGNIN_QUERY,
-            { 
-                email: data.get( "email" ) as string, 
-                password: data.get( "password" ) as string,
-                username: data.get( "username" ) as string
-            } 
-        )
-    } )
-
-    return null
+  return redirect( "/user" )
 }

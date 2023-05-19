@@ -4,6 +4,28 @@
 
 # clients can execute, along with the return type for each.
 
+# Create a new .graphql file or use an existing one to define your schema.
+
+# Define your schema using the GraphQL schema definition language (SDL) syntax. This includes specifying object types, input types, interfaces, enums, scalars, queries, mutations, and subscriptions.
+
+# Example:
+
+# graphql
+# Copy code
+# type User {
+#   id: ID!
+#   name: String!
+#   email: String!
+# }
+
+# type Query {
+#   getUser(id: ID!): User
+# }
+
+# type Mutation {
+#   createUser(name: String!, email: String!): User!
+# }
+
 type SignUp {
   email: String
   password: String

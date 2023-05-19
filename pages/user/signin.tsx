@@ -1,7 +1,29 @@
 import { FC } from "react";
 import { action } from '../../components/auth/actions/auth'
+import FillOutForm from "../../components/auth/layouts/FillOutForm";
+import { useRouteError } from "react-router-dom";
+import { GraphQLError } from "graphql";
 
-export { action }
+type ErrType = { 
+    response: { 
+        errors: GraphQLError[]
+    } 
+}
+
+const ErrorBoundary: FC = () => {
+    
+    const { response: { 
+        errors: [ err ] 
+    } } = useRouteError() as ErrType
+    
+    return( 
+    <div>
+        { err.message }
+    </div> 
+    )
+}
+
+export { action, ErrorBoundary }
 
 const SignIn: FC = () => <></>
 

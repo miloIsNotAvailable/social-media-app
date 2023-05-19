@@ -18,7 +18,12 @@ export const getPages = () => {
           .replace(/\[/g, ':')
           .replace( /\]/g, "" )
     
-        return { path, element: __outlets__[route].default, action: __outlets__[route].action }
+        return { 
+          path, 
+          element: __outlets__[route].default, 
+          action: __outlets__[route].action,
+          ErrorBoundary: __outlets__[route].ErrorBoundary
+        }
       })
 
     const routes = Object.keys(__routes__).map((route) => {
@@ -31,12 +36,13 @@ export const getPages = () => {
           .replace( /\]/g, "" )
     
         let children = outlets.filter( ( { path: p } ) => p.match( path ) )
-        children = children.map( ( { element: Element, path: p, action } ) => {
+        children = children.map( ( { element: Element, path: p, action, ErrorBoundary } ) => {
 
         return {
                 path: p.replace( path, "" ).replace( "/", "" ),
                 element: <Element/>,
-                action
+                action,
+                ErrorBoundary
             }
         } )
 
