@@ -8,19 +8,23 @@ import { Form, Outlet } from "react-router-dom";
 import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
+import { useQuery } from "react-query";
+import { Auth, AuthResolvers, useUserAuthMutation } from "../../../graphql/codegen/gql/gql";
+import { client, fetcher } from "../../../router/graphqlClient";
+import { gql } from "graphql-request";
 
 const FillOutForm: FC = () => {
 
     // const { data } = useQuery( {
     //     queryKey: ['films'], 
-    //     queryFn: fetcher<SignInResolvers, SignInQueryVariables>( 
+    //     queryFn: fetcher<AuthResolvers, Auth>( 
     //         client, 
     //         SIGNIN_QUERY,
     //         { email: "hey", password: "ji" } 
     //     )
     // } )
 
-    // // const { data } = useSignInQuery( client, { email: "", password: "hey" } )
+    // const { data } = useSignInQuery( client, { email: "", password: "hey" } )
     // console.log( data )
 
     return (

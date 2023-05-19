@@ -1,0 +1,13 @@
+mutation UserAuth($email: String!, $password: String!, $username: String) {
+  signin(email: $email, password: $password, username: $username) {
+    ... on SignIn {
+      email
+      password
+    }
+    ... on SignUp {
+      email
+      password
+      username
+    }
+  }
+}

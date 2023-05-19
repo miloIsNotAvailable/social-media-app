@@ -2,7 +2,7 @@ import { CodegenConfig } from '@graphql-codegen/cli'
  
 const config: CodegenConfig = {
   schema: 'http://localhost:5173/api/graphiql',
-  documents: ['./**/*.tsx'],
+  documents: [ "./graphql/**/*.graphql" ],
   ignoreNoDocuments: true,
   generates: {
     './graphql/codegen/gql/gql.ts': {
@@ -21,7 +21,8 @@ const config: CodegenConfig = {
         config: {
             preset: "client",
             fetcher: 'graphql-request',
-            useImplementingTypes: true
+            useImplementingTypes: true,
+            isReactHook: true
         },
     }
   },

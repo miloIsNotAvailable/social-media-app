@@ -2,9 +2,8 @@ import { RouteObject } from "react-router-dom";
 
 import { GraphQLClient, gql } from "graphql-request";
 import { Auth, AuthResolvers, SignIn, SignUp } from "../../../graphql/codegen/gql/gql";
-import { fetcher, queryClient } from "../../../router/graphqlClient";
+import { client, fetcher, queryClient } from "../../../router/graphqlClient";
 
-const client = new GraphQLClient( "/api/graphiql" );
 const SIGNIN_QUERY = gql`mutation UserAuth($email: String!, $password: String!, $username: String) {
     signin(email: $email, password: $password, username: $username) {
       ... on SignIn {
@@ -23,7 +22,7 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
     
     const data = await request.formData()
 
-    if( !data.get( "email" ) || !data.get( "password" ) ) throw new Error( "invalid email or password" ) 
+    if( !(data.get( "email" ) as string)!.match( "@" ) || !data.get( "password" ) ) throw new Response( "invalid email or password", { status: 400 } ) 
 
     const query = queryClient.fetchQuery( {
         queryKey: [ "fn" ],

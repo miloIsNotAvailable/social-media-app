@@ -1,10 +1,20 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLClient } from 'graphql-request';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
+
+function fetcher<TData, TVariables extends { [key: string]: any }>(client: GraphQLClient, query: string, variables?: TVariables, requestHeaders?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request({
+    document: query,
+    variables,
+    requestHeaders
+  });
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -177,3 +187,44 @@ export type Resolvers<ContextType = any> = {
   SignIn?: SignInResolvers<ContextType>;
   SignUp?: SignUpResolvers<ContextType>;
 };
+
+
+export type UserAuthMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+  username?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UserAuthMutation = { __typename?: 'Mutation', signin?: { __typename?: 'SignIn', email?: string | null, password?: string | null } | { __typename?: 'SignUp', email?: string | null, password?: string | null, username?: string | null } | null };
+
+
+export const UserAuthDocument = `
+    mutation UserAuth($email: String!, $password: String!, $username: String) {
+  signin(email: $email, password: $password, username: $username) {
+    ... on SignIn {
+      email
+      password
+    }
+    ... on SignUp {
+      email
+      password
+      username
+    }
+  }
+}
+    `;
+export const useUserAuthMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UserAuthMutation, TError, UserAuthMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UserAuthMutation, TError, UserAuthMutationVariables, TContext>(
+      ['UserAuth'],
+      (variables?: UserAuthMutationVariables) => fetcher<UserAuthMutation, UserAuthMutationVariables>(client, UserAuthDocument, variables, headers)(),
+      options
+    );
+export { fetcher }
