@@ -1,31 +1,30 @@
 import { Default } from "@globals/Input";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Divide from "../scenes/Divide";
 import { Color as Submit, Outline as OAuth } from "@globals/Button";
 import NavRoute from "@globals/NavRoute";
 import Header from "../scenes/Header";
-import { Form, Outlet, useActionData } from "react-router-dom";
+import { Form, Outlet, redirect, useActionData } from "react-router-dom";
 import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
-import { useQuery } from "react-query";
-import { Auth, AuthResolvers, useUserAuthMutation } from "../../../graphql/codegen/gql/gql";
-import { client, fetcher } from "../../../router/graphqlClient";
-import { gql } from "graphql-request";
+import { UserAuthMutation, UserAuthMutationVariables, useUserAuthMutation } from "../../../graphql/codegen/gql/gql";
+import { client, fetcher, queryClient } from "../../../router/graphqlClient";
+import { useMutation } from "@tanstack/react-query";
 
 const FillOutForm: FC = () => {
 
-    // const { data } = useQuery( {
-    //     queryKey: ['films'], 
-    //     queryFn: fetcher<AuthResolvers, Auth>( 
-    //         client, 
-    //         SIGNIN_QUERY,
-    //         { email: "hey", password: "ji" } 
-    //     )
-    // } )
+    const action = useActionData() as { signin: UserAuthMutationVariables }
 
-    // const { data } = useSignInQuery( client, { email: "", password: "hey" } )
-    // console.log( data )
+    const { isLoading, data, mutate } = useUserAuthMutation( client )
+
+    console.log( data )
+
+    useEffect( () => {
+        if( !action ) return
+        
+        mutate( action!.signin )
+    }, [ action ] )
 
     return (
         <Form 
@@ -50,7 +49,7 @@ const FillOutForm: FC = () => {
                 <Outlet/>
             </Section>
             <Section>
-                <Submit type="submit">Login</Submit>
+                <Submit type="submit">{ isLoading ? "loading..." : "Login" }</Submit>
                 <Redirect/>
             </Section>
         </Form>

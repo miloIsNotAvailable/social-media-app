@@ -28,7 +28,6 @@
 #   return <div>{/* Render the component */}</div>;
 # };
 
-
 mutation UserAuth($email: String!, $password: String!, $username: String) {
   signin(email: $email, password: $password, username: $username) {
     ... on SignIn {

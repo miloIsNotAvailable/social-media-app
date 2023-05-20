@@ -12,13 +12,16 @@ type ErrType = {
 
 const ErrorBoundary: FC = () => {
     
-    const { response: { 
-        errors: [ err ] 
-    } } = useRouteError() as ErrType
+    // const { response: { 
+    //     errors: [ err ] 
+    // } } = useRouteError() as ErrType
     
+    const e = useRouteError()
+    console.error( e ) 
+
     return( 
     <div>
-        { err.message }
+        { "an error occurred" }
     </div> 
     )
 }
