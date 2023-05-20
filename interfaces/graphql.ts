@@ -1,12 +1,14 @@
 import { ExpressContextFunctionArgument } from '@apollo/server/express4'
 
-type funcType = {
-    [name: string]: <T=any>( parents: any, args: T, context: contextType ) => any | Promise<T>
+export type GraphqlResolver<T = any> = ( parents: any, args: T, context: contextType ) => any | Promise<T>
+
+export type FuncType = {
+    [name: string]: GraphqlResolver
 } 
 
 export type rootType = {
-    Query?: funcType,
-    Mutation?: funcType
+    Query?: FuncType,
+    Mutation?: FuncType
 }
 
 

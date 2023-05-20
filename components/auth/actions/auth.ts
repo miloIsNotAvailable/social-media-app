@@ -34,7 +34,11 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
               email: data.get( "email" ) as string, 
               password: data.get( "password" ) as string,
               username: data.get( "username" ) as string
-          } 
+          },
+          {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": "true",
+          }
       )
   } )
 

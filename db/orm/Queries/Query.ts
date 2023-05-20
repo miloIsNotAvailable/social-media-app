@@ -123,7 +123,7 @@ export default class Query<T> extends Connect {
         return keys.join( "\n" )
     }
 
-    select = async( { data, include, where }: Select<T> ) => {
+    select = async( { data, include, where }: Select<T> ): Promise<T[] | undefined> => {
 
         const client = await this.connect()
 

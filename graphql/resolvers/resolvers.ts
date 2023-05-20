@@ -1,8 +1,6 @@
-import { GraphQLError } from "graphql";
-import { Generated } from "../../db/orm/generated"
 import { rootType } from "../../interfaces/graphql"
-
-let orm = new Generated();
+import { orm } from "./orm/orm";
+import { signin } from "./auth/graphql_resolvers";
 
 export const root: rootType = {
     Query: {
@@ -37,24 +35,6 @@ export const root: rootType = {
         }
     },
     Mutation: {
-        async signin( _, args: any ) {
-
-            // for testing
-            // if( !0 ) throw new GraphQLError('You are not authorized to perform this action.', {
-            //     extensions: {
-            //       code: 'FORBIDDEN',
-            //     },
-            //   });
-
-            if( !!args?.username ) return {
-                __typename: "SignUp",
-                ...args
-            }
-
-            return {
-                __typename: "SignIn",
-                ...args
-            }
-        },
+        signin: async( _, args, context ) => signin( _, args, context )
     }
 }

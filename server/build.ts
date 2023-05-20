@@ -29,6 +29,7 @@ export const server = new ApolloServer<any>({
   typeDefs: schema,
   schema: schema_ as any,
   resolvers: root,
+  
   plugins: [
     ApolloServerPluginDrainHttpServer({ httpServer }),
     // ApolloServerPluginLandingPageGraphQLPlayground(),
