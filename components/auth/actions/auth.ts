@@ -23,26 +23,30 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
 
   if( !(data.get( "email" ) as string)!.match( "@" ) || !data.get( "password" ) ) throw new Response( "invalid email or password", { status: 400 } ) 
 
-  await queryClient.invalidateQueries( { queryKey: [ "UserAuth" ] } )
+  // await queryClient.invalidateQueries( { queryKey: [ "UserAuth" ] } )
 
-  const query = await queryClient.fetchQuery( {
-      queryKey: [ "UserAuth" ],
-      queryFn: fetcher<AuthResolvers, Auth>( 
-          client, 
-          SIGNIN_QUERY,
-          { 
-              email: data.get( "email" ) as string, 
-              password: data.get( "password" ) as string,
-              username: data.get( "username" ) as string
-          },
-          {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": "true",
-          }
-      )
-  } )
+  // const query = await queryClient.fetchQuery( {
+  //     queryKey: [ "UserAuth" ],
+  //     queryFn: fetcher<AuthResolvers, Auth>( 
+  //         client, 
+  //         SIGNIN_QUERY,
+  //         { 
+  //             email: data.get( "email" ) as string, 
+  //             password: data.get( "password" ) as string,
+  //             username: data.get( "username" ) as string
+  //         },
+  //         {
+  //           "Content-Type": "application/json",
+  //           "Access-Control-Allow-Credentials": "true",
+  //         }
+  //     )
+  // } )
 
-  console.log( query )
+  // console.log( query )
 
-  return query
+  return   { 
+    email: data.get( "email" ) as string, 
+    password: data.get( "password" ) as string,
+    username: data.get( "username" ) as string
+  }
 }

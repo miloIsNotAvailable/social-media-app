@@ -8,6 +8,14 @@ export namespace JWTSession {
 
     export type CookieOptions = cookie.CookieSerializeOptions
 
+    export type JWTOptionsType<T> = { 
+        name: string,
+        sign: T, 
+        secret: string,
+        jwtOptions: jwt.SignOptions,
+        cookieOptions: cookie.CookieSerializeOptions
+    } 
+
     type PayloadType<T> = jwt.SignOptions 
 
     type CreateCookieType = (
@@ -49,31 +57,22 @@ export namespace JWTSession {
      * 
      * @returns httpOnly secure cookie 
      */
-    export const createJWTToken: <T>( 
-        name: string,
-        sign: T, 
-        secret: string,
-        payload: PayloadType<T>
-    ) => string 
-    = ( name, sign, secret, payload ) => {
+    export const createJWTToken: <T>( args: JWTOptionsType<T> ) => string 
+    = ( { name, sign, secret, jwtOptions, cookieOptions } ) => {
+        
         const token = jwt.sign(
             sign as object,
             secret,
-            {
-                jwtid: crypto.randomBytes( 16 ).toString( "hex" ),
-                ...payload
-            }
+            jwtOptions
         )
 
-        return handleCreateCookie( 
-            name,
-            token, 
-            { 
-            maxAge: payload.expiresIn as number || 60 * 60,
-            httpOnly: true,
-            secure: true,
-            path: "/",
-        } )
+        const serialized = cookie.serialize(
+            name, 
+            token!, 
+            cookieOptions
+        )
+
+        return serialized
     }
 
     export const verify = <T>( token: string, secret: string ) => {
@@ -82,32 +81,11 @@ export namespace JWTSession {
         return decoded
     }
 
-    export const createJWTSession = <T>( res: Response, args: T ) => {
-        const refresh_token_cookie = JWTSession.createJWTToken<T>( 
-            "refresh_token",
-            args,
-            process.env.ACCESS_TOKEN!,
-            {
-                issuer: "/user/",
-                expiresIn: 60 * 60 * 24, // 24 hours
-                subject: "user"
-            } 
-        )
+    export const createJWTSession = <T>( res: Response, req: Request, args: {
+        jwts: string[],
 
-        const access_token_cookie = JWTSession.createJWTToken<T>( 
-            "access_token",
-            args,
-            process.env.REFRESH_TOKEN!,
-            {
-                issuer: "/user/",
-                expiresIn: 60 * 2, // 24 hours
-                subject: "user"
-            } 
-        )
-        
-        res.setHeader( "Set-Cookie", [ refresh_token_cookie, access_token_cookie ] ) 
+    } ) => {
 
-        // res.setHeader( "Set-Cookie", [ access_token_cookie ] ) 
-
+        res.setHeader( "Set-Cookie", args.jwts ) 
     }
 }

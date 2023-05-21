@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 
 const FillOutForm: FC = () => {
 
-    const action = useActionData() as { signin: UserAuthMutationVariables }
+    const action = useActionData() as UserAuthMutationVariables
 
     const { isLoading, data, mutate } = useUserAuthMutation( client )
 
@@ -23,7 +23,7 @@ const FillOutForm: FC = () => {
     useEffect( () => {
         if( !action ) return
         
-        mutate( action!.signin )
+        mutate( action )
     }, [ action ] )
 
     return (
