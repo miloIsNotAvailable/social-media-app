@@ -47,7 +47,7 @@ test('deletes data correctly', async() => {
 
     const data = await orm.user.delete( {
         where: {
-            email: "hello"
+            email: "hello@gmail.com"
         },
         returning: { id: true }
     } )
