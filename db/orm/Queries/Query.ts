@@ -70,7 +70,7 @@ export default class Query<T> extends Connect {
             return this.test_env_result( rows )  
 
         } catch( e ) {
-            console.log( e )
+            throw new Error( e as any )
         }
 
         // return `insert into ${ this.table } (${ data_keys }) values (${ data_vals })`
