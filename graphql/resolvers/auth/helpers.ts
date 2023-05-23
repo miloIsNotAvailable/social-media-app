@@ -9,12 +9,12 @@ export const acc_token = ( id: User["id"] ) => JWTSession.createJWTToken<Exclude
     secret: process.env.ACCESS_TOKEN!,
     cookieOptions: {
         httpOnly: true,
-        maxAge: 60 * 60,
+        maxAge: 60 * 2,
         secure: true,
         path: "/"
     },
     jwtOptions: {
-        expiresIn: 60 * 60,
+        expiresIn: 60 * 2,
         jwtid: crypto.randomBytes( 32 ).toString(),
         issuer: id,
         subject: "user"

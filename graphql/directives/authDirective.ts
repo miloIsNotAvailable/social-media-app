@@ -96,7 +96,6 @@ authDirectiveTransformer: ( schema: GraphQLSchema ) =>
 }
 
 export function getUser() {
-    console.log( "ye" )
     return "USER"
 }
 

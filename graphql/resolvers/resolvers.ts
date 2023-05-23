@@ -16,6 +16,6 @@ export const root: rootType = {
         }
     },
     Mutation: {
-        signin: async( _, args, context ) => signin( _, args, context )
+        signin
     }
 }
