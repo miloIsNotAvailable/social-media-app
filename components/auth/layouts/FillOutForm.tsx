@@ -4,26 +4,31 @@ import Divide from "../scenes/Divide";
 import { Color as Submit, Outline as OAuth } from "@globals/Button";
 import NavRoute from "@globals/NavRoute";
 import Header from "../scenes/Header";
-import { Form, Outlet, redirect, useActionData } from "react-router-dom";
+import { Form, Outlet, redirect, useActionData, useNavigate } from "react-router-dom";
 import Section from "./Section";
 import Redirect from "../redirects/RedirectToSignUp";
 import { styles } from "../styles";
-import { UserAuthMutation, UserAuthMutationVariables, useUserAuthMutation } from "../../../graphql/codegen/gql/gql";
-import { client, fetcher, queryClient } from "../../../router/graphqlClient";
-import { useMutation } from "@tanstack/react-query";
+import { UserAuthMutationVariables, useUserAuthMutation } from "../../../graphql/codegen/gql/gql";
+import { client } from "../../../router/graphqlClient";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const FillOutForm: FC = () => {
 
     const action = useActionData() as UserAuthMutationVariables
 
-    const { isLoading, data, mutate } = useUserAuthMutation( client )
+    const navigate = useNavigate()
+    const token = useAuth()
 
-    console.log( data )
+    const { isLoading, mutate } = useUserAuthMutation( client, {
+        onSuccess: () => navigate( "/home" )
+    } )
 
     useEffect( () => {
-        if( !action ) return
-        
-        mutate( action )
+        if( !!token ) navigate( "/home" )
+    }, [] )
+
+    useEffect( () => {
+        if( !!action ) mutate( action )
     }, [ action ] )
 
     return (

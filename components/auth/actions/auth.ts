@@ -1,6 +1,6 @@
 import { RouteObject, redirect } from "react-router-dom";
 import { GraphQLClient, gql } from "graphql-request";
-import { Auth, AuthResolvers, SignIn, SignUp } from "../../../graphql/codegen/gql/gql";
+import { Auth, AuthResolvers } from "../../../graphql/codegen/gql/gql";
 import { client, fetcher, queryClient } from "../../../router/graphqlClient";
 
 const SIGNIN_QUERY = gql`mutation UserAuth($email: String!, $password: String!, $username: String) {

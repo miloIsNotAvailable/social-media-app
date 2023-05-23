@@ -30,14 +30,15 @@
 
 mutation UserAuth($email: String!, $password: String!, $username: String) {
   signin(email: $email, password: $password, username: $username) {
-    ... on SignIn {
-      email
-      password
+    ... on AuthSuccess {
+      token
     }
-    ... on SignUp {
-      email
-      password
-      username
+    ... on AuthError {
+      error
     }
   }
+}
+
+query HelloQuery {
+  hello
 }

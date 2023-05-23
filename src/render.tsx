@@ -7,6 +7,8 @@ import { store } from "../redux/store";
 import { getPages } from "./routes";
 import type * as express from "express";
 import fetch, { Headers, Request, Response, RequestInit } from 'node-fetch'
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../router/graphqlClient";
 
 export const render = async ( request: express.Request ) =>  {
 
@@ -26,6 +28,8 @@ export const render = async ( request: express.Request ) =>  {
     const router = createStaticRouter( dataRoutes, context )
 
     return ReactDOMserver.renderToString(
+      <QueryClientProvider client={ queryClient }>
+
         <Provider store={ store }>
             <StaticRouterProvider 
                 router={ router }
@@ -33,6 +37,7 @@ export const render = async ( request: express.Request ) =>  {
                 nonce="the-nonce"
             />
         </Provider>
+      </QueryClientProvider>
     )   
 }
 

@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { GraphQLClientRequestHeaders }from 'graphql-request/src/types';
+import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -24,7 +25,17 @@ export type Scalars = {
   Float: number;
 };
 
-export type Auth = SignIn | SignUp;
+export type Auth = AuthError | AuthSuccess;
+
+export type AuthError = {
+  __typename?: 'AuthError';
+  error?: Maybe<Scalars['String']>;
+};
+
+export type AuthSuccess = {
+  __typename?: 'AuthSuccess';
+  token?: Maybe<Scalars['String']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -43,18 +54,10 @@ export type Query = {
   hello?: Maybe<Scalars['String']>;
 };
 
-export type SignIn = {
-  __typename?: 'SignIn';
-  email?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-};
-
-export type SignUp = {
-  __typename?: 'SignUp';
-  email?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-};
+export enum Role {
+  Unknown = 'UNKNOWN',
+  User = 'USER'
+}
 
 
 
@@ -125,38 +128,55 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = {
-  Auth: ( SignIn ) | ( SignUp );
+  Auth: ( AuthError ) | ( AuthSuccess );
 };
 
 /** Mapping of union parent types */
 export type ResolversUnionParentTypes = {
-  Auth: ( SignIn ) | ( SignUp );
+  Auth: ( AuthError ) | ( AuthSuccess );
 };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Auth: ResolverTypeWrapper<ResolversUnionTypes['Auth']>;
+  AuthError: ResolverTypeWrapper<AuthError>;
+  AuthSuccess: ResolverTypeWrapper<AuthSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
-  SignIn: ResolverTypeWrapper<SignIn>;
-  SignUp: ResolverTypeWrapper<SignUp>;
+  Role: Role;
   String: ResolverTypeWrapper<Scalars['String']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Auth: ResolversUnionParentTypes['Auth'];
+  AuthError: AuthError;
+  AuthSuccess: AuthSuccess;
   Boolean: Scalars['Boolean'];
   Mutation: {};
   Query: {};
-  SignIn: SignIn;
-  SignUp: SignUp;
   String: Scalars['String'];
 };
 
+export type AuthDirectiveArgs = {
+  requires?: Maybe<Role>;
+};
+
+export type AuthDirectiveResolver<Result, Parent, ContextType = any, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type AuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['Auth'] = ResolversParentTypes['Auth']> = {
-  __resolveType: TypeResolveFn<'SignIn' | 'SignUp', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AuthError' | 'AuthSuccess', ParentType, ContextType>;
+};
+
+export type AuthErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthError'] = ResolversParentTypes['AuthError']> = {
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AuthSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthSuccess'] = ResolversParentTypes['AuthSuccess']> = {
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -167,27 +187,17 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
-export type SignInResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignIn'] = ResolversParentTypes['SignIn']> = {
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SignUpResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignUp'] = ResolversParentTypes['SignUp']> = {
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
   Auth?: AuthResolvers<ContextType>;
+  AuthError?: AuthErrorResolvers<ContextType>;
+  AuthSuccess?: AuthSuccessResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  SignIn?: SignInResolvers<ContextType>;
-  SignUp?: SignUpResolvers<ContextType>;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  auth?: AuthDirectiveResolver<any, any, ContextType>;
+};
 
 export type UserAuthMutationVariables = Exact<{
   email: Scalars['String'];
@@ -196,20 +206,22 @@ export type UserAuthMutationVariables = Exact<{
 }>;
 
 
-export type UserAuthMutation = { __typename?: 'Mutation', signin?: { __typename?: 'SignIn', email?: string | null, password?: string | null } | { __typename?: 'SignUp', email?: string | null, password?: string | null, username?: string | null } | null };
+export type UserAuthMutation = { __typename?: 'Mutation', signin?: { __typename?: 'AuthError', error?: string | null } | { __typename?: 'AuthSuccess', token?: string | null } | null };
+
+export type HelloQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HelloQueryQuery = { __typename?: 'Query', hello?: string | null };
 
 
 export const UserAuthDocument = `
     mutation UserAuth($email: String!, $password: String!, $username: String) {
   signin(email: $email, password: $password, username: $username) {
-    ... on SignIn {
-      email
-      password
+    ... on AuthSuccess {
+      token
     }
-    ... on SignUp {
-      email
-      password
-      username
+    ... on AuthError {
+      error
     }
   }
 }
@@ -225,6 +237,25 @@ export const useUserAuthMutation = <
     useMutation<UserAuthMutation, TError, UserAuthMutationVariables, TContext>(
       ['UserAuth'],
       (variables?: UserAuthMutationVariables) => fetcher<UserAuthMutation, UserAuthMutationVariables>(client, UserAuthDocument, variables, headers)(),
+      options
+    );
+export const HelloQueryDocument = `
+    query HelloQuery {
+  hello
+}
+    `;
+export const useHelloQueryQuery = <
+      TData = HelloQueryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: HelloQueryQueryVariables,
+      options?: UseQueryOptions<HelloQueryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<HelloQueryQuery, TError, TData>(
+      variables === undefined ? ['HelloQuery'] : ['HelloQuery', variables],
+      fetcher<HelloQueryQuery, HelloQueryQueryVariables>(client, HelloQueryDocument, variables, headers),
       options
     );
 export { fetcher }

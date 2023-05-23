@@ -26,21 +26,29 @@
 #   createUser(name: String!, email: String!): User!
 # }
 
-type SignUp {
-  email: String
-  password: String
-  username: String
+directive @auth (
+  requires: Role = USER
+) on OBJECT | FIELD_DEFINITION
+
+# role types
+enum Role {
+  USER
+  UNKNOWN
 }
 
-type SignIn {
-  email: String
-  password: String
+type AuthSuccess {
+  token: String
 }
 
-union Auth = SignIn | SignUp
+type AuthError {
+  error: String
+}
+
+union Auth = AuthSuccess | AuthError
+
 
 type Query {
-  hello: String
+  hello: String @auth
 }
 
 type Mutation {

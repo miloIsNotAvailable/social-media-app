@@ -7,6 +7,8 @@ import { store } from '../redux/store'
 import { BrowserRouter, RouteObject, RouterProvider, createBrowserRouter, matchRoutes } from 'react-router-dom'
 import { StaticRouter } from 'react-router-dom/server'
 import { getPages, routes } from './routes'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '../router/graphqlClient'
 
 // const routes: RouteObject[] = getPages().map( ( { element: Element, path } ) => ( {
 //   path, 
@@ -19,11 +21,11 @@ const Render: FC = () => {
 
   return (
     <Provider store={ store }>
-      {/* <BrowserRouter> */}
+      <QueryClientProvider client={ queryClient }>
         {/* <React.StrictMode> */}
           <RouterProvider router={ router } />
         {/* </React.StrictMode> */}
-      {/* </BrowserRouter> */}
+      </QueryClientProvider>
     </Provider>
   )
 }

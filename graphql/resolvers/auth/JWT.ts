@@ -87,5 +87,6 @@ export namespace JWTSession {
     } ) => {
 
         res.setHeader( "Set-Cookie", args.jwts ) 
+        return args.jwts
     }
 }

@@ -1,11 +1,12 @@
 import { GraphQLError } from "graphql"
 import { GraphqlResolver } from "../../../interfaces/graphql"
-import { SignIn, SignUp, UserAuthMutationVariables } from "../../codegen/gql/gql"
+import { UserAuthMutationVariables } from "../../codegen/gql/gql"
 import { JWTSession } from "./JWT"
 import { orm } from "../orm/orm"
 import { ExcludeExcept } from "../../../interfaces/custom"
 import { User } from "../../../db/orm/ast/types"
 import crypto from 'crypto'
+import { acc_token, refresh_token } from "./helpers"
 
 export const signin: GraphqlResolver<UserAuthMutationVariables> = async( 
     _, 
@@ -26,59 +27,29 @@ export const signin: GraphqlResolver<UserAuthMutationVariables> = async(
 
             if( !!check_for_account && !!check_for_account.length ) throw new GraphQLError( "account already exists" )
 
-            // const data = await orm.user.insert( {
-            //     data: { 
-            //         email, 
-            //         name: username 
-            //     }
-            // } ) 
+            const data = await orm.user.insert( {
+                data: { 
+                    email, 
+                    name: username 
+                }
+            } ) 
+
+            const [ { id } ]  = data!;
+
+            const ref_token = refresh_token( id )
+            const access_token = acc_token( id )
 
             JWTSession.createJWTSession<ExcludeExcept<User, | "id">>( 
                 res, req, 
                 { jwts: [
-                    JWTSession.createJWTToken<ExcludeExcept<User, | "id">>( {
-                        name: "refresh_token",
-                        sign: { id: "heyey" },
-                        secret: process.env.REFRESH_TOKEN!,
-                        cookieOptions: {
-                            httpOnly: true,
-                            maxAge: 60 * 60 * 24 * 7,
-                            secure: true,
-                            path: "/"
-                        },
-                        jwtOptions: {
-                            expiresIn: 60 * 60 * 24 * 7,
-                            jwtid: crypto.randomBytes( 32 ).toString(),
-                            issuer: "heyey",
-                            subject: "user"
-                        }
-                    } ),
-                    
-                    JWTSession.createJWTToken<ExcludeExcept<User, | "id">>( {
-                        name: "access_token",
-                        sign: { id: "heyey" },
-                        secret: process.env.ACCESS_TOKEN!,
-                        cookieOptions: {
-                            httpOnly: true,
-                            maxAge: 60 * 60,
-                            secure: true,
-                            path: "/"
-                        },
-                        jwtOptions: {
-                            expiresIn: 60 * 60,
-                            jwtid: crypto.randomBytes( 32 ).toString(),
-                            issuer: "heyey",
-                            subject: "user"
-                        }
-                    } )
+                    ref_token,
+                    access_token
                 ] }
             )
 
             return {
-                __typename: "SignUp",
-                email, 
-                password, 
-                username
+                __typename: "AuthSuccess",
+                token: access_token
             }
 
         } catch( e ) {
@@ -97,51 +68,20 @@ export const signin: GraphqlResolver<UserAuthMutationVariables> = async(
 
         const [ { id } ] = check_for_account
 
+        const ref_token = refresh_token( id )
+        const access_token = acc_token( id )
+
         JWTSession.createJWTSession<ExcludeExcept<User, | "id">>( 
             res, req, 
             { jwts: [
-                JWTSession.createJWTToken<ExcludeExcept<User, | "id">>( {
-                    name: "refresh_token",
-                    sign: { id },
-                    secret: process.env.REFRESH_TOKEN!,
-                    cookieOptions: {
-                        httpOnly: true,
-                        maxAge: 60 * 60 * 24 * 7,
-                        secure: true,
-                        path: "/"
-                    },
-                    jwtOptions: {
-                        expiresIn: 60 * 60 * 24 * 7,
-                        jwtid: crypto.randomBytes( 32 ).toString(),
-                        issuer: id,
-                        subject: "user"
-                    }
-                } ),
-                
-                JWTSession.createJWTToken<ExcludeExcept<User, | "id">>( {
-                    name: "access_token",
-                    sign: { id },
-                    secret: process.env.ACCESS_TOKEN!,
-                    cookieOptions: {
-                        httpOnly: true,
-                        maxAge: 60 * 60,
-                        secure: true,
-                        path: "/"
-                    },
-                    jwtOptions: {
-                        expiresIn: 60 * 60,
-                        jwtid: crypto.randomBytes( 32 ).toString(),
-                        issuer: id,
-                        subject: "user"
-                    }
-                } )
+                ref_token,
+                access_token
             ] }
         )
     
         return {
-            __typename: "SignIn",
-            email, 
-            password
+            __typename: "AuthSuccess",
+            token: access_token
         }
     } catch( e ) {
         throw new GraphQLError( (e as Error).message )

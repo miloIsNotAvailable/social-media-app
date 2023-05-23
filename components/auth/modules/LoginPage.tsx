@@ -10,11 +10,11 @@ import { queryClient } from "../../../router/graphqlClient";
 const LoginPage: FC = () => {
 
     return (
-        <QueryClientProvider client={ queryClient }>
+        // <QueryClientProvider client={ queryClient }>
         <div className={ styles.login_page }>
             <FillOutForm/>
         </div>
-        </QueryClientProvider>
+        // </QueryClientProvider>
     )
 }
 

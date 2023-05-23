@@ -44,7 +44,7 @@ export default class Query<T> extends Connect {
 
     insert = async( 
         d: Insert<T>
-    ) => {
+    ): Promise<T[] | undefined> => {
 
         const client = await this.connect()
 
