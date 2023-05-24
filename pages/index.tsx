@@ -1,14 +1,10 @@
 import { FC } from "react";
 import { Outlet } from "react-router-dom";
+import HomePage from "../components/home"
 
 const Home: FC  = () => {
 
-    return (
-        <>
-            <div>hello</div>
-            <Outlet/>
-        </>
-    )
+    return <HomePage/>
 }
 
 export default Home

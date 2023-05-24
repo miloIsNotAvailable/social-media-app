@@ -1,0 +1,6 @@
+.home_wrap {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    /* align-items: center; */
+}
