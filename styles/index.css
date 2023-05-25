@@ -32,6 +32,11 @@
   padding: 0;
 }
 
+svg {
+  width: 100%;
+  height: 100%;
+}
+
 @font-face {
   font-family: "Switzer";
   src: url( "../public/Switzer/Switzer-Black.otf" );

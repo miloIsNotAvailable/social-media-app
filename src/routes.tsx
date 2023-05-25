@@ -17,7 +17,12 @@ export const getPages = () => {
           .replace(/\[\.{3}.+\]/, '*')
           .replace(/\[/g, ':')
           .replace( /\]/g, "" )
-    
+          // routes inside nested routes
+          .replace( /\./, "/" )
+          .replace(/\[\.{3}.+\]/, '*')
+          .replace(/\[/g, ':')
+          .replace( /\]/g, "" )
+
         return { 
           path, 
           element: __outlets__[route].default, 

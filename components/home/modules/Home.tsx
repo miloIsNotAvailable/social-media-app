@@ -3,6 +3,7 @@ import Navbar from '../../Navbar/build/Navbar'
 import { Outlet } from 'react-router-dom'
 import { styles } from '../styles'
 import TopNavbar from '../navbars/TopNavbar'
+import BottomNavbar from '../navbars/BottomNavbar'
 
 const Home: FC = () => {
 
@@ -10,6 +11,7 @@ const Home: FC = () => {
         <div className={ styles.home_wrap }>
             <TopNavbar/>
             <Outlet/>
+            <BottomNavbar/>
         </div>
     )
 }
