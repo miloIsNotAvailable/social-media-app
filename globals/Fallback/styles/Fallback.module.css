@@ -1,0 +1,34 @@
+@keyframes loading {
+    0% {
+        background-position: 110% 0;    
+    } 100% {
+        background-position: -20% 0;
+    }
+}
+
+.loading {
+    display: flex;
+    width: 5%;
+    height: calc(var(--font-size) + .5rem);
+    border-radius: .1rem;
+    margin: .5rem;
+    background: linear-gradient( to left, var(--bg), #585858, var(--bg) );
+    background-size: 400% 100%;
+    background-repeat: none;
+    background-position: -10% 0;
+    animation: loading 1s ease infinite;
+}
+
+.loader {
+    border: 10px solid var(--font-color);
+    border-top: 10px solid var(--bg); 
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

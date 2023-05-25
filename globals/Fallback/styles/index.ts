@@ -1,0 +1,1 @@
+export { default as styles } from './Fallback.module.css' 
