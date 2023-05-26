@@ -18,11 +18,12 @@
   --bg: #272727;
   --red: #E45858;
   --green: #C6F5D9;
+  --blue: #7893F5;
   --font-color: white;
   --border-1: .1rem;
   --border-2: .3rem;
   --font-size: 1rem;
-  --font-size-small: .6rem;
+  --font-size-small: .8rem;
   --title-size: 1.5rem;
   --icon-size: 1rem;
 }

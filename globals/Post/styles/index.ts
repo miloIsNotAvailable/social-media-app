@@ -1,0 +1,1 @@
+export { default as styles } from './Post.module.css'
