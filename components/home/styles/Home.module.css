@@ -28,6 +28,11 @@
     border-top: 1px solid var(--dark-grey);
 }
 
+.navbar_bottom_wrap > a {
+    margin: 0;
+    padding: 0
+}
+
 nav > div {
     width: auto !important;
     height: auto !important;

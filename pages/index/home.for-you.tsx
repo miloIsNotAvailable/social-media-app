@@ -13,7 +13,7 @@ const Home: FC  = () => {
     }, [ isError ] )
 
     return (
-        <div>{ isLoading ? "loading..." : "hello" }</div>
+        <div>{ isLoading ? "loading..." : "hey" }</div>
     )
 }
 
