@@ -88,7 +88,7 @@ const Text: FC<TextProps> = ( { content, title } ) => {
                         className={ styles.post_wrap_img } 
                         src={ content }
                     /> : 
-                    <span className={ styles.post_wrap_text }>
+                    <span id="text-post" className={ styles.post_wrap_text }>
                         { content }
                     </span> 
                 }

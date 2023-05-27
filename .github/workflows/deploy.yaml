@@ -18,6 +18,13 @@ jobs:
       - run: npm install
       - run: npm run test
       - run: npm run build
+        run: yarn
+        run: npx playwright install --with-deps
+        run: yarn build-storybook --quiet
+        run: |
+          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:6006 && yarn test-storybook"
   # build_and_test:
   #   name: Rust project - latest
   #   runs-on: ubuntu-latest

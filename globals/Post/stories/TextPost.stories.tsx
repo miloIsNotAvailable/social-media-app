@@ -1,9 +1,13 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { within } from '@storybook/testing-library';
-// import { expect } from '@storybook/jest';
+import { within, configure } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
 import Text from '../modules/Text';
 import { BrowserRouter } from 'react-router-dom';
+
+configure( {
+  testIdAttribute: "id"
+} )
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -26,9 +30,9 @@ Primary.args = {
 Primary.play = async( { canvasElement } ) => {
   
   const canvas = within(canvasElement);
-  // const add = await canvas.findAllByRole('img');
+  const add = await canvas.findByTestId("text-post");
   
-  // expect( add ).not.toBeInTheDocument()
+  expect( add ).toBeInTheDocument()
 }
 
 export const ImagePost = Template.bind({});
@@ -40,7 +44,7 @@ ImagePost.args = {
 ImagePost.play = async( { canvasElement } ) => {
 
     const canvas = within(canvasElement);
-    // const add = await canvas.findAllByRole('img');
+    const add = await canvas.findByRole('img');
     
-    // expect( add ).toBeInTheDocument()
+    expect( add ).toBeInTheDocument()
 }
