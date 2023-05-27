@@ -10,9 +10,15 @@
     font-family: "Switzer";
     font-weight: normal;
     z-index: 1;
+    background: radial-gradient( 
+        circle at 100% 100%, 
+        rgba(120, 147, 245, 0.11) 0, 
+        #2C2C2C1c 60%, 
+        #2727271c 100%
+    );
 }
 
-.post_wrap::after {
+/* .post_wrap::after {
     position: absolute;
     content: "";
     inset: 0;
@@ -29,7 +35,7 @@
     background-size: 100%;
     opacity: 0.3;
     z-index: -1;
-}
+} */
 
 .post_wrap h1 {
     font-family: "Switzer";
@@ -41,6 +47,12 @@
     font-family: "Switzer";
     font-weight: normal;
     font-size: var(--font-size-small);
+}
+.post_wrap_img {
+    display: block;
+    width: calc( 100% );
+    height: calc( 100% );
+    border-radius: var(--border-1);
 }
 
 .top_navbar_wrap {

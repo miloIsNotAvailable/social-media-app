@@ -1,4 +1,5 @@
 const path = require( "path" )
+const { mergeConfig } = require( "vite" )
 
 module.exports = {
   "stories": [
@@ -17,7 +18,8 @@ module.exports = {
     "builder": "@storybook/builder-webpack5"
   },
   "features": {
-    "storyStoreV7": true
+    "storyStoreV7": true,
+    "interactionsDebugger": true, // 👈 enable playback controls
   },
   "typescript": { "reactDocgen": false },
   "webpackFinal": async ( config ) => {
