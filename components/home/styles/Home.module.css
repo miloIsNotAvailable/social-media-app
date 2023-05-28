@@ -33,7 +33,53 @@
     padding: 0
 }
 
-nav > div {
+.navbar_bottom_wrap > div {
     width: auto !important;
     height: auto !important;
+}
+
+.display_communities_wrap {
+    position: relative;
+    display: flex;
+}
+
+.display_communities {
+    visibility: collapse;
+    opacity: 0;
+    --nav-height: calc(1rem + var(--title-size) + 2px);
+    --panel-width: 20vw;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: calc(var(--nav-height) + 1px);
+    left: -2rem;
+    width: fit-content;
+    max-width: 0;
+    height: calc(100vh - 2 * 1.3 * var(--icon-size) - 2rem - 4px - var(--nav-height) - 1px);
+    background-color: var(--bg);
+    border-right: 1px solid var(--dark-grey);
+    overflow: hidden;
+    transition: all 300ms ease;
+    white-space: nowrap;
+}
+
+.display_communities_wrap:is(:focus, :active) .display_communities {
+    visibility: visible;
+    max-width: var(--panel-width);
+    opacity: 1;
+}
+
+.community_redirect {
+    display: flex;
+    align-items: center;
+    width: var(--panel-width);
+    height: fit-content;
+    background-color: var(--bg);
+    font-family: "Switzer";
+    font-weight: normal;
+    font-size: var(--font-size);
+    color: white;
+    padding: 1rem 0;
+    gap: .5rem;
+    text-decoration: none;
 }

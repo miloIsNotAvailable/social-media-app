@@ -56,3 +56,15 @@
   src: url( "../public/Switzer/Switzer-Regular.otf" );
   font-weight: normal;
 }
+
+#lines * {
+  transition: all 100ms ease;
+}
+
+#lines:hover #Line-top {
+  transform: translate( 10%, 0 );
+}
+
+#lines:hover #Line-bottom {
+  transform: translate( -10%, 0 );
+}
