@@ -1,0 +1,27 @@
+.create_community_wrap {
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    place-self: center;
+    width: 60vw;
+    gap: 2rem;
+}
+
+.community_desc {
+    resize: none;
+    outline: 1px solid var(--dark-grey);
+    width: calc( 100% - 2rem );
+    height: 10rem;
+    background-color: transparent;
+    border: none;
+    font-family: "Switzer";
+    font-size: var(--font-size);
+    font-weight: normal;
+    padding: .5rem 1rem;
+    color: var(--font-color);
+    z-index: 3;
+}
+
+.community_desc::placeholder {
+    color: var(--light-grey)
+}

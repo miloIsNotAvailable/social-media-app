@@ -61,6 +61,7 @@
     overflow: hidden;
     transition: all 300ms ease;
     white-space: nowrap;
+    padding: 0 1rem;
 }
 
 .display_communities_wrap:is(:focus, :active) .display_communities {
