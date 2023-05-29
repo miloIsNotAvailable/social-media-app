@@ -1,4 +1,5 @@
 import "../styles/index.css"
+import { setupWorker } from 'msw'
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
