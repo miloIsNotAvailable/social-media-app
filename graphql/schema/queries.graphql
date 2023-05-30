@@ -42,3 +42,11 @@ mutation UserAuth($email: String!, $password: String!, $username: String) {
 query HelloQuery {
   hello
 }
+
+mutation CreateCommunity($title: String!, $description: String) {
+  createCommunity(title: $title, description: $description) {
+    id
+    title
+    description
+  }
+}

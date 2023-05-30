@@ -63,6 +63,7 @@ authDirectiveTransformer: ( schema: GraphQLSchema ) =>
                     
                     if( !access_token ) {
                         res.setHeader( "Set-Cookie", [ acc_token( id ) ] )
+                        context.user = id
                         return
                     }
 
@@ -70,8 +71,11 @@ authDirectiveTransformer: ( schema: GraphQLSchema ) =>
                         access_token, 
                         process.env.ACCESS_TOKEN!,
                         { issuer: iss, subject: sub },
-                        ( err ) => {                            
-                            if( !err ) return
+                        ( err, succ ) => {                            
+                            if( !err ) {
+                                context.user = (succ as { id: string }).id
+                                return
+                            }
 
                             // check if jwt expired
                             err.message == "jwt expired" && res.setHeader( "Set-Cookie", [ acc_token( id ) ] )

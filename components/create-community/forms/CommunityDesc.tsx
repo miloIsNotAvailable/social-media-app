@@ -6,6 +6,7 @@ const CommunityDesc: FC = () => {
     return (
         <textarea 
             className={ styles.community_desc }
+            name="description"
             placeholder="community description"
         />
     )

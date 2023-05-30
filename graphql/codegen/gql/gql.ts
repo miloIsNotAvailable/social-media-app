@@ -37,9 +37,25 @@ export type AuthSuccess = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type Community = {
+  __typename?: 'Community';
+  communities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
+  createdAt?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createCommunity?: Maybe<Community>;
   signin?: Maybe<Auth>;
+};
+
+
+export type MutationCreateCommunityArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 
@@ -58,6 +74,24 @@ export enum Role {
   Unknown = 'UNKNOWN',
   User = 'USER'
 }
+
+export type User = {
+  __typename?: 'User';
+  communities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
+  email?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type UsersCommunitiesBridge = {
+  __typename?: 'UsersCommunitiesBridge';
+  community?: Maybe<Array<Maybe<Community>>>;
+  community_id?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  members?: Maybe<Scalars['Int']>;
+  user_id?: Maybe<Scalars['String']>;
+  users?: Maybe<Array<Maybe<User>>>;
+};
 
 
 
@@ -142,10 +176,14 @@ export type ResolversTypes = {
   AuthError: ResolverTypeWrapper<AuthError>;
   AuthSuccess: ResolverTypeWrapper<AuthSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Community: ResolverTypeWrapper<Community>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
   String: ResolverTypeWrapper<Scalars['String']>;
+  User: ResolverTypeWrapper<User>;
+  UsersCommunitiesBridge: ResolverTypeWrapper<UsersCommunitiesBridge>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -154,9 +192,13 @@ export type ResolversParentTypes = {
   AuthError: AuthError;
   AuthSuccess: AuthSuccess;
   Boolean: Scalars['Boolean'];
+  Community: Community;
+  Int: Scalars['Int'];
   Mutation: {};
   Query: {};
   String: Scalars['String'];
+  User: User;
+  UsersCommunitiesBridge: UsersCommunitiesBridge;
 };
 
 export type AuthDirectiveArgs = {
@@ -179,7 +221,17 @@ export type AuthSuccessResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CommunityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Community'] = ResolversParentTypes['Community']> = {
+  communities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createCommunity?: Resolver<Maybe<ResolversTypes['Community']>, ParentType, ContextType, RequireFields<MutationCreateCommunityArgs, 'title'>>;
   signin?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'email' | 'password'>>;
 };
 
@@ -187,12 +239,33 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  communities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UsersCommunitiesBridgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UsersCommunitiesBridge'] = ResolversParentTypes['UsersCommunitiesBridge']> = {
+  community?: Resolver<Maybe<Array<Maybe<ResolversTypes['Community']>>>, ParentType, ContextType>;
+  community_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  members?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  user_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Auth?: AuthResolvers<ContextType>;
   AuthError?: AuthErrorResolvers<ContextType>;
   AuthSuccess?: AuthSuccessResolvers<ContextType>;
+  Community?: CommunityResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+  UsersCommunitiesBridge?: UsersCommunitiesBridgeResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {
@@ -212,6 +285,14 @@ export type HelloQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type HelloQueryQuery = { __typename?: 'Query', hello?: string | null };
+
+export type CreateCommunityMutationVariables = Exact<{
+  title: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateCommunityMutation = { __typename?: 'Mutation', createCommunity?: { __typename?: 'Community', id?: string | null, title?: string | null, description?: string | null } | null };
 
 
 export const UserAuthDocument = `
@@ -256,6 +337,28 @@ export const useHelloQueryQuery = <
     useQuery<HelloQueryQuery, TError, TData>(
       variables === undefined ? ['HelloQuery'] : ['HelloQuery', variables],
       fetcher<HelloQueryQuery, HelloQueryQueryVariables>(client, HelloQueryDocument, variables, headers),
+      options
+    );
+export const CreateCommunityDocument = `
+    mutation CreateCommunity($title: String!, $description: String) {
+  createCommunity(title: $title, description: $description) {
+    id
+    title
+    description
+  }
+}
+    `;
+export const useCreateCommunityMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateCommunityMutation, TError, CreateCommunityMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateCommunityMutation, TError, CreateCommunityMutationVariables, TContext>(
+      ['CreateCommunity'],
+      (variables?: CreateCommunityMutationVariables) => fetcher<CreateCommunityMutation, CreateCommunityMutationVariables>(client, CreateCommunityDocument, variables, headers)(),
       options
     );
 export { fetcher }

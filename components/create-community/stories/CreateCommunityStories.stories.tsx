@@ -3,7 +3,14 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import CreateCommunity from '../modules/CreateCommunity';
 import { RouterProvider, createBrowserRouter, useRouteError } from 'react-router-dom';
 import { setupWorker, graphql } from 'msw'
-import { within } from '@storybook/testing-library';
+import { configure, userEvent, waitFor, within } from '@storybook/testing-library';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '../../../router/graphqlClient';
+import { action } from '../actions/createCommunityCheck';
+
+configure( {
+  testIdAttribute: "id"
+} )
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -17,6 +24,7 @@ export default {
 const router = ( args: any ) => createBrowserRouter( [ {
   path: "*",
   element: <CreateCommunity />,
+  action: action,
   ErrorBoundary: ( err ) => {
     let error = useRouteError();
     console.error( (error as any)?.data );
@@ -24,16 +32,21 @@ const router = ( args: any ) => createBrowserRouter( [ {
     return <div>hey</div>
   }
 } ] )
-const Template: ComponentStory<typeof CreateCommunity> = (args) => <RouterProvider router={ router( args ) }/>
+const Template: ComponentStory<typeof CreateCommunity> = (args) => <QueryClientProvider client={ queryClient }>
+  <RouterProvider router={ router( args ) }/>
+  </QueryClientProvider>
 
 export const Primary = Template.bind({});
 Primary.args = {}
 
 const handlers = [
-  graphql.query( "http://localhost:6006/api/graphiql", ( req, res, ctx ) => {
+  graphql.mutation( "CreateCommunity", ( req, res, ctx ) => {
     return res( 
+      // ctx.delay( 1000 ),
       ctx.data( {
-        communityData: "hello"
+          communities: {
+            title: "hello"
+          }
       } )
      )
   } )
@@ -48,8 +61,17 @@ Primary.play = async( { canvasElement } ) => {
   
   // worker.start()
   const canvas = within(canvasElement);
+  const title = await canvas.findByTestId( "community-name" )
+  const submit = await canvas.findByTestId( "submit-community" )
+
+  userEvent.type( title, "hello" )
+  userEvent.click( submit )
   
-  // expect( add ).toBeInTheDocument()
+  const result = await canvas.findByText( "success" )
+
+  waitFor( () => {
+    expect( result ).toBeInTheDocument()
+  } )
 }
 
 

@@ -50,7 +50,7 @@ type User {
   name: String,
   id: String
   email: String,
-  communities: UsersCommunitiesBridge[]
+  communities: [UsersCommunitiesBridge]
 }
 
 type Community {
@@ -58,13 +58,13 @@ type Community {
   title: String
   description: String
   createdAt: String
-  communities: UsersCommunitiesBridge[]
+  communities: [UsersCommunitiesBridge]
 }
 
 type UsersCommunitiesBridge {
     id: String
-    users: User[]
-    community: Community[]
+    users: [User]
+    community: [Community]
     user_id: String
     community_id: String
     members: Int
@@ -76,5 +76,6 @@ type Query {
 
 type Mutation {
   signin( email: String!, password: String!, username: String ): Auth
+  createCommunity( title: String!, description: String ): Community @auth
 }
 
