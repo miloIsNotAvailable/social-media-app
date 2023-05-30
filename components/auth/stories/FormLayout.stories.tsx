@@ -3,6 +3,8 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import Form from '../layouts/FillOutForm';
 import { RouterProvider, createBrowserRouter, useRouteError } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '../../../router/graphqlClient';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -27,7 +29,9 @@ const router = ( args: any ) => createBrowserRouter( [ {
     element: <div>hey</div>
    }]
 } ] )
-const Template: ComponentStory<typeof Form> = (args) => <RouterProvider router={ router( args ) }/>
+const Template: ComponentStory<typeof Form> = (args) => <QueryClientProvider client={ queryClient }>
+    <RouterProvider router={ router( args ) }/>
+  </QueryClientProvider>
 
 export const Primary = Template.bind({});
 Primary.args = {}
