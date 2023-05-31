@@ -68,6 +68,7 @@ export type MutationSigninArgs = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
+  userCommunities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
 };
 
 export enum Role {
@@ -237,6 +238,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {

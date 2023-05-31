@@ -1,6 +1,6 @@
 import { Loading, Spinner } from '@globals/Fallback'
 import { FC, Suspense, lazy, useEffect } from 'react'
-import { Form, useActionData } from 'react-router-dom'
+import { Form, Outlet, useActionData } from 'react-router-dom'
 import { styles } from '../styles'
 import { CreateCommunityMutationVariables, useCreateCommunityMutation } from '../../../graphql/codegen/gql/gql'
 import { client, queryClient } from '../../../router/graphqlClient'

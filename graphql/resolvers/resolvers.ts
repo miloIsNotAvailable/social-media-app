@@ -16,6 +16,22 @@ export const root: rootType = {
             } catch( e ) { 
                 console.log( e ) 
             }
+        },
+        async userCommunities( _, args ) {
+            try {
+
+                const data = await orm.userscommunitiesbridge.select( {
+                    data: {
+                        community_id: true
+                    },
+                    where: args
+                } )
+                console.log( data )
+
+                return data
+            } catch( e ) { 
+                console.log( e ) 
+            }
         }
     },
 

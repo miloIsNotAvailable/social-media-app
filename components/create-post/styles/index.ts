@@ -1,0 +1,1 @@
+export { default as styles } from './CreatePost.module.css'
