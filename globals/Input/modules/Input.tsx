@@ -1,7 +1,7 @@
 import { FC, MutableRefObject, forwardRef } from "react";
 import { styles } from "../styles";
 
-type InputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+export type InputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
 const Input = forwardRef<MutableRefObject<HTMLInputElement | null>, InputProps>( ( args, ref ) => {
     return (

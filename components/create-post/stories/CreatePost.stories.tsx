@@ -6,6 +6,7 @@ import { setupWorker, graphql } from 'msw'
 import { configure, userEvent, waitFor, within } from '@storybook/testing-library';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../../../router/graphqlClient';
+import { action } from '../actions/validatePostType';
 
 configure( {
   testIdAttribute: "id"
@@ -22,6 +23,7 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const router = ( args: any ) => createBrowserRouter( [ {
   path: "*",
+  action: action,
   element: <CreatePost />,
   ErrorBoundary: ( err ) => {
     let error = useRouteError();
