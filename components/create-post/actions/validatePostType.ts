@@ -7,6 +7,8 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
 //   if( (data.get( "title" ) as string)!.length > 30 || data.get( "description" )!.length > 300 ) 
     // throw new Response( "invalid community name or description", { status: 400 } ) 
 
+    if( typeof window === "undefined" ) return
+
     const file = data.get( "media" )
     const img = new FileReader()
 
