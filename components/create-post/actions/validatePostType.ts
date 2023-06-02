@@ -28,9 +28,8 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
     } )
 
   return { 
+    community: data.get( "community" ),
     title: data.get( "title" ),
-    text: data.get( "text" ),
-    image: data.get( "image" ),
-    link: data.get( "link" )
+    content: data.get( "text" ) || data.get( "image" ) || data.get( "link" )
   }
 }

@@ -29,6 +29,10 @@ const CreatePost: FC = () => {
                             <Outline type="submit">
                                 post
                             </Outline>
+                    </Suspense>
+                    <Suspense fallback={ 
+                        <Loading width={ "100%" } height={ "3rem" }/> 
+                    }>
                             <Outline>
                                 cancel
                             </Outline>

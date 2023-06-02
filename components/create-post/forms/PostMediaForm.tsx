@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { styles } from "../styles";
-import { useOpenFile } from "../../../hooks/useOpenFile";
 
 const PostMediaForm: FC = () => {
 

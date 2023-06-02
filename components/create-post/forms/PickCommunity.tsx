@@ -6,7 +6,7 @@ const PickCommunity: FC = () => {
     return (
         <div className={ styles.pick_community_wrap }>
             <div className={ styles.pick_community_placeholder_profile }/>
-            <input placeholder="pick community"/>
+            <input name="community" placeholder="pick community"/>
         </div>
     )
 }
