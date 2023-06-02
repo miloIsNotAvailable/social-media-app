@@ -7,6 +7,7 @@ import { configure, userEvent, waitFor, within } from '@storybook/testing-librar
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../../../router/graphqlClient';
 import { action } from '../actions/validatePostType';
+import { CreatePostMutation } from '../../../graphql/codegen/gql/gql';
 
 configure( {
   testIdAttribute: "id"
@@ -39,23 +40,24 @@ const Template: ComponentStory<typeof CreatePost> = (args) => <QueryClientProvid
 export const Primary = Template.bind({});
 Primary.args = {}
 
-// const handlers = [
-//   graphql.mutation( "CreatePost", ( req, res, ctx ) => {
-//     return res( 
-//       // ctx.delay( 1000 ),
-//       ctx.data( {
-//           communities: {
-//             title: "hello"
-//           }
-//       } )
-//      )
-//   } )
-// ] 
+const handlers = [
+  graphql.mutation( "CreatePost", ( req, res, ctx ) => {
+    return res( 
+      ctx.delay( 1000 ),
+      ctx.data( {
+          createPost: {
+            title: "hello",
+            content: "hi"
+          }
+      } as CreatePostMutation )
+     )
+  } )
+] 
 
-// if (typeof global.process === 'undefined') {
-//   const worker = setupWorker( ...handlers )
-//   worker.start()
-// }
+if (typeof global.process === 'undefined') {
+  const worker = setupWorker( ...handlers )
+  worker.start()
+}
 
 // Primary.play = async( { canvasElement } ) => {
   

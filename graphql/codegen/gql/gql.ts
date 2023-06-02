@@ -49,6 +49,7 @@ export type Community = {
 export type Mutation = {
   __typename?: 'Mutation';
   createCommunity?: Maybe<Community>;
+  createPost?: Maybe<Post>;
   signin?: Maybe<Auth>;
 };
 
@@ -59,16 +60,40 @@ export type MutationCreateCommunityArgs = {
 };
 
 
+export type MutationCreatePostArgs = {
+  communityId?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+
 export type MutationSigninArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
   username?: InputMaybe<Scalars['String']>;
 };
 
+export type Post = {
+  __typename?: 'Post';
+  author?: Maybe<Array<Maybe<User>>>;
+  authorId?: Maybe<Scalars['String']>;
+  communityId?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
   userCommunities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
+};
+
+
+export type QueryUserCommunitiesArgs = {
+  user_id: Scalars['String'];
 };
 
 export enum Role {
@@ -180,6 +205,7 @@ export type ResolversTypes = {
   Community: ResolverTypeWrapper<Community>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
+  Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -196,6 +222,7 @@ export type ResolversParentTypes = {
   Community: Community;
   Int: Scalars['Int'];
   Mutation: {};
+  Post: Post;
   Query: {};
   String: Scalars['String'];
   User: User;
@@ -233,12 +260,25 @@ export type CommunityResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createCommunity?: Resolver<Maybe<ResolversTypes['Community']>, ParentType, ContextType, RequireFields<MutationCreateCommunityArgs, 'title'>>;
+  createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title'>>;
   signin?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'email' | 'password'>>;
+};
+
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
+  author?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  authorId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  communityId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType>;
+  userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -265,6 +305,7 @@ export type Resolvers<ContextType = any> = {
   AuthSuccess?: AuthSuccessResolvers<ContextType>;
   Community?: CommunityResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UsersCommunitiesBridge?: UsersCommunitiesBridgeResolvers<ContextType>;
@@ -295,6 +336,15 @@ export type CreateCommunityMutationVariables = Exact<{
 
 
 export type CreateCommunityMutation = { __typename?: 'Mutation', createCommunity?: { __typename?: 'Community', id?: string | null, title?: string | null, description?: string | null } | null };
+
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  content?: InputMaybe<Scalars['String']>;
+  communityId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost?: { __typename?: 'Post', authorId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null, updatedAt?: string | null } | null };
 
 
 export const UserAuthDocument = `
@@ -361,6 +411,31 @@ export const useCreateCommunityMutation = <
     useMutation<CreateCommunityMutation, TError, CreateCommunityMutationVariables, TContext>(
       ['CreateCommunity'],
       (variables?: CreateCommunityMutationVariables) => fetcher<CreateCommunityMutation, CreateCommunityMutationVariables>(client, CreateCommunityDocument, variables, headers)(),
+      options
+    );
+export const CreatePostDocument = `
+    mutation CreatePost($title: String!, $content: String, $communityId: String) {
+  createPost(title: $title, content: $content, communityId: $communityId) {
+    authorId
+    content
+    createdAt
+    id
+    title
+    updatedAt
+  }
+}
+    `;
+export const useCreatePostMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreatePostMutation, TError, CreatePostMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreatePostMutation, TError, CreatePostMutationVariables, TContext>(
+      ['CreatePost'],
+      (variables?: CreatePostMutationVariables) => fetcher<CreatePostMutation, CreatePostMutationVariables>(client, CreatePostDocument, variables, headers)(),
       options
     );
 export { fetcher }

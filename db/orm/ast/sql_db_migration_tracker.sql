@@ -69,3 +69,17 @@ drop table public.community;
 CREATE TABLE IF NOT EXISTS public.Community (id TEXT NOT NULL DEFAULT uuid_v4s(), createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), title TEXT NOT NULL, description TEXT NOT NULL, CONSTRAINT Community_id_as_pkey PRIMARY KEY (id), CONSTRAINT Community_title_as_uniq UNIQUE (title));
 CREATE TABLE IF NOT EXISTS public.UsersCommunitiesBridge (id TEXT NOT NULL DEFAULT uuid_v4s(), user_id TEXT NOT NULL, community_id TEXT NOT NULL, CONSTRAINT UsersCommunitiesBridge_id_as_pkey PRIMARY KEY (id), CONSTRAINT User_users_fkey FOREIGN KEY (user_id) REFERENCES public.User(id) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT Community_community_fkey FOREIGN KEY (community_id) REFERENCES public.Community(id) ON DELETE CASCADE ON UPDATE CASCADE);
 
+
+alter table public.Post drop column published;
+alter table public.Post add column content TEXT NOT NULL;
+
+
+alter table public.Post add column content TEXT NULL;
+
+
+alter table public.Post alter column id type TEXT using id::TEXT;
+alter table public.Post alter column id set default uuid_v4s();
+
+
+alter table public.Post add column communityId TEXT NULL;
+

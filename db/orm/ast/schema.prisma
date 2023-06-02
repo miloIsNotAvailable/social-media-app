@@ -8,13 +8,15 @@ model User {
 }
   
 model Post {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    published Boolean  @default(false)
-    title     String   
-    author    User?    @relation(fields: [authorId], references: [id])
-    authorId  String?
+    id           String     @id @default(uuid())
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+    content      String?
+    title        String   
+    author       User?      @relation(fields: [authorId], references: [id])
+    authorId     String?
+    community    Community? @relation(fields: [communityId], references: [id])
+    communityId  String?
 }
 
 model Community {
@@ -23,6 +25,7 @@ model Community {
     title       String      @unique
     description String
     communities UsersCommunitiesBridge[]
+    posts Post[]
 }
 
 model UsersCommunitiesBridge {

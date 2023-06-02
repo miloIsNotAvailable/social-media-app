@@ -8,13 +8,15 @@ export type User = {
 }
 
 export type Post = {
-	id: number,
+	id: string,
 	createdAt: string,
 	updatedAt: string,
-	published: boolean,
+	content?: string,
 	title: string,
 	author?: User,
-	authorId?: string
+	authorId?: string,
+	community?: Community,
+	communityId?: string
 }
 
 export type Community = {
@@ -22,7 +24,8 @@ export type Community = {
 	createdAt: string,
 	title: string,
 	description: string,
-	communities: UsersCommunitiesBridge[]
+	communities: UsersCommunitiesBridge[],
+	posts: Post[]
 }
 
 export type UsersCommunitiesBridge = {

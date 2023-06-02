@@ -18,7 +18,7 @@ export type Insert<T> = {
     // make all their properties optional
     include?: {
         // type
-        [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
+        [K in keyof ExcludeMatchingProperties<T, Primitives>]?: 
         // remove array type
         // make object partial
         Partial<ArrayElement<ExcludeMatchingProperties<T, Primitives>[K]>>

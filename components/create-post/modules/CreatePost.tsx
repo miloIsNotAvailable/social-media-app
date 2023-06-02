@@ -1,16 +1,25 @@
-import { FC, Suspense, lazy } from "react";
+import { FC, Suspense, lazy, useEffect } from "react";
 import CreatePostHeader from "../scenes/CreatePostHeader";
 import { styles } from "../styles";
 import PickCommunity from "../forms/PickCommunity";
 import { Loading, Spinner } from "@globals/Fallback";
 import CreatePostForm from "../layouts/CreatePostForm";
-import { Form } from "react-router-dom";
+import { Form, useActionData } from "react-router-dom";
+import { CreatePostMutationVariables, useCreatePostMutation } from "../../../graphql/codegen/gql/gql";
+import { client } from "../../../router/graphqlClient";
 // import { Outline } from "@globals/Button";
 
 const Post = lazy( () => import( "@globals/Post" ) )
 const Outline = lazy( () => import( "@globals/Button/modules/Outline" ) )
 
 const CreatePost: FC = () => {
+
+    const { isLoading, mutate } = useCreatePostMutation( client )
+    const action = useActionData() as CreatePostMutationVariables
+
+    useEffect( () => {
+        action && mutate( action )
+    }, [ action ] )
 
     return (
         <div className={ styles.create_post_wrap }>
@@ -27,7 +36,13 @@ const CreatePost: FC = () => {
                         <Loading width={ "100%" } height={ "3rem" }/> 
                     }>
                             <Outline type="submit">
-                                post
+                                { isLoading ? 
+                                <Spinner 
+                                    width={ "1rem" }
+                                    height={ "1rem" }
+                                    borderWidth={ "1px" }
+                                /> 
+                                : "post" }
                             </Outline>
                     </Suspense>
                     <Suspense fallback={ 

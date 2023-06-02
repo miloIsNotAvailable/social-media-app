@@ -70,6 +70,17 @@ type UsersCommunitiesBridge {
     members: Int
 }
 
+type Post {
+  id: String
+  createdAt: String
+  updatedAt: String
+  content: String
+  title: String   
+  author: [User]
+  authorId: String
+  communityId: String
+}
+
 type Query {
   hello: String @auth
   userCommunities( user_id: String! ): [UsersCommunitiesBridge]
@@ -78,5 +89,6 @@ type Query {
 type Mutation {
   signin( email: String!, password: String!, username: String ): Auth
   createCommunity( title: String!, description: String ): Community @auth
+  createPost( title: String!, content: String, communityId: String ): Post @auth
 }
 

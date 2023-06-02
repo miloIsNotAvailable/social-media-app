@@ -2,7 +2,7 @@ import { rootType } from "../../interfaces/graphql"
 import { orm } from "./orm/orm";
 import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
-import { CreateCommunityMutationVariables } from "../codegen/gql/gql";
+import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
 
 export const root: rootType = {
@@ -65,6 +65,15 @@ export const root: rootType = {
             } catch( e ) {
                 new GraphQLError( e as any )
             }
+        },
+
+        async createPost( _, { title, content }: CreatePostMutationVariables, { user } ) {
+
+            return {
+                id: user,
+                title,
+                content
+            } as CreatePostMutation[ "createPost" ]
         }
     }
 }

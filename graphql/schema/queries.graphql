@@ -50,3 +50,14 @@ mutation CreateCommunity($title: String!, $description: String) {
     description
   }
 }
+
+mutation CreatePost($title: String!, $content: String, $communityId: String) {
+  createPost(title: $title, content: $content, communityId: $communityId) {
+    authorId
+    content
+    createdAt
+    id
+    title
+    updatedAt
+  }
+}
