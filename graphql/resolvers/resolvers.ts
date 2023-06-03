@@ -67,10 +67,23 @@ export const root: rootType = {
             }
         },
 
-        async createPost( _, { title, content }: CreatePostMutationVariables, { user } ) {
+        async createPost( _, { communityId, title, content }: CreatePostMutationVariables, { user } ) {
+
+            const [ { id } ] = communityId && await orm.community.select( {
+                data: { id: true },
+                where: { title: communityId }
+            } ) || [ { id: undefined } ]
+
+            const data = await orm.post.insert( {
+                data: {
+                    authorId: user,
+                    communityId: id,
+                    title,
+                    content: content as string | undefined
+                }
+            } )
 
             return {
-                id: user,
                 title,
                 content
             } as CreatePostMutation[ "createPost" ]

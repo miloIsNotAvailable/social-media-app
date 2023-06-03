@@ -22,7 +22,7 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
     file && img.readAsDataURL( file as any )
 
   return { 
-    community: data.get( "community" ),
+    communityId: data.get( "community" ),
     title: data.get( "title" ),
     content: data.get( "text" ) || data.get( "image" ) || data.get( "link" )
   } as CreatePostMutationVariables
