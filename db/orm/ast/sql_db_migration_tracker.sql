@@ -83,3 +83,6 @@ alter table public.Post alter column id set default uuid_v4s();
 
 alter table public.Post add column communityId TEXT NULL;
 
+
+;
+

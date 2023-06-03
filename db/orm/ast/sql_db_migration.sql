@@ -32,6 +32,7 @@ create table if not exists public.post (
 	title text not null,
 	authorid text null,
 	content text null,
+	communityid text null,
 	constraint post_id_as_pkey primary key(id),
 	constraint user_author_fkey foreign key(authorid) references "user"(id) on update cascade on delete restrict
 );

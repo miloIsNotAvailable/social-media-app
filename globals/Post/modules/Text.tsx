@@ -57,7 +57,7 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
 }
 const Text: FC<TextProps> = ( { content, title } ) => {
 
-    const base64 = useLinkToBase64( "https://images.unsplash.com/photo-1549989317-6f14743af1bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" )
+    // const base64 = useLinkToBase64( "https://images.unsplash.com/photo-1549989317-6f14743af1bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" )
     const imgRef = useRef<HTMLImageElement | null>( null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
 

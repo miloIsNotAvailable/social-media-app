@@ -4,6 +4,8 @@ import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
 import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
+import supabase from '@supabase/supabase-js'
+import { decode } from 'base64-arraybuffer'
 
 export const root: rootType = {
     Query: {
@@ -69,24 +71,30 @@ export const root: rootType = {
 
         async createPost( _, { communityId, title, content }: CreatePostMutationVariables, { user } ) {
 
-            const [ { id } ] = communityId && await orm.community.select( {
-                data: { id: true },
-                where: { title: communityId }
-            } ) || [ { id: undefined } ]
+            try {
 
-            const data = await orm.post.insert( {
-                data: {
-                    authorId: user,
-                    communityId: id,
+                const [ { id } ] = communityId && await orm.community.select( {
+                    data: { id: true },
+                    where: { title: communityId }
+                } ) || [ { id: undefined } ]
+    
+                const data = await orm.post.insert( {
+                    data: {
+                        authorId: user,
+                        communityId: id,
+                        title,
+                        content: content as string | undefined
+                    }
+                } )
+    
+                return {
                     title,
-                    content: content as string | undefined
-                }
-            } )
-
-            return {
-                title,
-                content
-            } as CreatePostMutation[ "createPost" ]
+                    content
+                } as CreatePostMutation[ "createPost" ]
+    
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
         }
     }
 }

@@ -26,12 +26,15 @@ e is DragEvent<HTMLInputElement> => {
  * @returns void
  */
 export const useOpenFile: 
-() => ( e:event ) => void = () => {
+<T extends any>( callback: T ) => ( e:event ) => string | null 
+= ( callback ) => {
 
     const [ file_, setFile ] = useState<string | null>( null )
 
     return ( e ) => {
         
+        if( typeof window === "undefined" ) return null
+
         const drag = eventIsDrag( e )
 
         // if( !e.currentTarget.accept ) return;
@@ -44,10 +47,10 @@ export const useOpenFile:
         img.onload = e => {
             if( !e.target?.result ) return
             
-            setFile( e?.target?.result as string )
+            (callback as any)(e?.target?.result as string)
         }
         file && img.readAsDataURL( file[0] )
-        console.log( file_ )
+        // console.log( img.dispatchEvent )
         // e.currentTarget.files = [ { item: new File() } ]
         // e.target.
         return file_
