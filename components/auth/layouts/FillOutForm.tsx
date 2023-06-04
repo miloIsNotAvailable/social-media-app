@@ -20,11 +20,11 @@ const FillOutForm: FC = () => {
     const token = useAuth()
 
     const { isLoading, mutate } = useUserAuthMutation( client, {
-        onSuccess: () => navigate( "/home" )
+        onSuccess: () => navigate( "/home/for-you" )
     } )
 
     useEffect( () => {
-        if( !!token ) navigate( "/home" )
+        if( !!token ) navigate( "/home/for-you" )
     }, [] )
 
     useEffect( () => {
