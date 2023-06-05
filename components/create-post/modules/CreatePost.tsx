@@ -14,9 +14,13 @@ const Outline = lazy( () => import( "@globals/Button/modules/Outline" ) )
 
 const CreatePost: FC = () => {
 
-    const { isLoading, mutate } = useCreatePostMutation( client )
+    const { isLoading, mutate, error } = useCreatePostMutation( client )
     const action = useActionData() as CreatePostMutationVariables
     const formRef = useRef<HTMLFormElement | undefined>( null )
+
+    useEffect( () => {
+        console.log( error )
+    }, [ error ] )  
 
     useEffect( () => {
         action && mutate( action )

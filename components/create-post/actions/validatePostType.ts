@@ -11,19 +11,26 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
     if( typeof window === "undefined" ) return
 
     const file = data.get( "media" )
-    const img = new FileReader()
+    
+    const e = new Promise( resolve => {
+      
+      if( !file ) return;
 
-    file && ( img.onload = e => {
-        if( !e.target?.result ) return
-        
-        console.log( e?.target?.result as string )
+      const img = new FileReader()
+
+      img.onload = e => {
+          if( !e.target?.result ) return
+          resolve( e.target.result ) 
+        } 
+      
+      img.readAsDataURL( file as any )
     } )
 
-    file && img.readAsDataURL( file as any )
+    data.set( "media", await e as string )
 
   return { 
     communityId: data.get( "community" ),
     title: data.get( "title" ),
-    content: data.get( "text" ) || data.get( "image" ) || data.get( "link" )
+    content: data.get( "text" ) || data.get( "media" ) || data.get( "link" )
   } as CreatePostMutationVariables
 }

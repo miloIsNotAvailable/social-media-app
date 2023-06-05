@@ -7,7 +7,12 @@ import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
 
-const supabase = createClient( process.env.DATABASE_URL!, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3ZnZkdHZkdXd5c2lzd3NieWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMzODMxNzAsImV4cCI6MTk5ODk1OTE3MH0.Xvch3b9lPuYfHVbo8xEZbuFuZCWm0OxqDRIZSGGML6o" )
+const prepareBase64DataUrl = ( base64: string ) => base64
+    .replace('data:image/jpeg;', 'data:image/jpeg;charset=utf-8;')
+    .replace('data:image/png;', 'data:image/png;charset=utf-8;')
+    .replace(/^.+,/, '')
+
+const supabase = createClient( "https://pwfvdtvduwysiswsbyio.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3ZnZkdHZkdXd5c2lzd3NieWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODMzODMxNzAsImV4cCI6MTk5ODk1OTE3MH0.Xvch3b9lPuYfHVbo8xEZbuFuZCWm0OxqDRIZSGGML6o" )
 
 export const root: rootType = {
     Query: {
@@ -77,18 +82,23 @@ export const root: rootType = {
 
                 const name = uuid();
 
-                const img = content && await supabase
+                const img = content && content?.match( /data\:image\/(.*)/ ) && 
+                await supabase
                 .storage
-                .from('posts')
-                .upload( `posts/${ name }.png`, decode( content ), {
-                  contentType: 'image/png'
-                })
+                .from('images')
+                .upload( `${ name }.jpg`,
+                    Buffer.from(prepareBase64DataUrl( content ), 'base64'),
+                    {
+                        contentType: 'image/jpeg',
+                        upsert: true,
+                    }
+                )
 
                 const link: "" | { data: { publicUrl: string } } | undefined | null = img && 
                 await supabase
                 .storage
-                .from( "posts" )
-                .getPublicUrl( `posts/${ name }.png` )
+                .from( "images" )
+                .getPublicUrl( `${ name }.png` )
 
                 const [ { id } ] = communityId && await orm.community.select( {
                     data: { id: true },
