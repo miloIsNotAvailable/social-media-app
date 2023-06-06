@@ -108,16 +108,25 @@ export default class Query<T> extends Connect {
     }
 
     private _select_include = ( 
-        include: Select<T>["include"], 
+        select: Select<T>["include"], 
         where: Select<T>["where"] 
     ): string => {
 
-        if( !include || !where ) return ""
+        
+        if( !select || !where ) return ""
+        
+        const { join, ...rest } = select
+        const key = Object.keys( rest )[0]
+        
+        const { ...join_key_rest } = join;
+        const join_key = Object.keys(Object.values( join_key_rest )[0]!)[0]
 
-        const keys = Object.keys( include )
+        console.log( join_key )
+
+        const keys = Object.keys( join )
         .map( x => {
             let table = this.relations[ x ]
-            return `inner join public.${ table } on ${ this.table }.${ Object.keys( where ).join( "" ) } = public.${ table }.${ Object.keys( (include as any)[ x ] ).join( "" ) }`
+            return `inner join public.${ table } on ${ this.table }.${ key } = public.${ table }.${ join_key }`
         } )
 
         return keys.join( "\n" )
@@ -132,7 +141,7 @@ export default class Query<T> extends Connect {
             const where_ = this._select_where( where ) 
             const incl = this._select_include( include, where )
     
-            const select_keys = `${Object.keys( data ).map( x => `${ this.table }.${x}` ).join( ", " )}${ include ? `, ${ Object.keys( include ).map( x => `public.${ this.relations[ x ] }.*` ).join( ", " ) }` : "" }`
+            const select_keys = `${Object.keys( data ).map( x => `${ this.table }.${x}` ).join( ", " )}${ include ? `, ${ Object.keys( include.join ).map( x => `public.${ this.relations[ x ] }.*` ).join( ", " ) }` : "" }`
 
             const query = `select ${ select_keys } from ${ this.table } ${ incl } ${ where_ }`
             

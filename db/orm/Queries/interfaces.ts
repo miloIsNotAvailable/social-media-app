@@ -26,12 +26,29 @@ export type Insert<T> = {
 }
 
 export type Like<T> = { LIKE: T }
-export type Where<T> =  {
+export type Where<T> =  AtMostTwoKeys<{
     [V in keyof 
     Partial<IncludeMatchingProperties<T, Primitives>>]: 
     Partial<IncludeMatchingProperties<T, Primitives>>[V] 
     | Like<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
-}
+}>
+
+type PickOnly<T, K extends keyof T> =
+    Pick<T, K> & { [P in Exclude<keyof T, K>]?: never };
+
+type AtMostOneKey<T> = (
+    PickOnly<T, never> |
+    { [K in keyof T]-?: PickOnly<T, K>
+    }[keyof T]
+) extends infer O ? { [P in keyof O]: O[P] } : never    
+
+export type AtMostTwoKeys<T> = (
+    PickOnly<T, never> |
+    { [K in keyof T]-?: PickOnly<T, K>
+    }[keyof T] |
+    { [K in keyof T]-?: PickOnly<T, K>
+    }[keyof T]
+) extends infer O ? { [P in keyof O]: O[P] } : never    
 
 export type Select<T> = {
     // pick data to select
@@ -39,20 +56,23 @@ export type Select<T> = {
         [V in keyof 
             Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
     }
+
+    include?: AtMostOneKey<{
+        [V in keyof 
+            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
+    }> & {join: AtMostOneKey<{
+            [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
+            // remove array type
+            // make object partial and a boolean
+            AtMostOneKey<{[V in keyof 
+                Partial<ArrayElement<
+                    ExcludeMatchingProperties<T, Primitives>[K]
+                >>
+            ]: boolean }>
+    }>}
     // where statamenet
     where?: Where<T>
     // if include make it an inner join
-    include?: {
-        [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
-        // remove array type
-        // make object partial and a boolean
-        { [
-            V in keyof 
-            Partial<ArrayElement<
-            ExcludeMatchingProperties<T, Primitives>[K]
-            >>
-        ]?: boolean }
-    }
 }
 
 export type Delete<T> = {

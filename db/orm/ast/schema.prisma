@@ -6,7 +6,7 @@ model User {
     posts       Post[]
     communities UsersCommunitiesBridge[]
 }
-  
+
 model Post {
     id           String     @id @default(uuid())
     createdAt    DateTime   @default(now())
