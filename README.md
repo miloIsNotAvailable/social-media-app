@@ -17,7 +17,7 @@ this is a weird combination of twitter and reddit, made just for fun and to try 
 Getting Started
 To get started with the social media app, follow the steps below:
 
-Clone the repository: git clone https://github.com/your-username/social-media-app.git
+Clone the repository: git clone https://github.com/miloIsNotAvailable/social-media-app.git
 
 ## with docker: 
 ```docker-compose up```

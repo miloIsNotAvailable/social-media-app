@@ -6,6 +6,7 @@ import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutatio
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
+import { Community, UsersCommunitiesBridge } from "../../db/orm/ast/types";
 
 const prepareBase64DataUrl = ( base64: string ) => base64
     .replace('data:image/jpeg;', 'data:image/jpeg;charset=utf-8;')
@@ -31,7 +32,15 @@ export const root: rootType = {
 
                 const data = await orm.userscommunitiesbridge.select( {
                     data: {
-                        community_id: true
+                        community_id: true,
+                    },
+                    include: {
+                        community_id: true,
+                        join: {
+                            community: {
+                                id: true
+                            } as { [V in keyof Community]?: boolean }
+                        }
                     },
                     where: args
                 } )
