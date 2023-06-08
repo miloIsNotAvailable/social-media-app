@@ -57,22 +57,26 @@ export type Select<T> = {
             Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
     }
 
-    include?: AtMostOneKey<{
-        [V in keyof 
-            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
-    }> & {join: AtMostOneKey<{
+    // if include make it an inner join
+    include?:  Partial<{
             [K in keyof ExcludeMatchingProperties<T, Primitives>]: 
-            // remove array type
-            // make object partial and a boolean
-            AtMostOneKey<{[V in keyof 
-                Partial<ArrayElement<
-                    ExcludeMatchingProperties<T, Primitives>[K]
-                >>
-            ]: boolean }>
-    }>}
+            { equal: AtMostOneKey<{
+                [V in keyof 
+                    Partial<IncludeMatchingProperties<ArrayElement<NonNullable<ExcludeMatchingProperties<T, Primitives>[K]>>, Primitives>>]?: boolean
+            }> } 
+            & { on: AtMostOneKey<{
+                [V in keyof 
+                    Partial<
+                        IncludeMatchingProperties<T, Primitives>
+                    >]?: boolean
+            }> } 
+            & Select<
+                    // make type non nulable otherwise types break
+                    ArrayElement<NonNullable<ExcludeMatchingProperties<T, Primitives>[K]>>
+                >
+    }>
     // where statamenet
     where?: Where<T>
-    // if include make it an inner join
 }
 
 export type Delete<T> = {

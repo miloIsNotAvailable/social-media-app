@@ -51,4 +51,4 @@ T,
  * type A = ArrayElement<User[]> // same as User
  * ```
  */
-export type ArrayElement<ArrayType extends unknown> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+export type ArrayElement<ArrayType extends unknown> = ArrayType extends readonly (infer ElementType)[] ? ElementType : ArrayType;

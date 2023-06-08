@@ -35,11 +35,19 @@ export const root: rootType = {
                         community_id: true,
                     },
                     include: {
-                        community_id: true,
-                        join: {
-                            community: {
-                                id: true
-                            } as { [V in keyof Community]?: boolean }
+                        community: {
+                            on: { community_id: true },
+                            equal: { id: true },
+                            data: { title: true },
+                            include: {
+                                posts: {
+                                    on: { id: true },
+                                    equal: { communityId: true },
+                                    data: { content: true }
+                                }
+                            }    
+                            // user_id: true
+
                         }
                     },
                     where: args
