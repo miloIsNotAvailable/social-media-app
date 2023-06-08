@@ -17,6 +17,7 @@ model Post {
     authorId     String?
     community    Community? @relation(fields: [communityId], references: [id])
     communityId  String?
+    communities  UsersCommunitiesBridge[]
 }
 
 model Community {
@@ -32,6 +33,8 @@ model UsersCommunitiesBridge {
     id           String      @id @default(uuid())
     users        User?       @relation(fields: [ user_id ], references: [ id ])
     community    Community?  @relation(fields: [ community_id ], references: [ id ])
+    posts        Post?       @relation(fields: [ post_id ], references: [ id ])
     user_id      String
     community_id String
+    post_id      String?
 }

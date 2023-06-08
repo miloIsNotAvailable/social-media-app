@@ -86,3 +86,9 @@ alter table public.Post add column communityId TEXT NULL;
 
 ;
 
+
+alter table public.UsersCommunitiesBridge add column post_id TEXT NOT NULL;
+
+
+alter table public.UsersCommunitiesBridge add column post_id TEXT NULL;
+
