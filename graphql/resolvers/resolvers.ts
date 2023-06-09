@@ -6,7 +6,7 @@ import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutatio
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
-import { Community, UsersCommunitiesBridge } from "../../db/orm/ast/types";
+import { Community, Post, UsersCommunitiesBridge } from "../../db/orm/ast/types";
 
 const prepareBase64DataUrl = ( base64: string ) => base64
     .replace('data:image/jpeg;', 'data:image/jpeg;charset=utf-8;')
@@ -27,7 +27,7 @@ export const root: rootType = {
                 console.log( e ) 
             }
         },
-        async userCommunities( _, args ) {
+        async userCommunities( _, args, { user } ) {
             try {
 
                 const data = await orm.userscommunitiesbridge.select( {
@@ -43,16 +43,30 @@ export const root: rootType = {
                         posts: {
                             on: { community_id: true },
                             equal: { communityId: true },
-                            data: { content: true, title: true }
+                            data: { 
+                                content: true, 
+                                title: true,
+                                communityId: true,
+                                authorId: true,
+                                createdAt: true,
+                                id: true 
+                            }
                         }
                     },
-                    where: args
+                    where: { user_id: user }
                 } )
+
                 console.log( data )
 
-                return data
+                return data!.map( ( d: UsersCommunitiesBridge | Post ) => ({ 
+                        ...d, 
+                        createdAt: (d as any).createdat,
+                        authorId: (d as any).authorid,
+                        communityId: (d as any).communityid,
+                    })
+                )
             } catch( e ) { 
-                console.log( e ) 
+                throw new GraphQLError( e as any ) 
             }
         }
     },

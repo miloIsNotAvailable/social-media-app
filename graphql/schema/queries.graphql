@@ -61,3 +61,15 @@ mutation CreatePost($title: String!, $content: String, $communityId: String) {
     updatedAt
   }
 }
+
+query UserCommunities($userId: String!) {
+  userCommunities(user_id: $userId) {
+    authorId
+    communityId
+    content
+    createdAt
+    id
+    title
+    updatedAt
+  }
+}

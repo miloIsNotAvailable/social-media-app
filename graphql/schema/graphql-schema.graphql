@@ -83,7 +83,7 @@ type Post {
 
 type Query {
   hello: String @auth
-  userCommunities( user_id: String! ): [UsersCommunitiesBridge]
+  userCommunities( user_id: String! ): [Post] @auth
 }
 
 type Mutation {

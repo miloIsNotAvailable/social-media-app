@@ -5,8 +5,8 @@ import { isBase64String } from '../interfaces/branded/Base64Type'
 import { useLinkToBase64 } from '../hooks/useLinkToBase64'
 
 interface TextProps {
-    content: string
-    title: string
+    content?: string | null
+    title?: string | null
 }
 
 
@@ -82,14 +82,14 @@ const Text: FC<TextProps> = ( { content, title } ) => {
             <PostUserNavbar/>
             <h1>{ title }</h1>
             <span className={ styles.post_wrap_text }>
-                { !!isBase64String( content ) ? 
+                { content && !!isBase64String( content ) ? 
                     <img 
                         ref={ imgRef }
                         className={ styles.post_wrap_img } 
                         src={ content }
                     /> : 
                     <span id="text-post" className={ styles.post_wrap_text }>
-                        { content }
+                        { content || "" }
                     </span> 
                 }
             </span>

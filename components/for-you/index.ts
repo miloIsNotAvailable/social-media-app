@@ -1,0 +1,1 @@
+export { default as ForYou } from './modules/for-you'

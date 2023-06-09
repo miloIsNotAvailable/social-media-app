@@ -88,7 +88,7 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
-  userCommunities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
+  userCommunities?: Maybe<Array<Maybe<Post>>>;
 };
 
 
@@ -278,7 +278,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
+  userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -345,6 +345,13 @@ export type CreatePostMutationVariables = Exact<{
 
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost?: { __typename?: 'Post', authorId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null, updatedAt?: string | null } | null };
+
+export type UserCommunitiesQueryVariables = Exact<{
+  userId: Scalars['String'];
+}>;
+
+
+export type UserCommunitiesQuery = { __typename?: 'Query', userCommunities?: Array<{ __typename?: 'Post', authorId?: string | null, communityId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null, updatedAt?: string | null } | null> | null };
 
 
 export const UserAuthDocument = `
@@ -436,6 +443,33 @@ export const useCreatePostMutation = <
     useMutation<CreatePostMutation, TError, CreatePostMutationVariables, TContext>(
       ['CreatePost'],
       (variables?: CreatePostMutationVariables) => fetcher<CreatePostMutation, CreatePostMutationVariables>(client, CreatePostDocument, variables, headers)(),
+      options
+    );
+export const UserCommunitiesDocument = `
+    query UserCommunities($userId: String!) {
+  userCommunities(user_id: $userId) {
+    authorId
+    communityId
+    content
+    createdAt
+    id
+    title
+    updatedAt
+  }
+}
+    `;
+export const useUserCommunitiesQuery = <
+      TData = UserCommunitiesQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: UserCommunitiesQueryVariables,
+      options?: UseQueryOptions<UserCommunitiesQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<UserCommunitiesQuery, TError, TData>(
+      ['UserCommunities', variables],
+      fetcher<UserCommunitiesQuery, UserCommunitiesQueryVariables>(client, UserCommunitiesDocument, variables, headers),
       options
     );
 export { fetcher }
