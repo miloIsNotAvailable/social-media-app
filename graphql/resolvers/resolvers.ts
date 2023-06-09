@@ -125,7 +125,7 @@ export const root: rootType = {
                 await supabase
                 .storage
                 .from( "images" )
-                .getPublicUrl( `${ name }.png` )
+                .getPublicUrl( `${ name }.jpg` )
 
                 const [ { id } ] = communityId && await orm.community.select( {
                     data: { id: true },

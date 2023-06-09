@@ -3,12 +3,12 @@ import { styles } from '../styles'
 import PostUserNavbar from '../navbars/PostUserNavbar'
 import { isBase64String } from '../interfaces/branded/Base64Type'
 import { useLinkToBase64 } from '../hooks/useLinkToBase64'
+import { Spinner } from '@globals/Fallback'
 
 interface TextProps {
     content?: string | null
     title?: string | null
 }
-
 
 function getAverageRGB( imgEl: HTMLImageElement ) {
 
@@ -57,7 +57,7 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
 }
 const Text: FC<TextProps> = ( { content, title } ) => {
 
-    // const base64 = useLinkToBase64( "https://images.unsplash.com/photo-1549989317-6f14743af1bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" )
+    const base64 = useLinkToBase64( content as string | null )
     const imgRef = useRef<HTMLImageElement | null>( null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
 
@@ -82,15 +82,16 @@ const Text: FC<TextProps> = ( { content, title } ) => {
             <PostUserNavbar/>
             <h1>{ title }</h1>
             <span className={ styles.post_wrap_text }>
-                { content && !!isBase64String( content ) ? 
+                { content && base64 ? 
                     <img 
                         ref={ imgRef }
                         className={ styles.post_wrap_img } 
-                        src={ content }
+                        src={ base64 }
+                        crossOrigin='anonymous'
                     /> : 
                     <span id="text-post" className={ styles.post_wrap_text }>
                         { content || "" }
-                    </span> 
+                    </span>
                 }
             </span>
         </div>
