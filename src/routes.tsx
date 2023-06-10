@@ -27,6 +27,7 @@ export const getPages = () => {
           path, 
           element: __outlets__[route].default, 
           action: __outlets__[route].action,
+          loader: __outlets__[route].loader,
           ErrorBoundary: __outlets__[route].ErrorBoundary
         }
       })
@@ -41,12 +42,13 @@ export const getPages = () => {
           .replace( /\]/g, "" )
     
         let children = outlets.filter( ( { path: p } ) => p.match( path ) )
-        children = children.map( ( { element: Element, path: p, action, ErrorBoundary } ) => {
+        children = children.map( ( { element: Element, path: p, action, ErrorBoundary, loader } ) => {
 
         return {
                 path: p.replace( path, "" ).replace( "/", "" ),
                 element: <Element/>,
                 action,
+                loader,
                 ErrorBoundary
             }
         } )

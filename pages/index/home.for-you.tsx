@@ -1,8 +1,8 @@
-import { FC, useEffect } from "react";
-import { useHelloQueryQuery } from "../../graphql/codegen/gql/gql";
-import { client } from "../../router/graphqlClient";
-import { useNavigate } from "react-router-dom";
+import { FC } from "react";
 import { ForYou } from "../../components/for-you";
+import { loader } from "../../components/for-you/loaders/loadPosts";
+
+export { loader }
 
 const Home: FC  = () => {
 
