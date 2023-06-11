@@ -4,10 +4,8 @@ import PostUserNavbar from '../navbars/PostUserNavbar'
 import { isBase64String } from '../interfaces/branded/Base64Type'
 import { useLinkToBase64 } from '../hooks/useLinkToBase64'
 import { Spinner } from '@globals/Fallback'
-import PostLayout from '../layouts/PostLayout'
-import PostActionsNavbar from '../navbars/PostActionsNavbar'
 
-interface TextProps {
+interface PostLayoutProps {
     content?: string | null
     title?: string | null
 }
@@ -57,14 +55,47 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     return rgb;
 
 }
-const Text: FC<TextProps> = ( { content, title } ) => {
+const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
+
+    const base64 = useLinkToBase64( content as string | null )
+    const imgRef = useRef<HTMLImageElement | null>( null )
+    const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
+
+    // console.log( base64 )
+    useEffect( () => {
+        if( !imgRef.current ) return
+        setAvgRGB( getAverageRGB( imgRef.current ) )
+    }, [ imgRef ] )
 
     return (
-        <div className={ styles.post }>
-            <PostLayout content={ content } title={ title }/>
-            <PostActionsNavbar/>
+        <div 
+            className={ styles.post_wrap }
+            style={ {
+                background: `radial-gradient( 
+                    circle at 100% 100%, 
+                    rgba(${ avgRGB && Object.values( avgRGB ).join( "," ) || "120, 147, 245" }, 0.11) 0, 
+                    #2C2C2C1c 60%, 
+                    #2727271c 100%
+                )`
+            } }
+        >
+            <PostUserNavbar/>
+            <h1>{ title }</h1>
+            <span className={ styles.post_wrap_text }>
+                { content && base64 ? 
+                    <img 
+                        ref={ imgRef }
+                        className={ styles.post_wrap_img } 
+                        src={ base64 }
+                        crossOrigin='anonymous'
+                    /> : 
+                    <span id="text-post" className={ styles.post_wrap_text }>
+                        { content || "" }
+                    </span>
+                }
+            </span>
         </div>
     )
 }
 
-export default Text
+export default PostLayout
