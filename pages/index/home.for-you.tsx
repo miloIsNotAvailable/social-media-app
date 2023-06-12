@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ForYou } from "../../components/for-you";
 import { loader } from "../../components/for-you/loaders/loadPosts";
 
-export { loader }
+// export { loader }
 
 const Home: FC  = () => {
 

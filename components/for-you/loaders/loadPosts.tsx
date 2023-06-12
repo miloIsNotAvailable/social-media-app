@@ -9,18 +9,21 @@ export const loader: LoaderFunction = async( {
 } ) => {
 
     // console.log( "hey" )
-    if( typeof window === "undefined" ) return defer( { data: null } )
+    // if( typeof window === "undefined" ) return defer( { data: null } )
 
-    const data = queryClient.fetchQuery( {
+    const d =  typeof window !== "undefined" && queryClient.fetchQuery( {
         queryKey: ["UserCommunities"],
         queryFn: fetcher<UserCommunitiesQuery, UserCommunitiesQueryVariables>( 
                 client, 
                 UserCommunitiesDocument,
-                { userId: "" } 
+                { userId: "" },
+                {
+                    "Access-Control-Allow-Credentials": "true"
+                }
             )
     } )
 
-    console.log( data )
+    console.log( d )
 
-    return defer( { data } )
+    return defer( { data: d } )
 }
