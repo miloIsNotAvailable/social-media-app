@@ -4,7 +4,8 @@ export type User = {
 	email: string,
 	name?: string,
 	posts: Post[],
-	communities: UsersCommunitiesBridge[]
+	communities: UsersCommunitiesBridge[],
+	liked: Like[]
 }
 
 export type Post = {
@@ -17,7 +18,16 @@ export type Post = {
 	authorId?: string,
 	community?: Community,
 	communityId?: string,
-	communities: UsersCommunitiesBridge[]
+	communities: UsersCommunitiesBridge[],
+	likes: Like[]
+}
+
+export type Like = {
+	id: string,
+	post?: Post,
+	postId?: string,
+	user?: User,
+	userId?: string
 }
 
 export type Community = {

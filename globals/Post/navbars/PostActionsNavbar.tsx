@@ -5,7 +5,11 @@ const Like = lazy( () => import( "../buttons/Like" ) )
 const Comment = lazy( () => import( "../buttons/Comment" ) )
 const Share = lazy( () => import( "../buttons/share" ) )
 
-const PostActionsNavbar: FC = () => {
+interface PostActionsNavbarProps {
+    id: string
+}
+
+const PostActionsNavbar: FC<PostActionsNavbarProps> = ( { id } ) => {
 
     return (
         <nav className={ styles.post_actions_nav_wrap }>
@@ -16,7 +20,7 @@ const PostActionsNavbar: FC = () => {
                 <Comment/>
             </Suspense>
             <Suspense fallback={ <Loading width={ "var(--icon-size)" } height={ "var(--icon-size)" }/> }>
-                <Like/>
+                <Like id={ id }/>
             </Suspense>
         </nav>
     )

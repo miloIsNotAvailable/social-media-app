@@ -20,6 +20,7 @@ create table if not exists public.userscommunitiesbridge (
 	id text not null default uuid_v4s(),
 	user_id text not null,
 	community_id text not null,
+	post_id text null,
 	constraint community_community_fkey foreign key(community_id) references "community"(id) on update cascade on delete restrict,
 	constraint user_users_fkey foreign key(user_id) references "user"(id) on update cascade on delete restrict,
 	constraint userscommunitiesbridge_id_as_pkey primary key(id)

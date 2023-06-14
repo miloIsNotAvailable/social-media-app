@@ -73,3 +73,11 @@ query UserCommunities($userId: String!) {
     updatedAt
   }
 }
+
+mutation LikePost($userId: String!, $postId: String!) {
+  likePost(userId: $userId, postId: $postId) {
+    id
+    postId
+    userId
+  }
+}

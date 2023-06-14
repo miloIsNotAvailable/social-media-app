@@ -10,6 +10,7 @@ import PostActionsNavbar from '../navbars/PostActionsNavbar'
 interface TextProps {
     content?: string | null
     title?: string | null
+    id?: string | null
 }
 
 function getAverageRGB( imgEl: HTMLImageElement ) {
@@ -57,12 +58,12 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     return rgb;
 
 }
-const Text: FC<TextProps> = ( { content, title } ) => {
+const Text: FC<TextProps> = ( { content, title, id } ) => {
 
     return (
         <div className={ styles.post }>
             <PostLayout content={ content } title={ title }/>
-            <PostActionsNavbar/>
+            <PostActionsNavbar id={ id! }/>
         </div>
     )
 }

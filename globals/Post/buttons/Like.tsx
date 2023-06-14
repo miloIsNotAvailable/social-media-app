@@ -1,12 +1,30 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Icon from '@globals/Icon'
+import { useLikePostMutation } from '../../../graphql/codegen/gql/gql'
+import { client } from '../../../router/graphqlClient'
 
-const Like: FC = () => {
+interface LikeProps {
+    id: string
+}
+
+const Like: FC<LikeProps> = ( { id } ) => {
 
     const [ open, setOpen ] = useState<boolean>( false )
+    const { isLoading, mutate } = useLikePostMutation( client, {
+        onMutate: () => {
+            setOpen( !open )
+        },
+        onError: () => {
+            setOpen( false )
+        }
+    } )
 
     const handleLike: () => void = () => {
         setOpen( !open )
+        mutate( {
+            postId: id,
+            userId: ""
+        } )
     }
 
     return (

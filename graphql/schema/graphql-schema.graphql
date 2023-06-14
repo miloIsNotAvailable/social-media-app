@@ -79,6 +79,13 @@ type Post {
   author: [User]
   authorId: String
   communityId: String
+  likes: [Like]
+}
+
+type Like  {
+  id: String
+  userId: String
+  postId: String
 }
 
 type Query {
@@ -90,5 +97,6 @@ type Mutation {
   signin( email: String!, password: String!, username: String ): Auth
   createCommunity( title: String!, description: String ): Community @auth
   createPost( title: String!, content: String, communityId: String ): Post @auth
+  likePost( userId: String!, postId: String! ): Like @auth
 }
 
