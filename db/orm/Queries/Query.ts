@@ -102,9 +102,11 @@ export default class Query<T> extends Connect {
             )
         } )
 
-        let keys = Object.keys( where ).map( x => `${this.table}.${x}` )
+        console.log( res_compare_arr )
 
-        return `where ${ keys.join( "," ) } ${ res_compare_arr.join( "AND" ) }`
+        let keys = Object.keys( where ).map( ( x, ind ) => `${this.table}.${x} ${res_compare_arr[ ind ] || "" }` )
+
+        return `where ${ keys.join( "AND " ) }`
     }
 
     private _select_include = ( 

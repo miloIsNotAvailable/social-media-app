@@ -49,6 +49,7 @@ export type Community = {
 export type Like = {
   __typename?: 'Like';
   id?: Maybe<Scalars['String']>;
+  like?: Maybe<Scalars['Boolean']>;
   postId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
 };
@@ -76,8 +77,8 @@ export type MutationCreatePostArgs = {
 
 
 export type MutationLikePostArgs = {
+  like: Scalars['Boolean'];
   postId: Scalars['String'];
-  userId: Scalars['String'];
 };
 
 
@@ -104,11 +105,17 @@ export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
   userCommunities?: Maybe<Array<Maybe<Post>>>;
+  userLikedPost?: Maybe<Like>;
 };
 
 
 export type QueryUserCommunitiesArgs = {
   user_id: Scalars['String'];
+};
+
+
+export type QueryUserLikedPostArgs = {
+  postId: Scalars['String'];
 };
 
 export enum Role {
@@ -277,6 +284,7 @@ export type CommunityResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type LikeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Like'] = ResolversParentTypes['Like']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  like?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   postId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -285,7 +293,7 @@ export type LikeResolvers<ContextType = any, ParentType extends ResolversParentT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createCommunity?: Resolver<Maybe<ResolversTypes['Community']>, ParentType, ContextType, RequireFields<MutationCreateCommunityArgs, 'title'>>;
   createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title'>>;
-  likePost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'postId' | 'userId'>>;
+  likePost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'like' | 'postId'>>;
   signin?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationSigninArgs, 'email' | 'password'>>;
 };
 
@@ -305,6 +313,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
+  userLikedPost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QueryUserLikedPostArgs, 'postId'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -380,13 +389,20 @@ export type UserCommunitiesQueryVariables = Exact<{
 
 export type UserCommunitiesQuery = { __typename?: 'Query', userCommunities?: Array<{ __typename?: 'Post', authorId?: string | null, communityId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null, updatedAt?: string | null } | null> | null };
 
-export type LikePostMutationVariables = Exact<{
-  userId: Scalars['String'];
+export type UserLikedPostQueryVariables = Exact<{
   postId: Scalars['String'];
 }>;
 
 
-export type LikePostMutation = { __typename?: 'Mutation', likePost?: { __typename?: 'Like', id?: string | null, postId?: string | null, userId?: string | null } | null };
+export type UserLikedPostQuery = { __typename?: 'Query', userLikedPost?: { __typename?: 'Like', like?: boolean | null } | null };
+
+export type LikePostMutationVariables = Exact<{
+  postId: Scalars['String'];
+  like: Scalars['Boolean'];
+}>;
+
+
+export type LikePostMutation = { __typename?: 'Mutation', likePost?: { __typename?: 'Like', like?: boolean | null } | null };
 
 
 export const UserAuthDocument = `
@@ -507,12 +523,31 @@ export const useUserCommunitiesQuery = <
       fetcher<UserCommunitiesQuery, UserCommunitiesQueryVariables>(client, UserCommunitiesDocument, variables, headers),
       options
     );
+export const UserLikedPostDocument = `
+    query userLikedPost($postId: String!) {
+  userLikedPost(postId: $postId) {
+    like
+  }
+}
+    `;
+export const useUserLikedPostQuery = <
+      TData = UserLikedPostQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: UserLikedPostQueryVariables,
+      options?: UseQueryOptions<UserLikedPostQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<UserLikedPostQuery, TError, TData>(
+      ['userLikedPost', variables],
+      fetcher<UserLikedPostQuery, UserLikedPostQueryVariables>(client, UserLikedPostDocument, variables, headers),
+      options
+    );
 export const LikePostDocument = `
-    mutation LikePost($userId: String!, $postId: String!) {
-  likePost(userId: $userId, postId: $postId) {
-    id
-    postId
-    userId
+    mutation LikePost($postId: String!, $like: Boolean!) {
+  likePost(postId: $postId, like: $like) {
+    like
   }
 }
     `;

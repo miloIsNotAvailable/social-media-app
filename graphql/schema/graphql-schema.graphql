@@ -86,17 +86,19 @@ type Like  {
   id: String
   userId: String
   postId: String
+  like: Boolean
 }
 
 type Query {
   hello: String @auth
   userCommunities( user_id: String! ): [Post] @auth
+  userLikedPost( postId: String! ): Like @auth
 }
 
 type Mutation {
   signin( email: String!, password: String!, username: String ): Auth
   createCommunity( title: String!, description: String ): Community @auth
   createPost( title: String!, content: String, communityId: String ): Post @auth
-  likePost( userId: String!, postId: String! ): Like @auth
+  likePost( postId: String!, like: Boolean! ): Like @auth
 }
 

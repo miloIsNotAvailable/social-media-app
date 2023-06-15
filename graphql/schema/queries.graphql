@@ -74,10 +74,14 @@ query UserCommunities($userId: String!) {
   }
 }
 
-mutation LikePost($userId: String!, $postId: String!) {
-  likePost(userId: $userId, postId: $postId) {
-    id
-    postId
-    userId
+query userLikedPost($postId: String!) {
+  userLikedPost(postId: $postId) {
+    like
+  }
+}
+
+mutation LikePost($postId: String!, $like: Boolean!) {
+  likePost(postId: $postId, like: $like) {
+    like
   }
 }

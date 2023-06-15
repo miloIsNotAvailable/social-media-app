@@ -2,7 +2,7 @@ import { rootType } from "../../interfaces/graphql"
 import { orm } from "./orm/orm";
 import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
-import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables } from "../codegen/gql/gql";
+import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryUserLikedPostArgs } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
@@ -68,6 +68,18 @@ export const root: rootType = {
             } catch( e ) { 
                 throw new GraphQLError( e as any ) 
             }
+        },
+        async userLikedPost( _, { postId }: QueryUserLikedPostArgs, { user } ) {
+
+            const data = await orm.like.select( {
+                data: { id: true },
+                where: {
+                    postId,
+                    userId: user
+                }
+            } )
+
+            return { like: !!data?.length } 
         }
     },
 
@@ -150,7 +162,17 @@ export const root: rootType = {
                 throw new GraphQLError( e as any )
             }
         },
-        async likePost( _, { postId, userId }: LikePostMutationVariables, { user } ) {
+        async likePost( _, { postId, like }: LikePostMutationVariables, { user } ) {
+
+            console.log(like )
+
+            if( !like ) {
+                await orm.like.delete( {
+                    where: { userId: user, postId }
+                } )
+
+                return { like }
+            }
 
             const data = await orm.like.insert( {
                 data: {
@@ -159,7 +181,7 @@ export const root: rootType = {
                 }
             } )
 
-            return { postId, userId: user }
+            return { like }
         }
     }
 }
