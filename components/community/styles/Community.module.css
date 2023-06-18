@@ -1,0 +1,18 @@
+.comunity_header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.community_name {
+    display: inline-flex;
+    gap: 1rem;
+}
+
+.community_desc {
+    width: clamp( 45ch, 50%, 75ch );
+    font-family: "Switzer";
+    font-weight: normal;
+    font-size: var(--font-size-small);
+    color: var(--light-grey)
+}
