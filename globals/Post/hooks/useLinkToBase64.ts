@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-function validURL( str: string ) {
+export function validURL( str: string ) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address

@@ -2,8 +2,9 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { styles } from '../styles'
 import PostUserNavbar from '../navbars/PostUserNavbar'
 import { isBase64String } from '../interfaces/branded/Base64Type'
-import { useLinkToBase64 } from '../hooks/useLinkToBase64'
+import { useLinkToBase64, validURL } from '../hooks/useLinkToBase64'
 import { Spinner } from '@globals/Fallback'
+import Image from '../scenes/Image'
 
 interface PostLayoutProps {
     content?: string | null
@@ -23,11 +24,14 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
         count = 0;
 
     if (!context) {
+        console.log( "no contexxt" )
         return defaultRGB;
     }
 
-    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
-    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+    height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height || canvas.clientWidth;
+    width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width || canvas.clientHeight; 
+
+    console.log( width, height )
 
     context.drawImage(imgEl, 0, 0);
 
@@ -35,6 +39,7 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
         data = context.getImageData(0, 0, width, height);
     } catch(e) {
         /* security error, img on diff domain */
+        console.log( e )
         return defaultRGB;
     }
 
@@ -58,14 +63,23 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
 const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
 
     const base64 = useLinkToBase64( content as string | null )
-    const imgRef = useRef<HTMLImageElement | null>( null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
+    
+    const imageRef = useRef<HTMLImageElement | null>( null )
 
-    // console.log( base64 )
     useEffect( () => {
-        if( !imgRef.current ) return
-        setAvgRGB( getAverageRGB( imgRef.current ) )
-    }, [ imgRef ] )
+        if( !imageRef.current || !base64 ) return
+
+        const img = document.createElement( "img" )
+        img.src = base64
+        img.crossOrigin = "anonymous"
+        img.className = styles.post_wrap_image
+
+        setAvgRGB( getAverageRGB( img ) )
+
+    }, [ imageRef.current, base64 ] )
+
+    console.log( avgRGB )
 
     return (
         <div 
@@ -82,13 +96,9 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
             <PostUserNavbar/>
             <h1>{ title }</h1>
             <span className={ styles.post_wrap_text }>
-                { content && base64 ? 
-                    <img 
-                        ref={ imgRef }
-                        className={ styles.post_wrap_img } 
-                        src={ base64 }
-                        crossOrigin='anonymous'
-                    /> : 
+                { content && validURL( content ) ? 
+                    <Image link={ content } ref={ imageRef as React.Ref<React.MutableRefObject<HTMLImageElement> | undefined> | undefined }/>
+                    : 
                     <span id="text-post" className={ styles.post_wrap_text }>
                         { content || "" }
                     </span>
