@@ -31,8 +31,6 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height || canvas.clientWidth;
     width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width || canvas.clientHeight; 
 
-    console.log( width, height )
-
     context.drawImage(imgEl, 0, 0);
 
     try {
@@ -74,12 +72,13 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
         img.src = base64
         img.crossOrigin = "anonymous"
         img.className = styles.post_wrap_image
+        
+        img.onload = () => {
 
-        setAvgRGB( getAverageRGB( img ) )
+            setAvgRGB( getAverageRGB( img ) )
+        }
 
     }, [ imageRef.current, base64 ] )
-
-    console.log( avgRGB )
 
     return (
         <div 
