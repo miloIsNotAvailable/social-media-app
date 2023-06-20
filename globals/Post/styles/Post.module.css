@@ -81,3 +81,11 @@
 .post_actions_nav_wrap div {
    height: var(--icon-size) !important;
 }
+
+.wrap_posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    place-items: center;
+    width: 100%;
+}

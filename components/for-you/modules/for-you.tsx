@@ -3,7 +3,7 @@ import { UserCommunitiesQuery, useUserCommunitiesQuery } from '../../../graphql/
 import { client } from '../../../router/graphqlClient'
 import { Await, defer, useLoaderData, useNavigate } from 'react-router-dom'
 import { styles } from '../styles'
-import Post from '@globals/Post'
+import Post, { Posts } from '@globals/Post'
 import { Post as PostType } from '../../../db/orm/ast/types'
 import { Spinner } from '@globals/Fallback'
 
@@ -26,12 +26,10 @@ const ForYou: FC = () => {
 
     return (
         <div className={ styles.for_you_wrap }>
-            { data?.userCommunities && data!.userCommunities!.map( 
-                ( e: any ) => (
-                <Post
-                    { ...(e!) }
-                />
-            ) ) }
+            { 
+                data?.userCommunities && 
+                <Posts posts={ data.userCommunities }/> 
+            }
         </div>
     )
 }
