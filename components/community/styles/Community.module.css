@@ -1,7 +1,9 @@
-.comunity_header {
+.community_header {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
+    place-items: center;
 }
 
 .community_name {
@@ -15,5 +17,6 @@
     font-family: "Switzer";
     font-weight: normal;
     font-size: var(--font-size-small);
-    color: var(--light-grey)
+    color: var(--light-grey);
+    text-align: center;
 }
