@@ -46,6 +46,22 @@ export type Community = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type CommunityDetails = {
+  __typename?: 'CommunityDetails';
+  communities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
+  createdAt?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+};
+
+export type CommunityPosts = {
+  __typename?: 'CommunityPosts';
+  posts?: Maybe<Array<Maybe<Post>>>;
+};
+
+export type CommunityQuery = CommunityDetails | CommunityPosts;
+
 export type Like = {
   __typename?: 'Like';
   id?: Maybe<Scalars['String']>;
@@ -104,8 +120,15 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
+  queryCommunity?: Maybe<CommunityQuery>;
   userCommunities?: Maybe<Array<Maybe<Post>>>;
   userLikedPost?: Maybe<Like>;
+};
+
+
+export type QueryQueryCommunityArgs = {
+  communityId: Scalars['String'];
+  includePosts?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -211,11 +234,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping of union types */
 export type ResolversUnionTypes = {
   Auth: ( AuthError ) | ( AuthSuccess );
+  CommunityQuery: ( CommunityDetails ) | ( CommunityPosts );
 };
 
 /** Mapping of union parent types */
 export type ResolversUnionParentTypes = {
   Auth: ( AuthError ) | ( AuthSuccess );
+  CommunityQuery: ( CommunityDetails ) | ( CommunityPosts );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -225,6 +250,9 @@ export type ResolversTypes = {
   AuthSuccess: ResolverTypeWrapper<AuthSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Community: ResolverTypeWrapper<Community>;
+  CommunityDetails: ResolverTypeWrapper<CommunityDetails>;
+  CommunityPosts: ResolverTypeWrapper<CommunityPosts>;
+  CommunityQuery: ResolverTypeWrapper<ResolversUnionTypes['CommunityQuery']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Like: ResolverTypeWrapper<Like>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -243,6 +271,9 @@ export type ResolversParentTypes = {
   AuthSuccess: AuthSuccess;
   Boolean: Scalars['Boolean'];
   Community: Community;
+  CommunityDetails: CommunityDetails;
+  CommunityPosts: CommunityPosts;
+  CommunityQuery: ResolversUnionParentTypes['CommunityQuery'];
   Int: Scalars['Int'];
   Like: Like;
   Mutation: {};
@@ -282,6 +313,24 @@ export type CommunityResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CommunityDetailsResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommunityDetails'] = ResolversParentTypes['CommunityDetails']> = {
+  communities?: Resolver<Maybe<Array<Maybe<ResolversTypes['UsersCommunitiesBridge']>>>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommunityPostsResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommunityPosts'] = ResolversParentTypes['CommunityPosts']> = {
+  posts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommunityQueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommunityQuery'] = ResolversParentTypes['CommunityQuery']> = {
+  __resolveType: TypeResolveFn<'CommunityDetails' | 'CommunityPosts', ParentType, ContextType>;
+};
+
 export type LikeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Like'] = ResolversParentTypes['Like']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   like?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -312,6 +361,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  queryCommunity?: Resolver<Maybe<ResolversTypes['CommunityQuery']>, ParentType, ContextType, RequireFields<QueryQueryCommunityArgs, 'communityId'>>;
   userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
   userLikedPost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QueryUserLikedPostArgs, 'postId'>>;
 };
@@ -339,6 +389,9 @@ export type Resolvers<ContextType = any> = {
   AuthError?: AuthErrorResolvers<ContextType>;
   AuthSuccess?: AuthSuccessResolvers<ContextType>;
   Community?: CommunityResolvers<ContextType>;
+  CommunityDetails?: CommunityDetailsResolvers<ContextType>;
+  CommunityPosts?: CommunityPostsResolvers<ContextType>;
+  CommunityQuery?: CommunityQueryResolvers<ContextType>;
   Like?: LikeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
@@ -403,6 +456,14 @@ export type LikePostMutationVariables = Exact<{
 
 
 export type LikePostMutation = { __typename?: 'Mutation', likePost?: { __typename?: 'Like', like?: boolean | null } | null };
+
+export type QueryCommunityQueryVariables = Exact<{
+  communityId: Scalars['String'];
+  includePosts?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type QueryCommunityQuery = { __typename?: 'Query', queryCommunity?: { __typename?: 'CommunityDetails', id?: string | null, title?: string | null, description?: string | null, createdAt?: string | null } | { __typename?: 'CommunityPosts', posts?: Array<{ __typename?: 'Post', content?: string | null, authorId?: string | null, title?: string | null } | null> | null } | null };
 
 
 export const UserAuthDocument = `
@@ -562,6 +623,39 @@ export const useLikePostMutation = <
     useMutation<LikePostMutation, TError, LikePostMutationVariables, TContext>(
       ['LikePost'],
       (variables?: LikePostMutationVariables) => fetcher<LikePostMutation, LikePostMutationVariables>(client, LikePostDocument, variables, headers)(),
+      options
+    );
+export const QueryCommunityDocument = `
+    query QueryCommunity($communityId: String!, $includePosts: Boolean) {
+  queryCommunity(communityId: $communityId, includePosts: $includePosts) {
+    ... on CommunityDetails {
+      id
+      title
+      description
+      createdAt
+    }
+    ... on CommunityPosts {
+      posts {
+        content
+        authorId
+        title
+      }
+    }
+  }
+}
+    `;
+export const useQueryCommunityQuery = <
+      TData = QueryCommunityQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: QueryCommunityQueryVariables,
+      options?: UseQueryOptions<QueryCommunityQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<QueryCommunityQuery, TError, TData>(
+      ['QueryCommunity', variables],
+      fetcher<QueryCommunityQuery, QueryCommunityQueryVariables>(client, QueryCommunityDocument, variables, headers),
       options
     );
 export { fetcher }

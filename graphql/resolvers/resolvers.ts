@@ -2,7 +2,7 @@ import { rootType } from "../../interfaces/graphql"
 import { orm } from "./orm/orm";
 import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
-import { CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryUserLikedPostArgs } from "../codegen/gql/gql";
+import { CommunityDetails, CommunityPosts, CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryCommunityQueryVariables, QueryUserLikedPostArgs } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
@@ -27,12 +27,54 @@ export const root: rootType = {
                 console.log( e ) 
             }
         },
+
+        async queryCommunity( _, { communityId, includePosts }: QueryCommunityQueryVariables ) {
+
+            try {
+                if( includePosts ) {
+
+                    const data = await orm.community.select( {
+                        data: { id: true },
+                        include: {
+                            posts: {
+                                data: { 
+                                    authorId: true, 
+                                    content: true, 
+                                    id: true, 
+                                    title: true 
+                                },
+                                on: { id: true },
+                                equal: { communityId: true }
+                            }
+                        },
+                        where: { id: communityId }
+                    } )
+
+                    return {
+                        __typename: "CommunityPosts",
+                        posts: ( data || [] )
+                    } as CommunityPosts
+                } 
+
+                const data = await orm.community.select( {
+                    data: { id: true, title: true, description: true },
+                    where: { id: communityId }
+                } )    
+
+                return {
+                    __typename: "CommunityDetails",
+                    ...( data && data[0] || [] )
+                } as CommunityDetails    
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
+        },
         async userCommunities( _, args, { user } ) {
             try {
 
                 const data = await orm.userscommunitiesbridge.select( {
                     data: {
-                        community_id: true,
+                        community_id: true
                     },
                     include: {
                         community: {

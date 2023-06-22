@@ -9,6 +9,7 @@ import Image from '../scenes/Image'
 interface PostLayoutProps {
     content?: string | null
     title?: string | null
+    communityId?: string | null
 }
 
 function getAverageRGB( imgEl: HTMLImageElement ) {
@@ -58,7 +59,9 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     return rgb;
 
 }
-const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
+const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
+
+    console.log( communityId )
 
     const base64 = useLinkToBase64( content as string | null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
@@ -92,7 +95,7 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title } ) => {
                 )`
             } }
         >
-            <PostUserNavbar/>
+            <PostUserNavbar communityId={ communityId }/>
             <h1>{ title }</h1>
             <span className={ styles.post_wrap_text }>
                 { content && validURL( content ) ? 

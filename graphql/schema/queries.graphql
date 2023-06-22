@@ -85,3 +85,21 @@ mutation LikePost($postId: String!, $like: Boolean!) {
     like
   }
 }
+
+query QueryCommunity($communityId: String!, $includePosts: Boolean) {
+  queryCommunity(communityId: $communityId, includePosts: $includePosts) {
+    ... on CommunityDetails {
+      id
+      title
+      description
+      createdAt
+    }
+    ... on CommunityPosts {
+      posts {
+        content,
+        authorId,
+        title
+      }
+    }
+  }
+}

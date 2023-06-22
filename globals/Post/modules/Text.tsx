@@ -11,6 +11,7 @@ interface TextProps {
     content?: string | null
     title?: string | null
     id?: string | null
+    communityId?: string | null
 }
 
 function getAverageRGB( imgEl: HTMLImageElement ) {
@@ -58,11 +59,15 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     return rgb;
 
 }
-const Text: FC<TextProps> = ( { content, title, id } ) => {
+const Text: FC<TextProps> = ( { content, title, id, communityId } ) => {
 
     return (
         <div className={ styles.post }>
-            <PostLayout content={ content } title={ title }/>
+            <PostLayout 
+                content={ content } 
+                title={ title } 
+                communityId={ communityId }
+            />
             <PostActionsNavbar id={ id! }/>
         </div>
     )
