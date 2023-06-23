@@ -21,6 +21,7 @@ Clone the repository: git clone https://github.com/miloIsNotAvailable/social-med
 
 ## with docker: 
 ```docker-compose up```
+if volume error pops up, check for "vite" volume, if it does not eixst create one manually
 
 ## with npm 
 - ```npm install```
