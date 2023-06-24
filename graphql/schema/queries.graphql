@@ -98,7 +98,8 @@ query QueryCommunity($communityId: String!, $includePosts: Boolean) {
       posts {
         content,
         authorId,
-        title
+        title,
+        id
       }
     }
   }

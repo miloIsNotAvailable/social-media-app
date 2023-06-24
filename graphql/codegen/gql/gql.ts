@@ -463,7 +463,7 @@ export type QueryCommunityQueryVariables = Exact<{
 }>;
 
 
-export type QueryCommunityQuery = { __typename?: 'Query', queryCommunity?: { __typename?: 'CommunityDetails', id?: string | null, title?: string | null, description?: string | null, createdAt?: string | null } | { __typename?: 'CommunityPosts', posts?: Array<{ __typename?: 'Post', content?: string | null, authorId?: string | null, title?: string | null } | null> | null } | null };
+export type QueryCommunityQuery = { __typename?: 'Query', queryCommunity?: { __typename?: 'CommunityDetails', id?: string | null, title?: string | null, description?: string | null, createdAt?: string | null } | { __typename?: 'CommunityPosts', posts?: Array<{ __typename?: 'Post', content?: string | null, authorId?: string | null, title?: string | null, id?: string | null } | null> | null } | null };
 
 
 export const UserAuthDocument = `
@@ -639,6 +639,7 @@ export const QueryCommunityDocument = `
         content
         authorId
         title
+        id
       }
     }
   }
