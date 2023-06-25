@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Loose } from "../../../interfaces/custom";
 import { styles } from "../styles";
 
@@ -7,8 +7,8 @@ type MainpageRoutes = "home" | "user" | "communities"
 type SectionRoutes = "communities"
 
 interface NavRouteProps {
-    mainpage: Loose<MainpageRoutes, string>
-    section: Loose<SectionRoutes, string>
+    mainpage?: Loose<MainpageRoutes, string>
+    section?: Loose<SectionRoutes, string>
     element?: string
 }
 
@@ -18,26 +18,30 @@ const NavRoute: FC<NavRouteProps> = ( {
     section, 
 } ) => {
 
+    const { pathname } = useLocation()
+
+    const [ l, m, s, e ] = pathname.split( "/" )
+
     return (
         <div className={ styles.wrap_routes }>
             <span>{":// "}</span>
             <a 
                 className={ styles.main } 
-                href={ mainpage as string }
+                href={ (mainpage || m) as string }
             >
-                { mainpage + "." }
+                { (mainpage || m) + "." }
             </a>
             <a 
                 className={ styles.sec } 
                 href={ section as string }
             >
-                { section + (!!element ? "." : "") }
+                { (section || s) + (!!(element || e) ? "." : "") }
             </a>
             <a 
                 className={ styles.el } 
-                href={ element as string }
+                href={ "/" + section + "/" + element as string }
             >
-                { element }
+                { (element || e) }
             </a>
         </div>
     )
