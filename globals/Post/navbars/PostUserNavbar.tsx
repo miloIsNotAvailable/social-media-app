@@ -36,11 +36,8 @@ const PostUserNavbar: FC<PostUserNavbarProps> = ( { communityId } ) => {
                 <Loading width={ "5rem" } height={ "1rem" }/> 
             }>
                 <NavRoute 
-                    mainpage={ "community" } 
-                    section={ data && 
-                        (data!.queryCommunity as CommunityDetails).title 
-                        || "lorem_ipsum" 
-                    }/>
+                    link={ "/communities/" + (data!.queryCommunity as CommunityDetails).title }    
+                />
             </Suspense>
         </nav>
     )

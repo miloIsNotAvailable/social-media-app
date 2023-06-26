@@ -10,30 +10,32 @@ interface NavRouteProps {
     mainpage?: Loose<MainpageRoutes, string>
     section?: Loose<SectionRoutes, string>
     element?: string
+    link?: string
 }
 
 const NavRoute: FC<NavRouteProps> = ( { 
     element, 
     mainpage, 
     section, 
+    link
 } ) => {
 
     const { pathname } = useLocation()
 
-    const [ l, m, s, e ] = pathname.split( "/" )
+    const [ l, m, s, e ] = (link || pathname).split( "/" )
 
     return (
         <div className={ styles.wrap_routes }>
             <span>{":// "}</span>
             <a 
                 className={ styles.main } 
-                href={ (mainpage || m) as string }
+                href={ "/" + (mainpage || m) as string }
             >
                 { (mainpage || m) + "." }
             </a>
             <a 
                 className={ styles.sec } 
-                href={ section as string }
+                href={ "/" + (m + "/" + s) as string }
             >
                 { (section || s) + (!!(element || e) ? "." : "") }
             </a>
