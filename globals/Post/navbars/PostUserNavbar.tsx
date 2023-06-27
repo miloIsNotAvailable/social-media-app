@@ -36,7 +36,8 @@ const PostUserNavbar: FC<PostUserNavbarProps> = ( { communityId } ) => {
                 <Loading width={ "5rem" } height={ "1rem" }/> 
             }>
                 <NavRoute 
-                    link={ "/communities/" + (data!.queryCommunity as CommunityDetails).title }    
+                    link={ "/communities/" + (data!.queryCommunity as CommunityDetails).title }
+                    to={ "communities/" + (data!.queryCommunity as CommunityDetails).id }
                 />
             </Suspense>
         </nav>

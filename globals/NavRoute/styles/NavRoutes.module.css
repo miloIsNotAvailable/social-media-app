@@ -1,6 +1,28 @@
 .wrap_routes {
     display: flex;
     flex-direction: row;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    max-width: 50ch;
+    overflow: hidden;
+}
+
+.wrap_routes .span-0 {
+    font-family: "Switzer";
+    font-weight: bold;
+    color: var(--green);
+}
+
+.wrap_routes .span-1 {
+    font-family: "Switzer";
+    font-weight: bolder;
+    color: var(--light-grey);
+}
+
+.wrap_routes .span-2 {
+    font-family: "Switzer";
+    font-weight: 100;
+    color: var(--dark-grey);
 }
 
 .wrap_routes span {

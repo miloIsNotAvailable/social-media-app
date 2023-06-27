@@ -11,23 +11,33 @@ interface NavRouteProps {
     section?: Loose<SectionRoutes, string>
     element?: string
     link?: string
+    to?: string
 }
 
 const NavRoute: FC<NavRouteProps> = ( { 
     element, 
     mainpage, 
     section, 
-    link
+    link,
+    to
 } ) => {
 
     const { pathname } = useLocation()
 
-    const [ l, m, s, e ] = (link || pathname).split( "/" )
+    const [ l, ...links ] = (link || pathname)
+    .replace( /\/$/, "" )
+    .replace( /\/(?<!$)/g, "./" )
+    .split( "/" )
 
     return (
-        <div className={ styles.wrap_routes }>
+        <a href={ "/" + to } className={ styles.wrap_routes }>
             <span>{":// "}</span>
-            <a 
+            { links.map( ( val, ind ) => (
+                <span className={ styles[("span-" + ind)] }>
+                    { val }
+                </span>   
+            ) ) }
+            {/* <a 
                 className={ styles.main } 
                 href={ "/" + (mainpage || m) as string }
             >
@@ -44,8 +54,8 @@ const NavRoute: FC<NavRouteProps> = ( {
                 href={ "/" + section + "/" + element as string }
             >
                 { (element || e) }
-            </a>
-        </div>
+            </a> */}
+        </a>
     )
 }
 
