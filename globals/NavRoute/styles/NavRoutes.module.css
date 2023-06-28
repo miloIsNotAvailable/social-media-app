@@ -3,8 +3,6 @@
     flex-direction: row;
     text-decoration: none;
     text-overflow: ellipsis;
-    max-width: 50ch;
-    overflow: hidden;
 }
 
 .wrap_routes .span-0 {
@@ -13,23 +11,26 @@
     color: var(--green);
 }
 
+.wrap_routes span {
+    white-space: pre-wrap;
+    color: var(--dark-grey);
+    font-weight: 500;
+}
+
 .wrap_routes .span-1 {
     font-family: "Switzer";
     font-weight: bolder;
     color: var(--light-grey);
+    width: 10ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .wrap_routes .span-2 {
     font-family: "Switzer";
     font-weight: 100;
     color: var(--dark-grey);
-}
-
-.wrap_routes span {
-    white-space: pre-wrap;
-    color: var(--dark-grey);
-    font-weight: 500;
-
 }
 
 .wrap_routes * {
