@@ -29,7 +29,7 @@ const PostActionsNavbar: FC<PostActionsNavbarProps> = ( { id } ) => {
                 <Share/>
             </Suspense>
             <Suspense fallback={ <Loading width={ "var(--icon-size)" } height={ "var(--icon-size)" }/> }>
-                <Comment/>
+                <Comment id={ id }/>
             </Suspense>
             <Suspense fallback={ <Loading width={ "var(--icon-size)" } height={ "var(--icon-size)" }/> }>
                 <Like id={ id } liked={ !!data?.userLikedPost?.like }/>
