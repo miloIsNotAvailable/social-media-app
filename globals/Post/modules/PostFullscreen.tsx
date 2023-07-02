@@ -23,7 +23,7 @@ const FullScreenPost: FC = () => {
                 title={ data?.queryPost?.title } 
                 communityId={ data?.queryPost?.communityId }
             />
-            <FullScreenActionsNavbar id={ "ye" }/>
+            <FullScreenActionsNavbar id={ queryPostId }/>
         </div>
     )
 }
