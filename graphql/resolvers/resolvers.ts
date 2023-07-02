@@ -2,7 +2,7 @@ import { rootType } from "../../interfaces/graphql"
 import { orm } from "./orm/orm";
 import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
-import { CommunityDetails, CommunityPosts, CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryCommunityQueryVariables, QueryUserLikedPostArgs } from "../codegen/gql/gql";
+import { CommunityDetails, CommunityPosts, CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryCommunityQueryVariables, QueryUserLikedPostArgs, QueryPostQueryVariables, QueryQueryPostArgs, QueryPostQuery } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
@@ -69,6 +69,28 @@ export const root: rootType = {
                 throw new GraphQLError( e as any )
             }
         },
+
+        async queryPost( _, { id }: QueryQueryPostArgs ) {
+
+            try {
+                const data = await orm.post.select( {
+                    data: {
+                        content:  true,
+                        id: true,
+                        title: true,
+                        communityId: true
+                    },
+                    where: { id }
+                } )
+    
+                const [ { communityid, ...rest } ] = data as (Post & { communityid: Post[ "communityId" ] })[]
+
+                return { ...rest, communityId: communityid } as QueryPostQuery[ "queryPost" ]
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
+        },
+
         async userCommunities( _, args, { user } ) {
             try {
 

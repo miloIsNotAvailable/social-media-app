@@ -104,3 +104,14 @@ query QueryCommunity($communityId: String!, $includePosts: Boolean) {
     }
   }
 }
+
+query QueryPost($queryPostId: String!) {
+  queryPost(id: $queryPostId) {
+    authorId
+    communityId
+    content
+    createdAt
+    id
+    title
+  }
+}

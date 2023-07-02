@@ -6,6 +6,7 @@ import { useLinkToBase64 } from '../hooks/useLinkToBase64'
 import { Spinner } from '@globals/Fallback'
 import PostLayout from '../layouts/PostLayout'
 import PostActionsNavbar from '../navbars/PostActionsNavbar'
+import { useNavigate } from 'react-router-dom'
 
 interface TextProps {
     content?: string | null
@@ -61,8 +62,14 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
 }
 const Text: FC<TextProps> = ( { content, title, id, communityId } ) => {
 
+    const navigate = useNavigate()
+
+    const handleNavigateToComments: () => void = () => {
+        navigate( "/posts/" + id )
+    }
+
     return (
-        <div className={ styles.post }>
+        <div className={ styles.post } onClick={ handleNavigateToComments }>
             <PostLayout 
                 content={ content } 
                 title={ title } 

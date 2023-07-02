@@ -108,6 +108,7 @@ type Query {
   userCommunities( user_id: String! ): [Post] @auth
   userLikedPost( postId: String! ): Like @auth
   queryCommunity( communityId: String!, includePosts: Boolean ): CommunityQuery
+  queryPost( id: String! ): Post
 }
 
 type Mutation {

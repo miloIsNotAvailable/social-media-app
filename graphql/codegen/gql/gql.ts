@@ -121,6 +121,7 @@ export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
   queryCommunity?: Maybe<CommunityQuery>;
+  queryPost?: Maybe<Post>;
   userCommunities?: Maybe<Array<Maybe<Post>>>;
   userLikedPost?: Maybe<Like>;
 };
@@ -129,6 +130,11 @@ export type Query = {
 export type QueryQueryCommunityArgs = {
   communityId: Scalars['String'];
   includePosts?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type QueryQueryPostArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -362,6 +368,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   queryCommunity?: Resolver<Maybe<ResolversTypes['CommunityQuery']>, ParentType, ContextType, RequireFields<QueryQueryCommunityArgs, 'communityId'>>;
+  queryPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryQueryPostArgs, 'id'>>;
   userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
   userLikedPost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QueryUserLikedPostArgs, 'postId'>>;
 };
@@ -464,6 +471,13 @@ export type QueryCommunityQueryVariables = Exact<{
 
 
 export type QueryCommunityQuery = { __typename?: 'Query', queryCommunity?: { __typename?: 'CommunityDetails', id?: string | null, title?: string | null, description?: string | null, createdAt?: string | null } | { __typename?: 'CommunityPosts', posts?: Array<{ __typename?: 'Post', content?: string | null, authorId?: string | null, title?: string | null, id?: string | null } | null> | null } | null };
+
+export type QueryPostQueryVariables = Exact<{
+  queryPostId: Scalars['String'];
+}>;
+
+
+export type QueryPostQuery = { __typename?: 'Query', queryPost?: { __typename?: 'Post', authorId?: string | null, communityId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null } | null };
 
 
 export const UserAuthDocument = `
@@ -657,6 +671,32 @@ export const useQueryCommunityQuery = <
     useQuery<QueryCommunityQuery, TError, TData>(
       ['QueryCommunity', variables],
       fetcher<QueryCommunityQuery, QueryCommunityQueryVariables>(client, QueryCommunityDocument, variables, headers),
+      options
+    );
+export const QueryPostDocument = `
+    query QueryPost($queryPostId: String!) {
+  queryPost(id: $queryPostId) {
+    authorId
+    communityId
+    content
+    createdAt
+    id
+    title
+  }
+}
+    `;
+export const useQueryPostQuery = <
+      TData = QueryPostQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: QueryPostQueryVariables,
+      options?: UseQueryOptions<QueryPostQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<QueryPostQuery, TError, TData>(
+      ['QueryPost', variables],
+      fetcher<QueryPostQuery, QueryPostQueryVariables>(client, QueryPostDocument, variables, headers),
       options
     );
 export { fetcher }
