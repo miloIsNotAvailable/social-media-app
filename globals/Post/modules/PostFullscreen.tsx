@@ -6,6 +6,7 @@ import { useQueryPostQuery } from '../../../graphql/codegen/gql/gql'
 import { client } from '../../../router/graphqlClient'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@globals/Fallback'
+import SendCommentLayout from '../layouts/SendCommentLayout'
 
 const FullScreenPost: FC = () => {
 
@@ -24,6 +25,7 @@ const FullScreenPost: FC = () => {
                 communityId={ data?.queryPost?.communityId }
             />
             <FullScreenActionsNavbar id={ queryPostId }/>
+            <SendCommentLayout/>
         </div>
     )
 }
