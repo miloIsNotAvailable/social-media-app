@@ -124,6 +124,15 @@
     color: var(--dark-grey);
     font-family: "Switzer";
     font-weight: normal;
+    width: fit-content;
+    border-radius: 2rem;
+}
+
+.comments_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
 }
 
 .wrap_send_comment {
@@ -131,4 +140,18 @@
     flex-direction: row;
     gap: 1rem;
     width: 100%;
+}
+
+.comment_wrap {
+    display: inline-flex;
+    gap: 1rem;
+    align-items: center;
+    font-family: "Switzer";
+    font-weight: normal;
+}
+
+.comment_wrap span {
+    font-family: "Switzer";
+    font-weight: normal;
+    color: var(--font-color)
 }
