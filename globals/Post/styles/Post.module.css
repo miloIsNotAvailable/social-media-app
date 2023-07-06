@@ -155,3 +155,9 @@
     font-weight: normal;
     color: var(--font-color)
 }
+
+.comments_wrap_responses {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

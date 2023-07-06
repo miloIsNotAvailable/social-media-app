@@ -21,7 +21,9 @@ const SendCommentLayout: FC = () => {
                 <CommentInput/>
                 <SendComment/>
             </div>
-            <Posts posts={ arr }/>
+            <div className={ styles.comments_wrap_responses }>
+                <Posts posts={ arr }/>
+            </div>
         </div>
     )
 }
