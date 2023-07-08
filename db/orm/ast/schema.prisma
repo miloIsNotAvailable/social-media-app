@@ -8,6 +8,12 @@ model User {
     liked       Like[]
 }
 
+model Comment {
+    id           String     @id @default(uuid())
+    post_id      String     
+    post         Post?      @relation( fields: [ post_id ], references: [ id ] )
+}
+
 model Post {
     id           String     @id @default(uuid())
     createdAt    DateTime   @default(now())
@@ -20,6 +26,7 @@ model Post {
     communityId  String?
     communities  UsersCommunitiesBridge[]
     likes        Like[]
+    comments     Comment[]
 }
 
 model Like  {

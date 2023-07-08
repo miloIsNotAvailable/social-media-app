@@ -8,6 +8,12 @@ export type User = {
 	liked: Like[]
 }
 
+export type Comment = {
+	id: string,
+	post_id: string,
+	post?: Post
+}
+
 export type Post = {
 	id: string,
 	createdAt: string,
@@ -19,7 +25,8 @@ export type Post = {
 	community?: Community,
 	communityId?: string,
 	communities: UsersCommunitiesBridge[],
-	likes: Like[]
+	likes: Like[],
+	comments: Comment[]
 }
 
 export type Like = {

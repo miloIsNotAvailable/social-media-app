@@ -37,3 +37,12 @@ create table if not exists public.post (
 	constraint post_id_as_pkey primary key(id),
 	constraint user_author_fkey foreign key(authorid) references "user"(id) on update cascade on delete restrict
 );
+
+create table if not exists public.like (
+	id text not null default uuid_v4s(),
+	postid text null,
+	userid text null,
+	constraint like_id_as_pkey primary key(id),
+	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
+	constraint user_user_fkey foreign key(userid) references "user"(id) on update cascade on delete restrict
+);

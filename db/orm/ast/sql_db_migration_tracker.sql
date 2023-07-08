@@ -95,3 +95,6 @@ alter table public.UsersCommunitiesBridge add column post_id TEXT NULL;
 
 CREATE TABLE IF NOT EXISTS public.Like (id TEXT NOT NULL DEFAULT uuid_v4s(), postId TEXT NULL, userId TEXT NULL, CONSTRAINT Like_id_as_pkey PRIMARY KEY (id), CONSTRAINT Post_post_fkey FOREIGN KEY (postId) REFERENCES public.Post(id) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT User_user_fkey FOREIGN KEY (userId) REFERENCES public.User(id) ON DELETE CASCADE ON UPDATE CASCADE);
 
+
+CREATE TABLE IF NOT EXISTS public.Comment (id TEXT NOT NULL DEFAULT uuid_v4s(), post_id TEXT NOT NULL, CONSTRAINT Comment_id_as_pkey PRIMARY KEY (id), CONSTRAINT Post_post_fkey FOREIGN KEY (post_id) REFERENCES public.Post(id) ON DELETE CASCADE ON UPDATE CASCADE);
+
