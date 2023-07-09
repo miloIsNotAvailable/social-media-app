@@ -5,6 +5,7 @@ import { styles } from '../styles'
 import CommentLayout from './CommentLayout'
 import Posts from '../modules/Posts'
 import { Post } from '../../../db/orm/ast/types'
+import { Outline } from '@globals/Button'
 
 const SendCommentLayout: FC = () => {
 
@@ -19,7 +20,9 @@ const SendCommentLayout: FC = () => {
         <div className={ styles.comments_wrap }>
             <div className={ styles.wrap_send_comment }>
                 <CommentInput/>
-                <SendComment/>
+                <Outline style={ { width: "100%" } }>
+                    send
+                </Outline>
             </div>
             <div className={ styles.comments_wrap_responses }>
                 <Posts posts={ arr }/>
