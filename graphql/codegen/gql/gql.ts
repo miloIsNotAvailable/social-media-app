@@ -37,6 +37,12 @@ export type AuthSuccess = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type Comment = {
+  __typename?: 'Comment';
+  comments?: Maybe<Array<Maybe<Post>>>;
+  post_id?: Maybe<Scalars['String']>;
+};
+
 export type Community = {
   __typename?: 'Community';
   communities?: Maybe<Array<Maybe<UsersCommunitiesBridge>>>;
@@ -120,10 +126,16 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']>;
+  queryComments?: Maybe<Comment>;
   queryCommunity?: Maybe<CommunityQuery>;
   queryPost?: Maybe<Post>;
   userCommunities?: Maybe<Array<Maybe<Post>>>;
   userLikedPost?: Maybe<Like>;
+};
+
+
+export type QueryQueryCommentsArgs = {
+  post_id: Scalars['String'];
 };
 
 
@@ -255,6 +267,7 @@ export type ResolversTypes = {
   AuthError: ResolverTypeWrapper<AuthError>;
   AuthSuccess: ResolverTypeWrapper<AuthSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Comment: ResolverTypeWrapper<Comment>;
   Community: ResolverTypeWrapper<Community>;
   CommunityDetails: ResolverTypeWrapper<CommunityDetails>;
   CommunityPosts: ResolverTypeWrapper<CommunityPosts>;
@@ -276,6 +289,7 @@ export type ResolversParentTypes = {
   AuthError: AuthError;
   AuthSuccess: AuthSuccess;
   Boolean: Scalars['Boolean'];
+  Comment: Comment;
   Community: Community;
   CommunityDetails: CommunityDetails;
   CommunityPosts: CommunityPosts;
@@ -307,6 +321,12 @@ export type AuthErrorResolvers<ContextType = any, ParentType extends ResolversPa
 
 export type AuthSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthSuccess'] = ResolversParentTypes['AuthSuccess']> = {
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
+  comments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
+  post_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -367,6 +387,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  queryComments?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryQueryCommentsArgs, 'post_id'>>;
   queryCommunity?: Resolver<Maybe<ResolversTypes['CommunityQuery']>, ParentType, ContextType, RequireFields<QueryQueryCommunityArgs, 'communityId'>>;
   queryPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryQueryPostArgs, 'id'>>;
   userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
@@ -395,6 +416,7 @@ export type Resolvers<ContextType = any> = {
   Auth?: AuthResolvers<ContextType>;
   AuthError?: AuthErrorResolvers<ContextType>;
   AuthSuccess?: AuthSuccessResolvers<ContextType>;
+  Comment?: CommentResolvers<ContextType>;
   Community?: CommunityResolvers<ContextType>;
   CommunityDetails?: CommunityDetailsResolvers<ContextType>;
   CommunityPosts?: CommunityPostsResolvers<ContextType>;
