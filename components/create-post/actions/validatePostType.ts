@@ -10,6 +10,12 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
 
     if( typeof window === "undefined" ) return
 
+    if( !!data.get( "text" ) ) return { 
+      communityId: data.get( "community" ),
+      title: data.get( "title" ),
+      content: data.get( "text" ) || data.get( "link" )
+    } as CreatePostMutationVariables
+
     const file = data.get( "media" )
     
     const e = new Promise( resolve => {

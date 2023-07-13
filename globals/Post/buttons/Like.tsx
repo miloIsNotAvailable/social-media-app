@@ -10,8 +10,6 @@ interface LikeProps {
 
 const Like: FC<LikeProps> = ( { id, liked } ) => {
 
-    console.log( liked )
-
     const [ open, setOpen ] = useState<boolean>( () => liked )
     const { isLoading, mutate, data } = useLikePostMutation( client, {
         onMutate: async ( newLike ) => {

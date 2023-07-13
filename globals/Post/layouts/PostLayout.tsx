@@ -61,8 +61,6 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
 }
 const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
 
-    console.log( communityId )
-
     const base64 = useLinkToBase64( content as string | null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
     
