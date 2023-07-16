@@ -85,3 +85,8 @@
     gap: .5rem;
     text-decoration: none;
 }
+
+.search_profile_wrap {
+    display: inline-flex;
+    gap: 1rem
+}
