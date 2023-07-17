@@ -115,3 +115,9 @@ query QueryPost($queryPostId: String!) {
     title
   }
 }
+
+mutation CreateComment($postId: String!, $title: String!, $content: String, $communityId: String) {
+  createComment(post_id: $postId, title: $title, content: $content, communityId: $communityId) {
+    post_id
+  }
+}

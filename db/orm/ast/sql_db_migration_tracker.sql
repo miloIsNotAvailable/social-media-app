@@ -98,3 +98,6 @@ CREATE TABLE IF NOT EXISTS public.Like (id TEXT NOT NULL DEFAULT uuid_v4s(), pos
 
 CREATE TABLE IF NOT EXISTS public.Comment (id TEXT NOT NULL DEFAULT uuid_v4s(), post_id TEXT NOT NULL, CONSTRAINT Comment_id_as_pkey PRIMARY KEY (id), CONSTRAINT Post_post_fkey FOREIGN KEY (post_id) REFERENCES public.Post(id) ON DELETE CASCADE ON UPDATE CASCADE);
 
+
+alter table public.Comment add column comment_id TEXT NOT NULL;
+

@@ -11,6 +11,7 @@ model User {
 model Comment {
     id           String     @id @default(uuid())
     post_id      String     
+    comment_id   String     
     post         Post?      @relation( fields: [ post_id ], references: [ id ] )
 }
 

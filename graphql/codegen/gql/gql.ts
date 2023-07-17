@@ -78,10 +78,19 @@ export type Like = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment?: Maybe<Comment>;
   createCommunity?: Maybe<Community>;
   createPost?: Maybe<Post>;
   likePost?: Maybe<Like>;
   signin?: Maybe<Auth>;
+};
+
+
+export type MutationCreateCommentArgs = {
+  communityId?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['String']>;
+  post_id: Scalars['String'];
+  title: Scalars['String'];
 };
 
 
@@ -366,6 +375,7 @@ export type LikeResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'post_id' | 'title'>>;
   createCommunity?: Resolver<Maybe<ResolversTypes['Community']>, ParentType, ContextType, RequireFields<MutationCreateCommunityArgs, 'title'>>;
   createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'title'>>;
   likePost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'like' | 'postId'>>;
@@ -500,6 +510,16 @@ export type QueryPostQueryVariables = Exact<{
 
 
 export type QueryPostQuery = { __typename?: 'Query', queryPost?: { __typename?: 'Post', authorId?: string | null, communityId?: string | null, content?: string | null, createdAt?: string | null, id?: string | null, title?: string | null } | null };
+
+export type CreateCommentMutationVariables = Exact<{
+  postId: Scalars['String'];
+  title: Scalars['String'];
+  content?: InputMaybe<Scalars['String']>;
+  communityId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'Comment', post_id?: string | null } | null };
 
 
 export const UserAuthDocument = `
@@ -719,6 +739,31 @@ export const useQueryPostQuery = <
     useQuery<QueryPostQuery, TError, TData>(
       ['QueryPost', variables],
       fetcher<QueryPostQuery, QueryPostQueryVariables>(client, QueryPostDocument, variables, headers),
+      options
+    );
+export const CreateCommentDocument = `
+    mutation CreateComment($postId: String!, $title: String!, $content: String, $communityId: String) {
+  createComment(
+    post_id: $postId
+    title: $title
+    content: $content
+    communityId: $communityId
+  ) {
+    post_id
+  }
+}
+    `;
+export const useCreateCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>(
+      ['CreateComment'],
+      (variables?: CreateCommentMutationVariables) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(client, CreateCommentDocument, variables, headers)(),
       options
     );
 export { fetcher }

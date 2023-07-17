@@ -44,5 +44,18 @@ create table if not exists public.like (
 	userid text null,
 	constraint like_id_as_pkey primary key(id),
 	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
-	constraint user_user_fkey foreign key(userid) references "user"(id) on update cascade on delete restrict
+	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
+	constraint user_user_fkey foreign key(userid) references "user"(id) on update cascade on delete restrict,
+	constraint post_post_fkey foreign key(post_id) references "post"(id) on update cascade on delete restrict,
+	constraint post_post_fkey foreign key(post_id) references "post"(id) on update cascade on delete restrict
+);
+
+create table if not exists public.comment (
+	id text not null default uuid_v4s(),
+	post_id text not null,
+	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
+	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
+	constraint comment_id_as_pkey primary key(id),
+	constraint post_post_fkey foreign key(post_id) references "post"(id) on update cascade on delete restrict,
+	constraint post_post_fkey foreign key(post_id) references "post"(id) on update cascade on delete restrict
 );

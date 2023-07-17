@@ -11,6 +11,7 @@ export type User = {
 export type Comment = {
 	id: string,
 	post_id: string,
+	comment_id: string,
 	post?: Post
 }
 

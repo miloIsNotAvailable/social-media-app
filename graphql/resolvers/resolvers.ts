@@ -2,7 +2,7 @@ import { rootType } from "../../interfaces/graphql"
 import { orm } from "./orm/orm";
 import { signin } from "./auth/graphql_resolvers";
 import { GraphQLError } from "graphql";
-import { CommunityDetails, CommunityPosts, CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryCommunityQueryVariables, QueryUserLikedPostArgs, QueryPostQueryVariables, QueryQueryPostArgs, QueryPostQuery, QueryQueryCommentsArgs } from "../codegen/gql/gql";
+import { CommunityDetails, CommunityPosts, CreateCommunityMutationVariables, CreatePostMutation, CreatePostMutationVariables, LikePostMutationVariables, QueryCommunityQueryVariables, QueryUserLikedPostArgs, QueryPostQueryVariables, QueryQueryPostArgs, QueryPostQuery, QueryQueryCommentsArgs, MutationCreateCommentArgs } from "../codegen/gql/gql";
 import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
@@ -268,6 +268,26 @@ export const root: rootType = {
             } )
 
             return { like }
+        },
+        async createComment( _, { post_id, ...rest }: MutationCreateCommentArgs ) {
+            
+            try {
+                const comment_id = uuid()
+
+                const data = await orm.comment.insert( {
+                    data: { post_id, comment_id },
+                    include: {
+                        post:  {
+                            id: comment_id, 
+                            ...(rest as any)
+                        }
+                    }
+                } )
+    
+                return { post_id }
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
         }
     }
 }

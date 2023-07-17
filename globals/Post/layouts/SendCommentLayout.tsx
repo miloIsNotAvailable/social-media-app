@@ -6,10 +6,11 @@ import CommentLayout from './CommentLayout'
 import Posts from '../modules/Posts'
 import { Post } from '../../../db/orm/ast/types'
 import { Outline } from '@globals/Button'
-import { Form, useActionData, useLocation } from 'react-router-dom'
-import { CreatePostMutationVariables } from '../../../graphql/codegen/gql/gql'
+import { Form, useActionData, useLocation, useParams } from 'react-router-dom'
+import { CreatePostMutationVariables, useCreateCommentMutation } from '../../../graphql/codegen/gql/gql'
 import CreatePostForm from '../../../components/create-post/layouts/CreatePostForm'
 import PickCommunity from '../../../components/create-post/forms/PickCommunity'
+import { client } from '../../../router/graphqlClient'
 
 const SendCommentLayout: FC = () => {
 
@@ -21,10 +22,11 @@ const SendCommentLayout: FC = () => {
     } as Post )
 
     const action = useActionData() as CreatePostMutationVariables
-    const location = useLocation()
+    const { id } = useParams() as  { id: string }
+    const { data, isLoading, mutate } = useCreateCommentMutation( client )
 
     useEffect( () => {
-        console.log( { action } )
+        action && mutate( { postId: id, ...action } )
     }, [ action ] )
 
     return (

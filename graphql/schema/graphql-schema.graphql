@@ -122,5 +122,6 @@ type Mutation {
   createCommunity( title: String!, description: String ): Community @auth
   createPost( title: String!, content: String, communityId: String ): Post @auth
   likePost( postId: String!, like: Boolean! ): Like @auth
+  createComment( post_id: String!, title: String!, content: String, communityId: String ): Comment
 }
 
