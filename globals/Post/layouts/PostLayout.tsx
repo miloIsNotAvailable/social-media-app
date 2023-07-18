@@ -94,16 +94,18 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
             } }
         >
             <PostUserNavbar communityId={ communityId }/>
-            <h1>{ title }</h1>
-            <span className={ styles.post_wrap_text }>
-                { content && validURL( content ) ? 
-                    <Image link={ content } ref={ imageRef as React.Ref<React.MutableRefObject<HTMLImageElement> | undefined> | undefined }/>
-                    : 
-                    <span id="text-post" className={ styles.post_wrap_text }>
-                        { content || "" }
-                    </span>
-                }
-            </span>
+            <div className={ styles.post_content_wrap }>
+                <h1>{ title }</h1>
+                <span className={ styles.post_wrap_text }>
+                    { content && validURL( content ) ? 
+                        <Image link={ content } ref={ imageRef as React.Ref<React.MutableRefObject<HTMLImageElement> | undefined> | undefined }/>
+                        : 
+                        <span id="text-post" className={ styles.post_wrap_text }>
+                            { content || "" }
+                        </span>
+                    }
+                </span>
+            </div>
         </div>
     )
 }

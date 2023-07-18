@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { Spinner } from '@globals/Fallback'
 import { styles } from '../styles'
 
-const CommunityPosts: FC = () => {
+const CommunityPostsComponent: FC = () => {
 
     const { id: communityId } = useParams() as { id: string }
 
@@ -27,4 +27,4 @@ const CommunityPosts: FC = () => {
     )
 }
 
-export default CommunityPosts
+export default CommunityPostsComponent

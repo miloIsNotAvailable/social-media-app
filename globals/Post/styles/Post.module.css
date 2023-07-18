@@ -66,6 +66,13 @@
     font-family: "Switzer";
     font-weight: bolder;
     font-size: var(--title-size);
+    letter-spacing: -0.02rem;
+}
+
+.post_content_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem
 }
 
 .post_wrap_text {

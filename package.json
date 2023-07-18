@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/server.js",
-    "storybook": "start-storybook -p 6006 -s ./public",
+    "storybook": "start-storybook -p 6007 -s ./public",
     "test-storybook": "test-storybook",
     "build-storybook": "build-storybook -s ./public",
     "test": "jest",
