@@ -88,5 +88,46 @@
 
 .search_profile_wrap {
     display: inline-flex;
-    gap: 1rem
+    gap: 1rem;
+    align-items: center
 }
+
+.search_wrap {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search_input {
+    visibility: collapse;
+    display: none;
+    max-width: 0%;
+    overflow: hidden;
+    padding: .25rem;
+    font-family: "Switzer";
+    font-weight: normal;
+    font-size: var(--font-size);
+    color: white;
+    background-color: var(--bg);
+    transition: all 100ms ease;
+    border: none;
+    border-radius: var(--border-1);
+    outline: none
+    /* outline: solid 1px var(--light-grey) */
+}
+
+.search_input::placeholder {
+    font-family: "Switzer";
+    font-weight: normal;
+    font-size: var(--font-size);
+    color: var(--light-grey);
+}
+
+.search_wrap:is( :active, :focus, :focus-within ) .search_input {
+    visibility: visible;
+    display: flex;
+    /* padding: .25rem; */
+    max-width: 100%;
+}
+

@@ -40,14 +40,20 @@ const TopNavbar: FC = () => {
 
             <NavRoute mainpage={ loc_arr[1] } section={ loc_arr[2] } element={ loc_arr[3] }/>
             <div className={ styles.search_profile_wrap }>
-                <Suspense fallback={ <Loading width={ "1rem" } height={ "1rem" }/> }>
-                    <Icon>
-                        <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="7.5" cy="8" r="7" stroke="white"/>
-                            <line x1="17.6464" y1="17.8536" x2="12.6464" y2="12.8536" stroke="white"/>
-                        </svg>
-                    </Icon>
-                </Suspense>
+                <div className={ styles.search_wrap } tabIndex={ 1 }>
+                    <Suspense fallback={ <Loading width={ "1rem" } height={ "1rem" }/> }>
+                        <Icon>
+                            <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="7.5" cy="8" r="7" stroke="white"/>
+                                <line x1="17.6464" y1="17.8536" x2="12.6464" y2="12.8536" stroke="white"/>
+                            </svg>
+                        </Icon>
+                        <input 
+                            placeholder={ "search" }
+                            className={ styles.search_input }
+                        />
+                    </Suspense>
+                </div>
                 <Suspense fallback={ <Loading width={ "1rem" } height={ "1rem" }/> }>
                     <Profile/>
                 </Suspense>
