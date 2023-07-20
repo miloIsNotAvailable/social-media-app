@@ -144,3 +144,25 @@
     object-fit: cover;
     border-radius: var(--border-2);
 }
+
+.flair {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: "Switzer";
+    font-size: var(--font-size);
+    font-weight: normal;
+    color: var(--light-grey)
+}
+
+.flairs_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem
+}
+
+.flairs_post_wrap {
+    display: inline-flex;
+    gap: .5rem
+}

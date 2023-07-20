@@ -7,6 +7,7 @@ import CreatePostForm from "../layouts/CreatePostForm";
 import { Form, useActionData, useFormAction } from "react-router-dom";
 import { CreatePostMutationVariables, useCreatePostMutation } from "../../../graphql/codegen/gql/gql";
 import { client } from "../../../router/graphqlClient";
+import PickFlairs from "../forms/PickFlairs";
 // import { Outline } from "@globals/Button";
 
 const Post = lazy( () => import( "@globals/Post" ) )
@@ -42,6 +43,7 @@ const CreatePost: FC = () => {
             >
                 <CreatePostHeader/>
                 <PickCommunity/>
+                <PickFlairs/>
                 <CreatePostForm/>
                 <div className={ styles.submit_wrap }>
                     <Suspense fallback={ 
@@ -68,7 +70,7 @@ const CreatePost: FC = () => {
                     </Suspense>
                 </div>
             </Form>
-            <div className={ styles.create_post_preview }>
+            {/* <div className={ styles.create_post_preview }>
                 <Suspense fallback={ 
                     <Spinner
                         width={ "2rem" }
@@ -81,7 +83,7 @@ const CreatePost: FC = () => {
                         content={ "lorem ipsum dolorem sit amet" }
                     />
                 </Suspense>
-            </div>
+            </div> */}
         </div>
     )
 }
