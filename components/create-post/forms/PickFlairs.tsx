@@ -1,5 +1,5 @@
 import { Default as Input } from '@globals/Input'
-import { ChangeEvent, FC, useRef, useState, MouseEvent } from 'react'
+import { ChangeEvent, FC, useRef, useState, MouseEvent, useEffect } from 'react'
 import { styles } from '../styles'
 import { Color } from '@globals/Button'
 import Flairs from '../scenes/Flairs'
@@ -16,8 +16,6 @@ const PickFlairs: FC = () => {
         setFlairs( prev => [ ...prev, ref.current!.value ] )
     }
 
-    console.log( flairs )
-
     return (
         <div className={ styles.flairs_wrap }>
             <div className={ styles.flairs_post_wrap }>
@@ -33,9 +31,11 @@ const PickFlairs: FC = () => {
                     add flair
                 </Color>
             </div>
-            { flairs.map( flair => ( 
-                <Flairs content={ flair }/> 
-            ) ) }
+            <div className={ styles.flairs_post_wrap }>
+                { flairs.map( flair => ( 
+                    <Flairs content={ flair }/> 
+                ) ) }
+            </div>
         </div>
     )
 }
