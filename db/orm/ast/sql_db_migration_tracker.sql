@@ -101,3 +101,6 @@ CREATE TABLE IF NOT EXISTS public.Comment (id TEXT NOT NULL DEFAULT uuid_v4s(), 
 
 alter table public.Comment add column comment_id TEXT NOT NULL;
 
+
+alter table public.Post add column flairs TEXT NULL;
+

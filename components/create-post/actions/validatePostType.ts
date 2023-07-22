@@ -8,6 +8,8 @@ export const action: RouteObject["action"] = async( { params, request } ) => {
 //   if( (data.get( "title" ) as string)!.length > 30 || data.get( "description" )!.length > 300 ) 
     // throw new Response( "invalid community name or description", { status: 400 } ) 
 
+    console.log( data.get( "flairs" ) )
+
     if( typeof window === "undefined" ) return
 
     if( !!data.get( "text" ) ) return { 

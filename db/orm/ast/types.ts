@@ -20,6 +20,7 @@ export type Post = {
 	createdAt: string,
 	updatedAt: string,
 	content?: string,
+	flairs?: string,
 	title: string,
 	author?: User,
 	authorId?: string,

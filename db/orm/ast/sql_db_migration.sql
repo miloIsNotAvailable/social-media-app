@@ -53,6 +53,7 @@ create table if not exists public.like (
 create table if not exists public.comment (
 	id text not null default uuid_v4s(),
 	post_id text not null,
+	comment_id text not null,
 	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
 	constraint post_post_fkey foreign key(postid) references "post"(id) on update cascade on delete restrict,
 	constraint comment_id_as_pkey primary key(id),
