@@ -1,0 +1,9 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    font-family: "Switzer";
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    letter-spacing: -0.02rem;
+}

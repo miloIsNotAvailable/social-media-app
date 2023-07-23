@@ -20,5 +20,6 @@ export const Primary = Template.bind({});
 Primary.args = {
     mainpage: "home",
     section: "communities",
-    element: "lorem-ipsum"
+    element: "lorem-ipsum",
+    link: "lorem/ipsum"
 }

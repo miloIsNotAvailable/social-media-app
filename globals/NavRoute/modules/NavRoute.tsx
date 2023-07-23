@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Loose } from "../../../interfaces/custom";
 import { styles } from "../styles";
+import Header from "@globals/Header";
 
 type MainpageRoutes = "home" | "user" | "communities"
 type SectionRoutes = "communities"
@@ -24,37 +25,36 @@ const NavRoute: FC<NavRouteProps> = ( {
 
     const { pathname } = useLocation()
 
-    const [ l, ...links ] = (link || pathname)
+    const [ ...links ] = (link || pathname)
+    // remove the last /
     .replace( /\/$/, "" )
+    // replace / with ./
     .replace( /\/(?<!$)/g, "./" )
+    // split./ on / so we get hello./hey./ -> [hello., hey.]
     .split( "/" )
 
     return (
-        <a href={ "/" + to } className={ styles.wrap_routes }>
-            <span>{":// "}</span>
-            { links.map( ( val, ind ) => (
-                <span className={ styles[("span-" + ind)] }>
-                    { val }
-                </span>   
-            ) ) }
-            {/* <a 
-                className={ styles.main } 
-                href={ "/" + (mainpage || m) as string }
+        <a 
+            href={ "/" + (link || to) } 
+            className={ styles.wrap_routes }
+        >
+            <Header 
+                whiteSpace="pre-wrap"
+                fontWeight={ 500 }
+                fontSize={ "var(--title-size)" }
+                color={ "var(--dark-grey)" }
             >
-                { (mainpage || m) + "." }
-            </a>
-            <a 
-                className={ styles.sec } 
-                href={ "/" + (m + "/" + s) as string }
+                {":// "}
+            </Header>
+            <Header 
+                fontSize={ "var(--title-size)" }
             >
-                { (section || s) + (!!(element || e) ? "." : "") }
-            </a>
-            <a 
-                className={ styles.el } 
-                href={ "/" + section + "/" + element as string }
-            >
-                { (element || e) }
-            </a> */}
+                { links.map( ( val, ind ) => (
+                    <span>
+                        { val }
+                    </span>   
+                ) ) }
+            </Header>
         </a>
     )
 }
