@@ -21,6 +21,8 @@
     place-items: center;
     width: 100%;
     padding: .5rem 0;
+    border-bottom: 1px solid var(--dark-grey);
+    margin-bottom: -1px;
 }
 
 .nav_switch_element_underline {
