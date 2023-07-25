@@ -12,13 +12,13 @@ const Navbar: FC = () => {
     
     return (
         <nav className={ styles.top_nav_wrap }>
-            <Lazy Component={ Menu }/>
+            <Lazy children={ <Menu/> }/>
             <NavRoute
                 // replace only the first /
                 link={ pathname.replace( /\//, "" ) }
                 to={ pathname.replace( /\//, "" ) }
             />
-            <Lazy Component={ Profile }/>
+            <Lazy children={ <Profile/> }/>
         </nav>
     )
 }

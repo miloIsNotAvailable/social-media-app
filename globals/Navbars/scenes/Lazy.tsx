@@ -2,10 +2,10 @@ import { Loading } from '@globals/Fallback'
 import { FC, Suspense, lazy } from 'react'
 
 type LazyProps = {
-    Component: React.LazyExoticComponent<FC>
+    children: JSX.Element | JSX.Element[]
 }
 
-const Lazy: FC<LazyProps> = ( { Component } ) => {
+const Lazy: FC<LazyProps> = ( { children } ) => {
 
     return (
         <Suspense fallback={ 
@@ -14,7 +14,7 @@ const Lazy: FC<LazyProps> = ( { Component } ) => {
                 height={ "var(--icon-size)" }
             /> 
         }>
-            <Component/>
+            { children }
         </Suspense>
     )
 }
