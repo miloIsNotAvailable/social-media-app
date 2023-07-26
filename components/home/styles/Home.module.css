@@ -131,3 +131,9 @@
     max-width: 100%;
 }
 
+.home_layout {
+    display: grid;
+    grid-template-rows: auto auto 100% auto;
+    height: 100vh;
+    width: 100vh;
+}
