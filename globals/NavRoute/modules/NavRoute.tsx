@@ -35,7 +35,7 @@ const NavRoute: FC<NavRouteProps> = ( {
 
     return (
         <a 
-            href={ "/" + (link || to) } 
+            href={ "/" + (to || link) } 
             className={ styles.wrap_routes }
         >
             <Header 

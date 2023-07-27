@@ -1,4 +1,4 @@
-import { FC, JSXElementConstructor, createElement, useEffect, useRef, useState } from 'react'
+import { FC, JSXElementConstructor, MutableRefObject, createElement, forwardRef, useEffect, useRef, useState } from 'react'
 import { styles } from '../styles'
 
 type E = Parameters<typeof createElement>
@@ -6,13 +6,13 @@ type V = { type: E[0], props: E[1] & {children: E[2]} }
 
 type SwitchProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
-const Switch: FC<SwitchProps> = ( children ) => {
+const Switch = forwardRef<MutableRefObject<HTMLElement | null>, SwitchProps>( ( children, ref ) => {
 
     const [ selected, setSelected ] = useState<number>( 0 )
     const divRef = useRef<HTMLDivElement | null>( null )
 
     return (
-        <nav className={ styles.nav_switch_wrap }>
+        <nav className={ styles.nav_switch_wrap } ref={ ref as any }>
             { (children!.children as React.ReactNode[])!.map( ( el, ind ) => (
                 <div 
                     ref={ divRef }
@@ -35,6 +35,6 @@ const Switch: FC<SwitchProps> = ( children ) => {
             ) ) }
         </nav>
     )
-}
+})
 
 export default Switch

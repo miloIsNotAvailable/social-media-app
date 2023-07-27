@@ -25,7 +25,26 @@ const router = ( args: any ) => createBrowserRouter( [ {
     return <div>hey</div>
   }
 } ] )
+
+const router_2 = ( args: any ) => createBrowserRouter( [ {
+  path: "*",
+  element: <HomeLayout>
+        <div style={ { width: "100%", height:"111vh" } }>
+            hello
+        </div>
+  </HomeLayout>,
+  ErrorBoundary: ( err ) => {
+    let error = useRouteError();
+    console.error( (error as any)?.data );
+
+    return <div>hey</div>
+  }
+} ] )
 const Template: ComponentStory<typeof HomeLayout> = (args) => <RouterProvider router={ router( args ) }/>
+const Template2: ComponentStory<typeof HomeLayout> = (args) => <RouterProvider router={ router_2( args ) }/>
 
 export const Primary = Template.bind({});
 Primary.args = {}
+
+export const Scroll = Template2.bind({});
+Scroll.args = {}
