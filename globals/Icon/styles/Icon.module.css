@@ -2,7 +2,7 @@
     cursor: pointer;
     display: grid;
     place-items: center;
-    width: var(--icon-size);
+    width: auto;
     height: var(--icon-size);
 }
 
