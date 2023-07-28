@@ -23,15 +23,21 @@ const HomeLayout: FC<HomeLayoutProps> = ( { children } ) => {
     useEffect( () => {
         if( !navRef.current ) return
 
-        navRef.current!.style.maxHeight = !isScrollDown ? "0%" : "100%"
-        navRef.current!.style.visibility = !isScrollDown ? "collapse" : "visible"
+        navRef.current!.style.maxHeight = !isScrollDown ? "0" : "4rem"
+        // navRef.current!.style.visibility = !isScrollDown ? "collapse" : "visible"
 
     }, [ isScrollDown ] )
 
     return (
         <div className={ styles.home_layout }>
             <DefaultNavbar/>
-            <SwitchNavbar ref={ navRef as any }>
+            <SwitchNavbar 
+                ref={ navRef as any } 
+                style={ { 
+                    maxHeight: "100%", 
+                    visibility: "visible" 
+                } }
+            >
                 <NavRoute 
                     link={ "h/for-you" }
                     to={ "home/for-you" }

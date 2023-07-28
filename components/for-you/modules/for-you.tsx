@@ -25,12 +25,12 @@ const ForYou: FC = () => {
     ) 
 
     return (
-        <div className={ styles.for_you_wrap }>
+        <>
             { 
                 data?.userCommunities && 
                 <Posts posts={ data.userCommunities }/> 
             }
-        </div>
+        </>
     )
 }
 

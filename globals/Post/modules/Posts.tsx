@@ -10,11 +10,11 @@ interface PostsProps {
 const Posts: FC<PostsProps> = ( { posts } ) => {
 
     return (
-        <div className={ styles.wrap_posts }>
+        <>
             { posts.map( e => (
                 <Text { ...e }/>
             ) ) }
-        </div>
+        </>
     )
 }
 

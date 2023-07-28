@@ -15,9 +15,7 @@ const BottomNavbar: FC  = () => {
         <nav className={ styles.nav_bottom_wrap }>
             { icon_arr.map( ( Component ) => (
                 <Lazy>
-                    <Icon>
-                        <Component/>
-                    </Icon>
+                    <Icon src={ Component }/>
                 </Lazy>
             ) ) }
         </nav>

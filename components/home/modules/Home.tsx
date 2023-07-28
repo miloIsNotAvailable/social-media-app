@@ -1,18 +1,14 @@
 import { FC } from 'react'
-import Navbar from '../../Navbar/build/Navbar'
 import { Outlet } from 'react-router-dom'
 import { styles } from '../styles'
-import TopNavbar from '../navbars/TopNavbar'
-import BottomNavbar from '../navbars/BottomNavbar'
+import HomeLayout from '../layouts/HomeLayout'
 
 const Home: FC = () => {
 
     return (
-        <div className={ styles.home_wrap }>
-            <TopNavbar/>
+        <HomeLayout>
             <Outlet/>
-            <BottomNavbar/>
-        </div>
+        </HomeLayout>
     )
 }
 

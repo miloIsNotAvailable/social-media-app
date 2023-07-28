@@ -60,14 +60,14 @@
     text-decoration: underline;
 }
 
+.wrap_routes span:nth-child(1) {
+    color: var(--green) !important
+}
+
 .wrap_routes span {
     color: var(--light-grey);
     max-width: 9ch;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.wrap_routes:nth-child(1) span:nth-child(1) {
-    color: var(--green)
 }
