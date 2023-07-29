@@ -9,7 +9,7 @@ const Menu = lazy( () => import( "../scenes/Menu" ) )
 const Navbar: FC = () => {
 
     const { pathname } = useLocation()
-    
+
     return (
         <nav className={ styles.top_nav_wrap }>
             <Lazy children={ <Menu/> }/>

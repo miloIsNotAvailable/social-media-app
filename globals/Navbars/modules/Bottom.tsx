@@ -9,14 +9,20 @@ import { styles } from "../styles"
 
 const BottomNavbar: FC  = () => {
 
-    const icon_arr = [ Slash, Communities, NewPost ]
+    const icon_arr = [ 
+        { Component: Slash, link: "/home/for-you" }, 
+        { Component: Communities, link: "/communities" }, 
+        { Component: NewPost, link: "/home/create-post" } 
+    ]
 
     return (
         <nav className={ styles.nav_bottom_wrap }>
-            { icon_arr.map( ( Component ) => (
-                <Lazy>
-                    <Icon src={ Component }/>
-                </Lazy>
+            { icon_arr.map( ( { Component, link } ) => (
+                <a href={ link }>
+                    <Lazy>
+                        <Icon src={ Component }/>
+                    </Lazy>
+                </a>
             ) ) }
         </nav>
     )
