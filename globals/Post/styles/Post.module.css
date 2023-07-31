@@ -180,3 +180,15 @@
     flex-direction: column;
     width: 100%;
 }
+
+.post_flair {
+    display: grid;
+    place-items: center;
+    padding: 1rem .5rem;
+    outline: 1px solid var(--dark-grey);
+    font-family: "Switzer";
+    font-weight: normal;
+    color: var(--font-color);
+    font-size: var(--font-size-small);
+    border-radius: 1rem;
+}
