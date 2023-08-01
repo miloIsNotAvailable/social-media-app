@@ -149,3 +149,12 @@
     overflow-y: auto;
     gap: 2rem;
 }
+
+.home_layout_body_wrap::-webkit-scrollbar {
+    width: .5rem;
+    background-color: var(--bg);
+}
+
+.home_layout_body_wrap::-webkit-scrollbar-thumb {
+    background-color: var(--light-grey);
+}
