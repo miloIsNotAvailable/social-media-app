@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Flair from '../scenes/Flair';
+import Flair from '../scenes/PostHeader';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '../../../router/graphqlClient';
@@ -22,5 +22,7 @@ const Template: ComponentStory<typeof Flair> = (args) =>
 
 export const Primary = Template.bind({});
 Primary.args = {
-    content: "hello"
+    community: "hello",
+    communityId: "1234",
+    flairs: [ "big flair", "bigger flair" ]
 }
