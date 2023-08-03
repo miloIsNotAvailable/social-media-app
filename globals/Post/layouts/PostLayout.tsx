@@ -5,6 +5,7 @@ import { isBase64String } from '../interfaces/branded/Base64Type'
 import { useLinkToBase64, validURL } from '../hooks/useLinkToBase64'
 import { Spinner } from '@globals/Fallback'
 import Image from '../scenes/Image'
+import PostHeader from '../scenes/PostHeader'
 
 interface PostLayoutProps {
     content?: string | null
@@ -93,7 +94,11 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
                 )`
             } }
         >
-            <PostUserNavbar communityId={ communityId }/>
+            <PostHeader 
+                community={ "hello" }
+                communityId={ communityId as string }
+                flairs={ [ "dummy flair" ] }
+            />
             <div className={ styles.post_content_wrap }>
                 <h1>{ title }</h1>
                 <span className={ styles.post_wrap_text }>

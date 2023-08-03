@@ -3,6 +3,9 @@ import Profile from "@globals/Profile";
 import { FC } from "react";
 import Flair from "./Flair";
 import { styles } from "../styles";
+import { Loading } from "@globals/Fallback";
+import { CommunityDetails, useQueryCommunityQuery } from "../../../graphql/codegen/gql/gql";
+import { client } from "../../../router/graphqlClient";
 
 interface PostHeaderProps {
     flairs: string[]
@@ -12,11 +15,26 @@ interface PostHeaderProps {
 
 const PostHeader: FC<PostHeaderProps> = ( { flairs, communityId, community } ) => {
 
+    const { data, isLoading } = useQueryCommunityQuery( client, {
+        communityId: (communityId as string)!,
+        includePosts: false
+    } )
+
+    if( isLoading ) return (
+        <nav className={ styles.top_navbar_wrap }>
+            <Loading width={ "1rem" } height={ "1rem" }/> 
+            <Loading width={ "5rem" } height={ "1rem" }/> 
+        </nav>
+    )
+
     return (
         <div className={ styles.post_header_wrap }>
             <Profile/>
             <div className={ styles.post_community_and_flairs }>
-                <NavRoute link={ "communities/" + community }/>
+                <NavRoute 
+                    link={ "communities/" + (data!.queryCommunity as CommunityDetails).title }
+                    to={ "communities/" + (data!.queryCommunity as CommunityDetails).id }
+                />
                 <div className={ styles.flairs_wrap }>
                     { flairs.map( flair => (
                         <Flair content={ flair }/>
