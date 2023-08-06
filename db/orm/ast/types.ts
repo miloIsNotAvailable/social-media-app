@@ -4,8 +4,10 @@ export type User = {
 	email: string,
 	name?: string,
 	posts: Post[],
+	post: Posts[],
 	communities: UsersCommunitiesBridge[],
-	liked: Like[]
+	liked: Like[],
+	like: Likes[]
 }
 
 export type Comment = {
@@ -31,6 +33,57 @@ export type Post = {
 	comments: Comment[]
 }
 
+export type Flairs = {
+	id: string,
+	createdAt: string,
+	updatedAt: string,
+	flair_name: string,
+	type: string,
+	flairs: PostFlairAssignments[]
+}
+
+export type PostFlairAssignments = {
+	id: string,
+	createdAt: string,
+	updatedAt: string,
+	flair?: Flairs,
+	flair_id?: string,
+	post?: Posts,
+	post_id?: string
+}
+
+export type PostContent = {
+	id: string,
+	createdAt: string,
+	updatedAt: string,
+	content?: string,
+	title: string,
+	post?: Posts,
+	post_id?: string
+}
+
+export type Posts = {
+	id: string,
+	comment: boolean,
+	type: string,
+	post_flairs: PostFlairAssignments[],
+	post_flair_id?: string,
+	likes: Likes[],
+	details: PostContent[],
+	author?: User,
+	author_id?: string,
+	community?: Community,
+	community_id?: string
+}
+
+export type Likes = {
+	id: string,
+	post?: Posts,
+	post_id?: string,
+	user?: User,
+	user_id?: string
+}
+
 export type Like = {
 	id: string,
 	post?: Post,
@@ -45,7 +98,8 @@ export type Community = {
 	title: string,
 	description: string,
 	communities: UsersCommunitiesBridge[],
-	posts: Post[]
+	posts: Post[],
+	post: Posts[]
 }
 
 export type UsersCommunitiesBridge = {

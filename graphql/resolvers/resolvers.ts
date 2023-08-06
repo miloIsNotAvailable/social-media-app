@@ -7,6 +7,7 @@ import { uuid } from 'uuidv4'
 import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
 import { Community, Post, UsersCommunitiesBridge } from "../../db/orm/ast/types";
+import postsRes from './posts'
 
 const prepareBase64DataUrl = ( base64: string ) => base64
     .replace('data:image/jpeg;', 'data:image/jpeg;charset=utf-8;')
@@ -17,6 +18,9 @@ const supabase = createClient( "https://pwfvdtvduwysiswsbyio.supabase.co", "eyJh
 
 export const root: rootType = {
     Query: {
+
+        ...postsRes.Query,
+
         async hello() {
             try {
 
@@ -171,6 +175,7 @@ export const root: rootType = {
 
     Mutation: {
         signin,
+        ...postsRes.Mutation,
         async createCommunity( 
             _, 
             { title, description }: CreateCommunityMutationVariables, 

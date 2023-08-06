@@ -26,11 +26,13 @@ export type Insert<T> = {
 }
 
 export type Like<T> = { LIKE: T }
+export type Or<T> = { Or: T }
 export type Where<T> =  AtMostTwoKeys<{
     [V in keyof 
     Partial<IncludeMatchingProperties<T, Primitives>>]: 
     Partial<IncludeMatchingProperties<T, Primitives>>[V] 
     | Like<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
+    | Or<Partial<IncludeMatchingProperties<T, Primitives>>[V]>
 }>
 
 type PickOnly<T, K extends keyof T> =

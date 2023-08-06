@@ -1,7 +1,7 @@
 import { QueryResult } from "pg";
 import { ExcludeExcept, IncludeExcept } from "../../../interfaces/custom";
 import { Connect } from "./Connect";
-import { Delete, Insert, Like, Select, Where } from "./interfaces";
+import { Delete, Insert, Like, Or, Select, Where } from "./interfaces";
 
 export default class Query<T> extends Connect {
     

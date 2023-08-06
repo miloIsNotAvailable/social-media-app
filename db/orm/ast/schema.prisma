@@ -4,8 +4,10 @@ model User {
     email       String      @unique
     name        String?
     posts       Post[]
+    post        Posts[]
     communities UsersCommunitiesBridge[]
     liked       Like[]
+    like        Likes[]
 }
 
 model Comment {
@@ -31,6 +33,81 @@ model Post {
     comments     Comment[]
 }
 
+// flairs type default=default app flair
+// type [community name]=community app flair
+model Flairs {
+    id           String     @id @default(uuid())
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+    // The name of the flair.
+    flair_name   String
+    // The type of the flair (e.g., default, community).
+    type         String
+    flairs       PostFlairAssignments[]
+}
+
+model PostFlairAssignments {
+    // self explanatory
+    id           String     @id @default(uuid())
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+    // flairs can be assigned to multiple 
+    // post flairs
+    // and a flair can be assigned once
+    // as well as post flairs can have multiple flairs
+    // so to avoid duplicating data in flairs
+    // post flairs can take multiple flairs
+    // for each a record will be created 
+    flair        Flairs?    @relation(fields: [flair_id], references: [id])
+    flair_id     String?
+    post         Posts?     @relation(fields: [post_id], references: [id])
+    post_id      String?    
+}
+
+// post can have multiple images
+// handling multiple image uploads for one post will be 
+// handle from the backend
+// this can be used for querying by content/title
+model PostContent {
+    id            String     @id @default(uuid())
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    content       String?
+    title         String   
+    // post_id must be equal to Posts id
+    post          Posts?     @relation(fields: [post_id], references: [id])
+    post_id       String?
+}
+
+model Posts {
+    id             String        @id @default(uuid())
+    comment        Boolean       @default(false)
+    type           String
+    // now when querying posts flairs you'll get all flairs 
+    // for the post
+    post_flairs    PostFlairAssignments[]
+    post_flair_id  String?
+    likes          Likes[]
+    // details for posts, content date created updated
+    details        PostContent[]
+    // check for author
+    author         User?         @relation(fields: [author_id], references: [id])
+    author_id      String?
+    // check for community
+    community      Community?    @relation(fields: [community_id], references: [id])
+    community_id   String?
+}
+
+model Likes  {
+    id            String      @id @default(uuid())
+    post          Posts?      @relation(fields: [post_id], references: [id])
+    post_id       String?     @unique
+    // get user who liked the post, so later 
+    // we can filter by liked posts  
+    user          User?       @relation(fields: [user_id], references: [id])
+    user_id       String?     @unique
+}
+
 model Like  {
     id           String     @id @default(uuid())
     post         Post?      @relation(fields: [postId], references: [id])
@@ -46,6 +123,7 @@ model Community {
     description String
     communities UsersCommunitiesBridge[]
     posts Post[]
+    post  Posts[]
 }
 
 model UsersCommunitiesBridge {

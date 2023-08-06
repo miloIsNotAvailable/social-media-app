@@ -96,7 +96,55 @@ type Post {
   likes: [Like]
 }
 
-type Like  {
+type Flairs {
+  id: String
+  createdat: String
+  updatedat: String
+  flair_name: String
+  type: String
+  flairs: [PostFlairAssignments]
+}
+
+type PostFlairAssignments {
+  id: String
+  createdat: String
+  updatedat: String
+}
+
+type PostContent {
+  id: String
+  createdat: String
+  updatedat: String
+  post_id: String
+  title: String
+  content: String
+}
+
+type Likes {
+  id: String
+  post_id: String
+  user_id: String  
+}
+
+type Communities {
+  communityId: String
+  name: String
+  description: String
+  createdAt: String
+}
+
+type Posts {
+  id: String
+  comment: Boolean,
+  type: String
+  details: PostContent
+  community: Communities
+  author: User
+  likes: [Likes]
+  flairs: [PostFlairAssignments]
+}
+
+type Like {
   id: String
   userId: String
   postId: String
@@ -123,5 +171,11 @@ type Mutation {
   createPost( title: String!, content: String, communityId: String ): Post @auth
   likePost( postId: String!, like: Boolean! ): Like @auth
   createComment( post_id: String!, title: String!, content: String, communityId: String ): Comment
+  userCreatePost( 
+    title: String!, 
+    content: String, 
+    communityId: String, 
+    flairs: [String]
+  ): Posts
 }
 
