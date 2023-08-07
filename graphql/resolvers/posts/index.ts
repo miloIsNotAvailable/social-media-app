@@ -5,7 +5,67 @@ import { uuid } from "uuidv4";
 
 export default {
     Query: {
-        
+        async queryPosts( _, { communityId } ) {
+            try {
+
+                const data = await orm.posts.select( {
+                    data: { 
+                        community_id: true, 
+                        author_id: true, 
+                        comment: true ,
+                        id: true,
+                        post_flair_id: true,
+                        type: true
+                    },
+                    where: { community_id: communityId },
+                    include: {
+                        details: {
+                            data: { 
+                                content: true, 
+                                title: true, 
+                                createdAt: true 
+                            },
+                            equal: { post_id: true },
+                            on: { id: true }
+                        },
+                        author: {
+                            data: { name: true },
+                            on: { author_id: true },
+                            equal: { id: true }
+                        },
+                        likes: {
+                            data: { id: true },
+                            equal: { post_id: true },
+                            on: { id: true }
+                        }
+                        // post_flairs: {
+                        //     data: { flair_id: true },
+                        //     on: { id: true },
+                        //     equal: { flair_id: true },
+                        //     include: {
+                        //         flair: {
+                        //             data: { flair_name: true, type: true },
+                        //             on: { flair_id: true },
+                        //             equal: { id: true }
+                        //         }
+                        //     }
+                        // }
+                    }
+                } )
+
+                console.log( data )
+                return data?.map( args => ({
+                    ...args,
+                    details: args,
+                    community: args,
+                    author: args,
+                    likes: [args]
+                }) )
+
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
+        }
     },
     Mutation: {
         async userCreatePost( _, args ) {
