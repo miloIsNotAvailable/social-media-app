@@ -8,7 +8,9 @@ export default {
         async queryPosts( _, { communityId } ) {
             try {
 
+                // query poss data
                 const data = await orm.posts.select( {
+                    // select data
                     data: { 
                         community_id: true, 
                         author_id: true, 
@@ -19,22 +21,28 @@ export default {
                     },
                     where: { community_id: communityId },
                     include: {
+                        // join for PostContent table
                         details: {
                             data: { 
                                 content: true, 
                                 title: true, 
                                 createdAt: true 
                             },
+                            // join on post_id = id
                             equal: { post_id: true },
                             on: { id: true }
                         },
+                        // join User table
                         author: {
                             data: { name: true },
+                            // join on author_id = id
                             on: { author_id: true },
                             equal: { id: true }
                         },
+                        // join Likes table
                         likes: {
                             data: { id: true },
+                            // join on post_id = id
                             equal: { post_id: true },
                             on: { id: true }
                         }
@@ -54,6 +62,9 @@ export default {
                 } )
 
                 console.log( data )
+                // map the data since it's an array 
+                // and js will handle assigning proper 
+                // object values
                 return data?.map( args => ({
                     ...args,
                     details: args,
