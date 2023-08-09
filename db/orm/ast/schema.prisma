@@ -6,6 +6,7 @@ model User {
     posts       Post[]
     post        Posts[]
     communities UsersCommunitiesBridge[]
+    community   CommunityUsers[]
     liked       Like[]
     like        Likes[]
 }
@@ -96,6 +97,9 @@ model Posts {
     // check for community
     community      Community?    @relation(fields: [community_id], references: [id])
     community_id   String?
+
+    communities    Communities?    @relation(fields: [communities_id], references: [id])
+    communities_id String?
 }
 
 model Likes  {
@@ -124,6 +128,29 @@ model Community {
     communities UsersCommunitiesBridge[]
     posts Post[]
     post  Posts[]
+}
+
+model Communities {
+    id               String      @id @default(uuid())
+    createdAt        DateTime    @default(now())
+    community_name   String
+    description      String
+    // check for all users in community
+    community_users  CommunityUsers[]
+    // check for posts in community 
+    posts            Posts[]
+}
+
+// this tables defines m-n relation
+// between users and communities
+// only one user can be assigned to one community
+// ie. they follow it
+model CommunityUsers {
+    id           String        @id @default(uuid())
+    community    Communities?  @relation(fields: [ community_id ], references: [ id ])
+    users        User?         @relation(fields: [ user_id ], references: [ id ])
+    user_id      String
+    community_id String
 }
 
 model UsersCommunitiesBridge {
