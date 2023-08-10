@@ -180,7 +180,7 @@ export default class Query<T> extends Connect {
             const incl = this._select_include( include, where )
     
             const select_keys = `${Object.keys( data ).map( x => `${ this.table }.${x}` ).join( ", " )}${ include ? `, ${ Object.keys( include ).map( x => `public.${ this.relations[ x ] }.*` ).join( ", " ) }` : "" }`
-        const data_to_select = this.get_data( data, include, this.table )
+            const data_to_select = this.get_data( data, include, this.table )
 
             const query = `select ${ data_to_select } from ${ this.table } ${ incl } ${ where_ }`
             
