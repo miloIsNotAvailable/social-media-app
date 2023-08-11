@@ -14,7 +14,7 @@ get postflairassignments() { return new Query<Types.PostFlairAssignments>( 'Post
 
 get postcontent() { return new Query<Types.PostContent>( 'PostContent', { post: 'Posts' } ) }
 
-get posts() { return new Query<Types.Posts>( 'Posts', { post_flairs: 'PostFlairAssignments', likes: 'Likes', details: 'PostContent', author: 'User', community: 'Community' } ) }
+get posts() { return new Query<Types.Posts>( 'Posts', { flair: 'Flairs', post_flairs: 'PostFlairAssignments', likes: 'Likes', details: 'PostContent', author: 'User', community: 'Community' } ) }
 
 get likes() { return new Query<Types.Likes>( 'Likes', { post: 'Posts', user: 'User' } ) }
 

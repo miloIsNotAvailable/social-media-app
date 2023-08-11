@@ -129,12 +129,13 @@ export default class Query<T> extends Connect {
         .map( x => {
 
             // on always has only one property
-            const { on, equal } = (select as any)[ x ]
+            const { on, equal, include } = (select as any)[ x ]
+            const include_ = !!include ? "\n" + this._select_include( (include as any), 1 as any ) : ""
             const key = Object.keys( on )[0]
             const scnd_key = Object.keys( equal )[0]
 
             let table = this.relations[ x ]
-            return `inner join public.${ table } on ${ this.table }.${ key } = public.${ table }.${ scnd_key }`
+            return `inner join public.${ table } on ${ this.table }.${ key } = public.${ table }.${ scnd_key }` + include_
         } )
 
         return keys.join( "\n" )

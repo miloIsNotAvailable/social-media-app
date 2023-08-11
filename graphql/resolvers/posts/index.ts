@@ -46,11 +46,11 @@ export default {
                             equal: { post_id: true },
                             on: { id: true }
                         },
-                        post_flairs: {
-                            data: { id: true, flair_id: true },
-                            on: { id: true },  
-                            equal: { post_id: true },
-                        }
+                        // post_flairs: {
+                        //     data: { id: true, flair_id: true },
+                        //     on: { id: true },  
+                        //     equal: { post_id: true },
+                        // }
                         // post_flairs: {
                         //     data: { flair_id: true },
                         //     on: { id: true },
