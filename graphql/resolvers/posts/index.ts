@@ -34,7 +34,7 @@ export default {
                         },
                         // join User table
                         author: {
-                            data: { name: true },
+                            data: { name: true, id: "user_id", email: true },
                             // join on author_id = id
                             on: { author_id: true },
                             equal: { id: true }

@@ -56,7 +56,7 @@ export type Select<T> = {
     // pick data to select
     data: {
         [V in keyof 
-            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean
+            Partial<IncludeMatchingProperties<T, Primitives>>]?: boolean | string
     }
 
     // if include make it an inner join

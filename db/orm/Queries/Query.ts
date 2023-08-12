@@ -111,11 +111,10 @@ export default class Query<T> extends Connect {
 
     private _select_include = ( 
         select: Select<T>["include"], 
-        where: Select<T>["where"] 
     ): string => {
 
         
-        if( !select || !where ) return ""
+        if( !select ) return ""
         
         // const { join, ...rest } = select
         // const key = Object.keys( rest )[0]
@@ -130,7 +129,7 @@ export default class Query<T> extends Connect {
 
             // on always has only one property
             const { on, equal, include } = (select as any)[ x ]
-            const include_ = !!include ? "\n" + this._select_include( (include as any), 1 as any ) : ""
+            const include_ = !!include ? "\n" + this._select_include( (include as any) ) : ""
             const key = Object.keys( on )[0]
             const scnd_key = Object.keys( equal )[0]
 
@@ -150,7 +149,7 @@ export default class Query<T> extends Connect {
         const data_arr = []
 
         const d = Object.keys( data )
-        .map( x => `${ table_name }.${ x }` )
+        .map( x => typeof (data as any)[x] == "boolean" ? `${ table_name }.${ x }` : `${ table_name }.${ x } as ${ (data as any)[x] }` )
         .join( ", " )
 
         data_arr.push( d )
@@ -178,7 +177,7 @@ export default class Query<T> extends Connect {
         try {
 
             const where_ = this._select_where( where ) 
-            const incl = this._select_include( include, where )
+            const incl = this._select_include( include )
     
             const select_keys = `${Object.keys( data ).map( x => `${ this.table }.${x}` ).join( ", " )}${ include ? `, ${ Object.keys( include ).map( x => `public.${ this.relations[ x ] }.*` ).join( ", " ) }` : "" }`
             const data_to_select = this.get_data( data, include, this.table )
