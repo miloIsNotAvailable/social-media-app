@@ -112,7 +112,7 @@ type PostFlairAssignments {
 }
 
 type PostContent {
-  id: String
+  content_id: String
   createdat: String
   updatedat: String
   post_id: String
@@ -121,20 +121,20 @@ type PostContent {
 }
 
 type Likes {
-  id: String
+  like_id: String
   post_id: String
   user_id: String  
 }
 
 type Communities {
-  communityId: String
-  name: String
+  community_id: String
+  community_name: String
   description: String
   createdAt: String
 }
 
 type Posts {
-  id: String
+  post_id: String
   comment: Boolean,
   type: String
   details: PostContent

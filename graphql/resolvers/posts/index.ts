@@ -15,7 +15,7 @@ export default {
                         community_id: true, 
                         author_id: true, 
                         comment: true ,
-                        id: true,
+                        id: "post_id",
                         post_flair_id: true,
                         type: true
                     },
@@ -34,18 +34,23 @@ export default {
                         },
                         // join User table
                         author: {
-                            data: { name: true, id: "user_id", email: true },
+                            data: { name: true, id: true, email: true },
                             // join on author_id = id
                             on: { author_id: true },
                             equal: { id: true }
                         },
                         // join Likes table
                         likes: {
-                            data: { id: true },
+                            data: { id: "like_id" },
                             // join on post_id = id
                             equal: { post_id: true },
                             on: { id: true }
                         },
+                        community: {
+                            data: { title: "community_name", description: true },
+                            on: { community_id: true },
+                            equal: { id: true }
+                        }
                         // post_flairs: {
                         //     data: { id: true, flair_id: true },
                         //     on: { id: true },  

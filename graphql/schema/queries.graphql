@@ -121,3 +121,62 @@ mutation CreateComment($postId: String!, $title: String!, $content: String, $com
     post_id
   }
 }
+
+# queries content and title of a post
+fragment Content on Posts {
+  details {
+    content
+    title
+  }
+}
+
+# queries the community post was added to, 
+# with community.id mapped to community_id 
+fragment Community on Posts {
+  community {
+    community_id
+    community_name
+    description
+  }
+}
+
+# queries the flairs
+fragment Flairs on Posts {
+  flairs {    
+    createdat
+    id
+    updatedat
+  }
+}
+
+# queries the author, hee data stays unchanged
+fragment Author on Posts {
+  author {
+    email
+    id
+    name
+  }
+}
+
+# queries the likes, with id mapped to likes_id
+# used only for COUNT(*) to get the number of likes
+fragment Likes on Posts {
+  likes {
+    like_id
+  }
+}
+
+# putting it all together
+# with Posts.id mapped to post_id 
+query QueryCommunityPosts($communityId: String) {
+  queryPosts(communityId: $communityId) {
+    comment
+    post_id
+    type
+    ...Author
+    ...Content
+    ...Flairs
+    ...Community
+    ...Likes
+  }
+}
