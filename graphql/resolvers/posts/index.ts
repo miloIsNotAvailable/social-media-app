@@ -2,11 +2,14 @@ import { GraphQLError } from "graphql";
 import { rootType } from "../../../interfaces/graphql";
 import { orm } from "../orm/orm";
 import { uuid } from "uuidv4";
+import { QueryCommunityPostsQuery, QueryCommunityPostsQueryVariables } from "../../codegen/gql/gql";
 
 export default {
     Query: {
-        async queryPosts( _, { communityId } ) {
+        async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables ) {
             try {
+
+                if( !communityId ) throw new Error( "no community provided" )
 
                 // query poss data
                 const data = await orm.posts.select( {
@@ -19,7 +22,7 @@ export default {
                         post_flair_id: true,
                         type: true
                     },
-                    where: { community_id: communityId },
+                    where: { community_id: (communityId as string) },
                     include: {
                         // join for PostContent table
                         details: {
@@ -51,23 +54,6 @@ export default {
                             on: { community_id: true },
                             equal: { id: true }
                         }
-                        // post_flairs: {
-                        //     data: { id: true, flair_id: true },
-                        //     on: { id: true },  
-                        //     equal: { post_id: true },
-                        // }
-                        // post_flairs: {
-                        //     data: { flair_id: true },
-                        //     on: { id: true },
-                        //     equal: { flair_id: true },
-                        //     include: {
-                        //         flair: {
-                        //             data: { flair_name: true, type: true },
-                        //             on: { flair_id: true },
-                        //             equal: { id: true }
-                        //         }
-                        //     }
-                        // }
                     }
                 } )
 
@@ -81,7 +67,7 @@ export default {
                     community: args,
                     author: args,
                     likes: [args]
-                }) )
+                }) ) as QueryCommunityPostsQuery
 
             } catch( e ) {
                 throw new GraphQLError( e as any )
