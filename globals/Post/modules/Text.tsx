@@ -70,12 +70,12 @@ const Text: FC<TextProps> = ( { content, title, id, communityId } ) => {
 
     return (
         <div className={ styles.post } onClick={ handleNavigateToComments }>
-            <PostLayout 
+            {/* <PostLayout 
                 content={ content } 
                 title={ title } 
                 communityId={ communityId }
-            />
-            <PostActionsNavbar id={ id! }/>
+            /> */}
+            {/* <PostActionsNavbar id={ id! }/> */}
         </div>
     )
 }

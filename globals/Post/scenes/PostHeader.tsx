@@ -4,7 +4,7 @@ import { FC } from "react";
 import Flair from "./Flair";
 import { styles } from "../styles";
 import { Loading } from "@globals/Fallback";
-import { CommunityDetails, useQueryCommunityQuery } from "../../../graphql/codegen/gql/gql";
+import { Communities, CommunityDetails, useQueryCommunityQuery } from "../../../graphql/codegen/gql/gql";
 import { client } from "../../../router/graphqlClient";
 
 interface PostHeaderProps {
@@ -13,27 +13,27 @@ interface PostHeaderProps {
     community: string
 }
 
-const PostHeader: FC<PostHeaderProps> = ( { flairs, communityId, community } ) => {
+const PostHeader: FC<Communities & { flairs: string[] }> = ( { community_name: community, community_id, flairs } ) => {
 
-    const { data, isLoading } = useQueryCommunityQuery( client, {
-        communityId: (communityId as string)!,
-        includePosts: false
-    } )
+    // const { data, isLoading } = useQueryCommunityQuery( client, {
+    //     communityId: (communityId as string)!,
+    //     includePosts: false
+    // } )
 
-    if( isLoading ) return (
-        <nav className={ styles.top_navbar_wrap }>
-            <Loading width={ "1rem" } height={ "1rem" }/> 
-            <Loading width={ "5rem" } height={ "1rem" }/> 
-        </nav>
-    )
+    // if( isLoading ) return (
+    //     <nav className={ styles.top_navbar_wrap }>
+    //         <Loading width={ "1rem" } height={ "1rem" }/> 
+    //         <Loading width={ "5rem" } height={ "1rem" }/> 
+    //     </nav>
+    // )
 
     return (
         <div className={ styles.post_header_wrap }>
             <Profile/>
             <div className={ styles.post_community_and_flairs }>
                 <NavRoute 
-                    link={ "communities/" + (data!.queryCommunity as CommunityDetails).title }
-                    to={ "communities/" + (data!.queryCommunity as CommunityDetails).id }
+                    link={ "communities/" + community }
+                    to={ "communities/" + community_id }
                 />
                 <div className={ styles.flairs_wrap }>
                     { flairs.map( flair => (

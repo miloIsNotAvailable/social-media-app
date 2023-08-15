@@ -6,10 +6,10 @@ import { QueryCommunityPostsQuery, QueryCommunityPostsQueryVariables } from "../
 
 export default {
     Query: {
-        async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables ) {
+        async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables, { user } ) {
             try {
 
-                if( !communityId ) throw new Error( "no community provided" )
+                // if( !communityId ) throw new Error( "no community provided" )
 
                 // query poss data
                 const data = await orm.posts.select( {
@@ -66,7 +66,7 @@ export default {
                     details: args,
                     community: args,
                     author: args,
-                    likes: [args]
+                    likes: [args] || []
                 }) ) as QueryCommunityPostsQuery
 
             } catch( e ) {

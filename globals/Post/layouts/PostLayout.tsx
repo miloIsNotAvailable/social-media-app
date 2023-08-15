@@ -7,6 +7,8 @@ import { Spinner } from '@globals/Fallback'
 import Image from '../scenes/Image'
 import PostHeader from '../scenes/PostHeader'
 import Header from '@globals/Header'
+import { CommunityPosts, Post, Posts } from '../../../graphql/codegen/gql/gql'
+import PostContent from './PostContent'
 
 interface PostLayoutProps {
     content?: string | null
@@ -61,9 +63,9 @@ function getAverageRGB( imgEl: HTMLImageElement ) {
     return rgb;
 
 }
-const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
+const PostLayout: FC<Posts> = ( { details, community, flairs, post_id } ) => {
 
-    const base64 = useLinkToBase64( content as string | null )
+    const base64 = useLinkToBase64( details?.content as string | null )
     const [ avgRGB, setAvgRGB ] = useState<{ r: number, g: number, b: number } | null>( null );
     
     const imageRef = useRef<HTMLImageElement | null>( null )
@@ -96,11 +98,11 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
             } }
         >
             <PostHeader 
-                community={ "hello" }
-                communityId={ communityId as string }
+                {...community}
                 flairs={ [ "dummy flair" ] }
             />
-            <div className={ styles.post_content_wrap }>
+            <PostContent { ...details }/>
+            {/* <div className={ styles.post_content_wrap }>
                 <Header>
                     <>{ title }</>
                 </Header>
@@ -113,7 +115,7 @@ const PostLayout: FC<PostLayoutProps> = ( { content, title, communityId } ) => {
                         </span>
                     }
                 </span>
-            </div>
+            </div> */}
         </div>
     )
 }

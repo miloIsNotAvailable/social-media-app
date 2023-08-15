@@ -46,7 +46,7 @@ const SendCommentLayout: FC = () => {
                 </Outline>
             </Form>
             <div className={ styles.comments_wrap_responses }>
-                <Posts posts={ arr }/>
+                <Posts posts={ [] }/>
             </div>
         </div>
     )

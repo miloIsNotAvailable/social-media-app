@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof Flair> = (args) =>
 
 export const Primary = Template.bind({});
 Primary.args = {
-    community: "hello",
-    communityId: "1234",
+    community_name: "hello",
+    community_id: "1234",
     flairs: [ "big flair", "bigger flair" ]
 }

@@ -1,5 +1,5 @@
 import { FC, Suspense, useEffect } from 'react'
-import { UserCommunitiesQuery, useUserCommunitiesQuery } from '../../../graphql/codegen/gql/gql'
+import { Posts as PostsType, UserCommunitiesQuery, useQueryCommunityPostsQuery, useUserCommunitiesQuery } from '../../../graphql/codegen/gql/gql'
 import { client } from '../../../router/graphqlClient'
 import { Await, defer, useLoaderData, useNavigate } from 'react-router-dom'
 import { styles } from '../styles'
@@ -9,8 +9,8 @@ import { Spinner } from '@globals/Fallback'
 
 const ForYou: FC = () => {
 
-    const { data, isLoading, error } = useUserCommunitiesQuery( client, {
-        userId: ""        
+    const { data, isLoading, error } = useQueryCommunityPostsQuery( client, {
+        communityId: "e9cc01df-596b-424b-9d49-ea7517161c1b"        
     } )
 
     const navigate = useNavigate()
@@ -27,8 +27,8 @@ const ForYou: FC = () => {
     return (
         <>
             { 
-                data?.userCommunities && 
-                <Posts posts={ data.userCommunities }/> 
+                data?.queryPosts && 
+                <Posts posts={ data!.queryPosts! as PostsType[] }/> 
             }
         </>
     )
