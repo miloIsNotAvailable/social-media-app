@@ -163,7 +163,8 @@ type Query {
   queryCommunity( communityId: String!, includePosts: Boolean ): CommunityQuery
   queryPost( id: String! ): Post
   queryComments( post_id: String! ): Comment
-  queryPosts( communityId: String  ): [Posts] @auth
+  queryPosts( communityId: String  ): [Posts]
+  queryPostById( postId: String! ): Posts
 }
 
 type Mutation {

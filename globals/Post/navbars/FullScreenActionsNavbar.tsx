@@ -9,9 +9,10 @@ const Share = lazy( () => import( "../buttons/share" ) )
 
 interface FullScreenActionsNavbarProps {
     id: string
+    created_at: string
 }
 
-const FullScreenActionsNavbar: FC<FullScreenActionsNavbarProps> = ( { id } ) => {
+const FullScreenActionsNavbar: FC<FullScreenActionsNavbarProps> = ( { id, created_at } ) => {
     
     const { data, isLoading } = useUserLikedPostQuery( client, { postId: id } )
 
@@ -26,7 +27,7 @@ const FullScreenActionsNavbar: FC<FullScreenActionsNavbarProps> = ( { id } ) => 
     return (
         <div className={ styles.post_actions_fullscreen_wrap }>
             <div className={ styles.post_actions_date }>
-                2023-12-07
+                { created_at }
             </div>
             <nav 
                 className={ styles.post_actions_nav_wrap } 

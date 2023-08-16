@@ -26,7 +26,7 @@ const FullScreenPost: FC = () => {
             <PostLayout 
                 { ...data!.queryPosts![0] }
             />
-            <FullScreenActionsNavbar id={ queryPostId }/>
+            <FullScreenActionsNavbar id={ queryPostId } created_at={ "2023-01-03" }/>
             <SendCommentLayout/>
         </div>
     )

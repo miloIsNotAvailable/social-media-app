@@ -6,6 +6,73 @@ import { QueryCommunityPostsQuery, QueryCommunityPostsQueryVariables } from "../
 
 export default {
     Query: {
+        async queryPostById( _, { postId } ) {
+            try {
+                
+                // if( !communityId ) throw new Error( "no community provided" )
+
+                // query poss data
+                const data = await orm.posts.select( {
+                    // select data
+                    data: { 
+                        community_id: true, 
+                        author_id: true, 
+                        comment: true ,
+                        id: "post_id",
+                        post_flair_id: true,
+                        type: true
+                    },
+                    where: { id: (postId as string) },
+                    include: {
+                        // join for PostContent table
+                        details: {
+                            data: { 
+                                content: true, 
+                                title: true, 
+                                createdAt: true 
+                            },
+                            // join on post_id = id
+                            equal: { post_id: true },
+                            on: { id: true }
+                        },
+                        // join User table
+                        author: {
+                            data: { name: true, id: true, email: true },
+                            // join on author_id = id
+                            on: { author_id: true },
+                            equal: { id: true }
+                        },
+                        // join Likes table
+                        likes: {
+                            data: { id: "like_id" },
+                            // join on post_id = id
+                            equal: { post_id: true },
+                            on: { id: true }
+                        },
+                        community: {
+                            data: { title: "community_name", description: true },
+                            on: { community_id: true },
+                            equal: { id: true }
+                        }
+                    }
+                } )
+
+                console.log( data )
+                // map the data since it's an array 
+                // and js will handle assigning proper 
+                // object values
+                return data?.map( args => ({
+                    ...args,
+                    details: args,
+                    community: args,
+                    author: args,
+                    likes: [args] || []
+                }) )[0]
+
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
+        },
         async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables, { user } ) {
             try {
 
