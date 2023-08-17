@@ -156,6 +156,20 @@ type Comment {
   comments: [Post]
 }
 
+type CommunityPostsArray {
+  posts: [Posts]
+}
+
+type PostsSingle {
+  post: Posts
+}
+
+type ForYouPosts {
+  for_you: [Posts] @auth
+}
+
+union QueryPostsUnion = PostsSingle | CommunityPostsArray | ForYouPosts
+
 type Query {
   hello: String @auth
   userCommunities( user_id: String! ): [Post] @auth
@@ -163,7 +177,8 @@ type Query {
   queryCommunity( communityId: String!, includePosts: Boolean ): CommunityQuery
   queryPost( id: String! ): Post
   queryComments( post_id: String! ): Comment
-  queryPosts( communityId: String  ): [Posts]
+  queryPosts( communityId: String ): [Posts]
+  queryPostsUnion( communityId: String, postId: String ): QueryPostsUnion
   queryPostById( postId: String! ): Posts
 }
 

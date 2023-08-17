@@ -6,6 +6,7 @@ export type User = {
 	posts: Post[],
 	post: Posts[],
 	communities: UsersCommunitiesBridge[],
+	community: CommunityUsers[],
 	liked: Like[],
 	like: Likes[]
 }
@@ -73,7 +74,10 @@ export type Posts = {
 	author?: User,
 	author_id?: string,
 	community?: Community,
-	community_id?: string
+	community_id?: string,
+	communities?: Communities,
+	communities_id?: string,
+	community_users: CommunityUsers[]
 }
 
 export type Likes = {
@@ -100,6 +104,25 @@ export type Community = {
 	communities: UsersCommunitiesBridge[],
 	posts: Post[],
 	post: Posts[]
+}
+
+export type Communities = {
+	id: string,
+	createdAt: string,
+	community_name: string,
+	description: string,
+	community_users: CommunityUsers[],
+	posts: Posts[]
+}
+
+export type CommunityUsers = {
+	id: string,
+	community?: Communities,
+	users?: User,
+	posts?: Posts,
+	user_id: string,
+	community_id: string,
+	post_id: string
 }
 
 export type UsersCommunitiesBridge = {

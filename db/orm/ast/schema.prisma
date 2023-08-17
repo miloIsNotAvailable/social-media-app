@@ -100,6 +100,9 @@ model Posts {
 
     communities    Communities?    @relation(fields: [communities_id], references: [id])
     communities_id String?
+    // this is for querying for you page etc. multiple communities
+    // and posts across one user stuff
+    community_users CommunityUsers[]
 }
 
 model Likes  {
@@ -149,8 +152,10 @@ model CommunityUsers {
     id           String        @id @default(uuid())
     community    Communities?  @relation(fields: [ community_id ], references: [ id ])
     users        User?         @relation(fields: [ user_id ], references: [ id ])
+    posts        Posts?        @relation(fields: [ post_id ], references: [ id ])
     user_id      String
     community_id String
+    post_id String
 }
 
 model UsersCommunitiesBridge {

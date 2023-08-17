@@ -3,13 +3,83 @@ import { rootType } from "../../../interfaces/graphql";
 import { orm } from "../orm/orm";
 import { uuid } from "uuidv4";
 import { QueryCommunityPostsQuery, QueryCommunityPostsQueryVariables } from "../../codegen/gql/gql";
+import { Where } from "../../../db/orm/Queries/interfaces";
+import { Posts } from "../../../db/orm/ast/types";
+
+const selectPosts: ( where: Where<Posts> ) => Promise<Posts[] | undefined> = async( where ) => {
+    const data = await orm.posts.select( {
+        // select data
+        data: { 
+            community_id: true, 
+            author_id: true, 
+            comment: true ,
+            id: "post_id",
+            post_flair_id: true,
+            type: true
+        },
+        where,
+        include: {
+            // join for PostContent table
+            details: {
+                data: { 
+                    content: true, 
+                    title: true, 
+                    createdAt: true 
+                },
+                // join on post_id = id
+                equal: { post_id: true },
+                on: { id: true }
+            },
+            // join User table
+            author: {
+                data: { name: true, id: true, email: true },
+                // join on author_id = id
+                on: { author_id: true },
+                equal: { id: true }
+            },
+            // join Likes table
+            likes: {
+                data: { id: "like_id" },
+                // join on post_id = id
+                equal: { post_id: true },
+                on: { id: true }
+            },
+            community: {
+                data: { title: "community_name", description: true },
+                on: { community_id: true },
+                equal: { id: true }
+            }
+        }
+    } )
+
+    return data
+}
+
+const mapOrmQueryData = ( args: Posts ) => {
+
+    return {
+        ...args,
+        details: args,
+        community: args,
+        author: args,
+        likes: [args] || []
+    }
+} 
 
 export default {
     Query: {
         async queryPostById( _, { postId } ) {
             try {
-                
                 // if( !communityId ) throw new Error( "no community provided" )
+
+                // const d = await orm.userscommunitiesbridge.select( {
+                //     data: { id: true },
+                //     include: {
+                //         posts: {
+                //             data: {  }
+                //         }
+                //     }
+                // } )
 
                 // query poss data
                 const data = await orm.posts.select( {
@@ -73,68 +143,55 @@ export default {
                 throw new GraphQLError( e as any )
             }
         },
-        async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables, { user } ) {
+        
+        async queryPosts( _, { communityId }: QueryCommunityPostsQueryVariables ) {
+
             try {
+                return (await selectPosts( { community_id: communityId as string } ))!
+                .map( mapOrmQueryData )
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
+        },
 
-                // if( !communityId ) throw new Error( "no community provided" )
-
-                // query poss data
-                const data = await orm.posts.select( {
-                    // select data
-                    data: { 
-                        community_id: true, 
-                        author_id: true, 
-                        comment: true ,
-                        id: "post_id",
-                        post_flair_id: true,
-                        type: true
-                    },
-                    where: { community_id: (communityId as string) },
-                    include: {
-                        // join for PostContent table
-                        details: {
-                            data: { 
-                                content: true, 
-                                title: true, 
-                                createdAt: true 
-                            },
-                            // join on post_id = id
-                            equal: { post_id: true },
-                            on: { id: true }
-                        },
-                        // join User table
-                        author: {
-                            data: { name: true, id: true, email: true },
-                            // join on author_id = id
-                            on: { author_id: true },
-                            equal: { id: true }
-                        },
-                        // join Likes table
-                        likes: {
-                            data: { id: "like_id" },
-                            // join on post_id = id
-                            equal: { post_id: true },
-                            on: { id: true }
-                        },
-                        community: {
-                            data: { title: "community_name", description: true },
-                            on: { community_id: true },
-                            equal: { id: true }
-                        }
-                    }
-                } )
-
-                console.log( data )
+        // TODO: get nested include joins working
+        async queryPostsUnion( _, { communityId: community_id, postId: post_id }, { user } ) {
+            try {
+                
                 // map the data since it's an array 
                 // and js will handle assigning proper 
                 // object values
-                return data?.map( args => ({
-                    ...args,
-                    details: args,
-                    community: args,
-                    author: args,
-                    likes: [args] || []
-                }) ) as QueryCommunityPostsQuery
+                if( community_id ) return {
+                    __typename: "CommunityPostsArray",
+                    posts: (await selectPosts( { community_id } ))!
+                    .map( args => mapOrmQueryData( { 
+                            ...args, 
+                        } ) ) as QueryCommunityPostsQuery
+                }
+
+                if( post_id ) {
+                    const data = await selectPosts( { id: post_id } )
+                    return { 
+                        __typename: "PostsSingle", 
+                        post: data?.map( args => mapOrmQueryData( { 
+                            ...args, 
+                        } ) )[0]
+                    }
+                }
+
+                // if( user ) {
+                //     const data = await orm.communityusers.select( {
+                //         data: { id: "bridge_id" },
+                //         where: { user_id: user },
+                //         include: {
+                //            posts: {
+                //             data: {  }
+                //            } 
+                //         }
+                //     } )
+                // }
+                
+                return null
 
             } catch( e ) {
                 throw new GraphQLError( e as any )

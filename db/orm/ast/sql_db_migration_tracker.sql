@@ -115,3 +115,11 @@ CREATE TABLE IF NOT EXISTS public.Likes (id TEXT NOT NULL DEFAULT uuid_v4s(), po
 CREATE TABLE IF NOT EXISTS public.PostFlairAssignments (id TEXT NOT NULL DEFAULT uuid_v4s(), createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), flair_id TEXT NULL, post_id TEXT NULL, CONSTRAINT PostFlairAssignments_id_as_pkey PRIMARY KEY (id), CONSTRAINT Flairs_flair_fkey FOREIGN KEY (flair_id) REFERENCES public.Flairs(id) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT Posts_post_fkey FOREIGN KEY (post_id) REFERENCES public.Posts(id) ON DELETE CASCADE ON UPDATE CASCADE);
 CREATE TABLE IF NOT EXISTS public.PostContent (id TEXT NOT NULL DEFAULT uuid_v4s(), createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), content TEXT NULL, title TEXT NOT NULL, post_id TEXT NULL, CONSTRAINT PostContent_id_as_pkey PRIMARY KEY (id), CONSTRAINT Posts_post_fkey FOREIGN KEY (post_id) REFERENCES public.Posts(id) ON DELETE CASCADE ON UPDATE CASCADE);
 
+
+alter table public.Posts add column communities_id TEXT NULL;
+CREATE TABLE IF NOT EXISTS public.Communities (id TEXT NOT NULL DEFAULT uuid_v4s(), createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), community_name TEXT NOT NULL, description TEXT NOT NULL, CONSTRAINT Communities_id_as_pkey PRIMARY KEY (id));
+CREATE TABLE IF NOT EXISTS public.CommunityUsers (id TEXT NOT NULL DEFAULT uuid_v4s(), user_id TEXT NOT NULL, community_id TEXT NOT NULL, CONSTRAINT CommunityUsers_id_as_pkey PRIMARY KEY (id), CONSTRAINT Communities_community_fkey FOREIGN KEY (community_id) REFERENCES public.Communities(id) ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT User_users_fkey FOREIGN KEY (user_id) REFERENCES public.User(id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+
+alter table public.CommunityUsers add column post_id TEXT NOT NULL;
+

@@ -201,7 +201,7 @@ export type Query = {
   queryComments?: Maybe<Comment>;
   queryCommunity?: Maybe<CommunityQuery>;
   queryPost?: Maybe<Post>;
-  queryPostById?: Maybe<Array<Maybe<Posts>>>;
+  queryPostById?: Maybe<Posts>;
   queryPosts?: Maybe<Array<Maybe<Posts>>>;
   userCommunities?: Maybe<Array<Maybe<Post>>>;
   userLikedPost?: Maybe<Like>;
@@ -225,7 +225,7 @@ export type QueryQueryPostArgs = {
 
 
 export type QueryQueryPostByIdArgs = {
-  communityId?: InputMaybe<Scalars['String']>;
+  postId: Scalars['String'];
 };
 
 
@@ -542,7 +542,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   queryComments?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryQueryCommentsArgs, 'post_id'>>;
   queryCommunity?: Resolver<Maybe<ResolversTypes['CommunityQuery']>, ParentType, ContextType, RequireFields<QueryQueryCommunityArgs, 'communityId'>>;
   queryPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryQueryPostArgs, 'id'>>;
-  queryPostById?: Resolver<Maybe<Array<Maybe<ResolversTypes['Posts']>>>, ParentType, ContextType, Partial<QueryQueryPostByIdArgs>>;
+  queryPostById?: Resolver<Maybe<ResolversTypes['Posts']>, ParentType, ContextType, RequireFields<QueryQueryPostByIdArgs, 'postId'>>;
   queryPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Posts']>>>, ParentType, ContextType, Partial<QueryQueryPostsArgs>>;
   userCommunities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType, RequireFields<QueryUserCommunitiesArgs, 'user_id'>>;
   userLikedPost?: Resolver<Maybe<ResolversTypes['Like']>, ParentType, ContextType, RequireFields<QueryUserLikedPostArgs, 'postId'>>;
