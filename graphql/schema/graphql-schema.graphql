@@ -168,7 +168,7 @@ type ForYouPosts {
   for_you: [Posts] @auth
 }
 
-union QueryPostsUnion = PostsSingle | CommunityPostsArray | ForYouPosts
+union QueryPostsUnion = PostsSingle | CommunityPostsArray
 
 type Query {
   hello: String @auth

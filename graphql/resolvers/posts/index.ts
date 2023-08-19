@@ -178,19 +178,6 @@ export default {
                         } ) )[0]
                     }
                 }
-
-                // if( user ) {
-                //     const data = await orm.communityusers.select( {
-                //         data: { id: "bridge_id" },
-                //         where: { user_id: user },
-                //         include: {
-                //            posts: {
-                //             data: {  }
-                //            } 
-                //         }
-                //     } )
-                // }
-                
                 return null
 
             } catch( e ) {
