@@ -176,6 +176,7 @@ type Query {
   userLikedPost( postId: String! ): Like @auth
   queryCommunity( communityId: String!, includePosts: Boolean ): CommunityQuery
   queryPost( id: String! ): Post
+  searchCommunity( name: String! ): [Communities]
   queryComments( post_id: String! ): Comment
   queryPosts( communityId: String ): [Posts]
   queryPostsUnion( communityId: String, postId: String ): QueryPostsUnion

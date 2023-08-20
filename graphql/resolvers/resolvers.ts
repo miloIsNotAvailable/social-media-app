@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js'
 import { decode } from 'base64-arraybuffer'
 import { Community, Post, UsersCommunitiesBridge } from "../../db/orm/ast/types";
 import postsRes from './posts'
+import communityRes from './communities'
 
 const prepareBase64DataUrl = ( base64: string ) => base64
     .replace('data:image/jpeg;', 'data:image/jpeg;charset=utf-8;')
@@ -20,6 +21,7 @@ export const root: rootType = {
     Query: {
 
         ...postsRes.Query,
+        ...communityRes.Query,
 
         async hello() {
             try {
