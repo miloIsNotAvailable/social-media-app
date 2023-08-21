@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { rootType } from "../../../interfaces/graphql";
 import { orm } from "../orm/orm";
 
@@ -10,6 +11,23 @@ export default {
             } )
 
             return data
+        }
+    },
+    Mutation: {
+        async createCommunities( _, { name, description } ) {
+
+            try {
+                const data = await orm.communities.insert( {
+                    data: {
+                        community_name: name,
+                        description                    
+                    }
+                } )
+    
+                return data![0]    
+            } catch( e ) {
+                throw new GraphQLError( e as any )
+            }
         }
     }
 } as rootType

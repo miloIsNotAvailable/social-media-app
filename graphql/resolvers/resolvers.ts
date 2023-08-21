@@ -178,6 +178,7 @@ export const root: rootType = {
     Mutation: {
         signin,
         ...postsRes.Mutation,
+        ...communityRes.Mutation,
         async createCommunity( 
             _, 
             { title, description }: CreateCommunityMutationVariables, 

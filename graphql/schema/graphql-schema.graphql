@@ -186,6 +186,7 @@ type Query {
 type Mutation {
   signin( email: String!, password: String!, username: String ): Auth
   createCommunity( title: String!, description: String ): Community @auth
+  createCommunities( name: String!, description: String ): Communities
   createPost( title: String!, content: String, communityId: String ): Post @auth
   likePost( postId: String!, like: Boolean! ): Like @auth
   createComment( post_id: String!, title: String!, content: String, communityId: String ): Comment
