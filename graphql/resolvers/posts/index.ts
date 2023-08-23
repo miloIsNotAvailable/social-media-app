@@ -6,6 +6,10 @@ import { QueryCommunityPostsQuery, QueryCommunityPostsQueryVariables } from "../
 import { Where } from "../../../db/orm/Queries/interfaces";
 import { Posts } from "../../../db/orm/ast/types";
 
+/**
+ * @params where is where statement for posts
+ * @returns queried posts json
+ */
 const selectPosts: ( where: Where<Posts> ) => Promise<Posts[] | undefined> = async( where ) => {
     const data = await orm.posts.select( {
         // select data
@@ -55,6 +59,9 @@ const selectPosts: ( where: Where<Posts> ) => Promise<Posts[] | undefined> = asy
     return data
 }
 
+/**
+ * @returns mapped data for GraphQL types
+ */
 const mapOrmQueryData = ( args: Posts ) => {
 
     return {
