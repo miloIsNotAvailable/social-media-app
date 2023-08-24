@@ -3,6 +3,7 @@ import { FC, Suspense, lazy } from 'react'
 import { default as HomeIcon } from '../../../imgs/slash.svg'
 import { default as DiscoverIcon } from '../../../imgs/compas.svg'
 import { default as CreatePostIcon } from '../../../imgs/+.svg'
+import { default as SearchCommunityIcon } from '../../../imgs/search.svg'
 import { styles } from '../styles'
 import { useNavigate } from 'react-router-dom'
 
@@ -14,6 +15,7 @@ const BottomNavbar: FC = () => {
         { link: "/home/for-you", src: HomeIcon }, 
         { link: "/home/create-post", src: CreatePostIcon },
         { link: "/home/discover", src: DiscoverIcon }, 
+        { link: "/home/search", src: SearchCommunityIcon }
     ]
 
     const navigate = useNavigate();
