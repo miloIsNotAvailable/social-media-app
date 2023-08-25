@@ -4,6 +4,7 @@ import { orm } from "../orm/orm";
 
 export default {
     Query: {
+        // searches for communities given the name
         async searchCommunity( _, { name } ) {
             const data = await orm.communities.select( {
                 data: { community_name: true, createdAt: true, description: true, id: true },
@@ -14,6 +15,8 @@ export default {
         }
     },
     Mutation: {
+        // creates a community based on title and description
+        // the rest gets generated automatically
         async createCommunities( _, { name, description } ) {
 
             try {
