@@ -1,11 +1,15 @@
 import { GraphQLError } from "graphql";
 import { rootType } from "../../../interfaces/graphql";
 import { orm } from "../orm/orm";
+import init, { run } from '../../../db/orm/pkg/db_compiler'
 
 export default {
     Query: {
         // searches for communities given the name
         async searchCommunity( _, { name } ) {
+
+            (await init()).run()
+
             const data = await orm.communities.select( {
                 data: { community_name: true, createdAt: true, description: true, id: true },
                 where: { community_name: { LIKE: name } }

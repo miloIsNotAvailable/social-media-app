@@ -1,0 +1,104 @@
+// ######################################
+// Readme
+// ######################################
+// You will notice the pattern ( X ~ Y | X )
+// instead of X ~ Y?. This is because we do not
+// want the concat operator ~ between X and Y
+// to consume any whitespace after X, if Y is not present.
+
+// This is how PEG grammars work:
+// https://pest.rs/book/grammars/peg.html
+
+// This is the basic syntax of Pest grammar files:
+// https://pest.rs/book/grammars/syntax.html#cheat-sheet
+
+// ######################################
+// Schema - the root of all rules
+// ######################################
+schema = {
+    SOI
+    ~ (model_declaration | comment_block | empty_lines)*
+    ~ EOI
+    }
+
+model_declaration = {   
+    namespace
+    ~BLOCK_OPEN
+    ~(column | comment_block)*
+    ~BLOCK_CLOSE
+}
+
+namespace = {
+	name	
+    ~scope_resolution_operator
+    ~enum_
+}
+
+name = @{ ASCII_ALPHANUMERIC* }
+enum_ = { ASCII_ALPHANUMERIC* }
+
+column = {
+	name
+    ~ base_type
+    ~directive?
+    ~ COLUMN_END
+}
+
+column_name = @{ ASCII_ALPHANUMERIC* }
+
+// Define the symbol for ending a column definition
+COLUMN_END = @{ ";" ~ (WHITESPACE|empty_lines) }
+
+// Define the rule for parsing non-nullable columns
+non_nullable = @{ "!" }
+
+directive = { "@" ~name }
+
+type = {
+	name
+    ~generic
+    ~function?
+}
+
+generic = { 
+    TYPE_OPEN 
+    ~arguments_list
+    ~TYPE_CLOSE 
+}
+
+arguments_list = { 
+	base_type
+    ~("," ~base_type)*
+}
+
+function = {
+	scope_resolution_operator
+    ~name
+    ~"("
+    ~arguments_list
+    ~")"
+}
+
+argument = { scope_resolution_operator ~name }
+
+base_type = { name ~generic? ~non_nullable? ~(function | argument)? }
+
+WHITESPACE = _{ SPACE_SEPARATOR | "\t" } // tabs are also whitespace
+NEWLINE = _{ "\n" | "\r\n" | "\r" }
+empty_lines = @{ (WHITESPACE* ~ NEWLINE)+ }
+scope_resolution_operator={ "::" }
+
+BLOCK_OPEN = { "{" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
+BLOCK_CLOSE = { "}" }
+
+TYPE_OPEN = { "<" }
+TYPE_CLOSE = { ">" }
+
+// ######################################
+// Comments and Documentation Comments
+// ######################################
+comment_block = ${ ((doc_comment | comment) ~ NEWLINE?)+ }
+trailing_comment = ${ doc_comment | comment }
+doc_comment = { WHITESPACE* ~ "///" ~ doc_content }
+comment = { WHITESPACE* ~ (!"///") ~ "//" ~ doc_content }
+doc_content = @{ (!NEWLINE ~ ANY)* }

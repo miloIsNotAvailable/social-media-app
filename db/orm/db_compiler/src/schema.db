@@ -1,0 +1,22 @@
+// table, an enum coming from namespace which is the database name
+public::User {
+    id  PrimaryKey<String>;
+    // directives, work just like graphql directives
+    email String @validate;
+    username String::unique();
+    createdAt DateTime;
+    posts Vec<Posts>;
+}
+
+public::Posts {
+    // values like primary key etc. are types which can be assigned functions
+    id  PrimaryKey<String>::uuidv4();
+    title String;
+    content String;
+    createdAt DateTime;
+    // foreign key <type, refrence table enum, foreign table reference>
+    // enum values can be used in keys etc.
+    // during compiltion convert camelCase to camel_case and get the first part
+    // then do first part + table name lowercase + variable name and make it the constraint name
+    authorId ForeignKey<String, User::id>;
+}
