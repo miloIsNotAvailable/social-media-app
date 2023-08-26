@@ -1,25 +1,49 @@
+// ---- std and file imports ----
+//
 use crate::schema::{ Rule, Pairs, Pair };
 use crate::db_parse::ast::{ Model, ModelDeclaration };
 use std::collections::HashMap;
+//
+// ---- t-t-t-that's it folks ----
 
-pub fn parse_namespace<'a>( pairs: Pairs<'_, Rule> ) -> ModelDeclaration {
+// parses database and name
+//
+// public::User { ... }
+// ^^^^^^  ^^^^    
+// db      name
+//
+pub fn parse_namespace<'a>( pairs: Pairs<'_, Rule> ) -> Option<ModelDeclaration> {
     
+    // sets the model declaration part
     let mut d: ModelDeclaration = ModelDeclaration { 
         database: String::from( "" ),
         name: String::from( "" ) 
     };
 
+    // - namespace                            # you're here
+    //     - enum_: "..."                     # database
+    //     - name: "..."                      # name
+    //     - scope_resolution_operator: "..." # syntax
     for pair in pairs {
+
+        //
+        // - enum_: "..."                     # you're here
+        // - ...
         match pair.as_rule() {
             
             Rule::name  => { d.database = pair.as_span().as_str().to_string() },
             Rule::enum_ => { d.name = pair.as_span().as_str().to_string() }
+            
             // useless
+            // public::User { ... }
+            //       ^^
+            //      this
+            // 
             Rule::scope_resolution_operator => {},
             _ => panic!()
         }
     }
 
-    println!("{:?}", d.clone());
-    d.clone()
+    // return set model declaration
+    Some( d.clone() )
 }
