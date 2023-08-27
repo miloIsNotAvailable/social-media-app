@@ -1,3 +1,17 @@
+// ----     boring file mod declarations     ----
+// 
+mod base_types;
+//
+// ---- no more boring file mod declarations ----
+
+
+
+// ---- std and file imports ----
+//
+use crate::db_parse::ast::base_types::{ BaseTypeNames };
+//
+// ---- t-t-t-that's it folks ----
+
 // defines the whole Model's struct
 // complete with namespace and name
 // and columns
@@ -59,65 +73,6 @@ pub struct Directive {
 #[derive( Debug, Clone )]
 pub struct ArgumentsList {
     pub base_type: Vec<BaseType>
-}
-
-//
-// maps string types from the schema
-// to and enum
-//
-#[derive( Debug, Clone )]
-pub enum BaseTypeNames {
-    // enums compile to SQL as follows:
-    //
-    // username String
-    //          ^^^^^^
-    //           TEXT
-    //
-    // username String::length( 256 )
-    //          ^^^^^^^^^^^^^^^^^^^^^
-    //              VARCHAR( 256 )
-    //
-    String,  
-
-    // followed Bool
-    //          ^^^^
-    //         BOOLEAN
-    //
-    Bool,
-
-    // num Int
-    //     ^^^
-    //     INT
-    //
-    Int,     
-
-    // createdAt DateTime
-    //           ^^^^^^^^
-    //           timestamp with time zone not null default now()
-    //
-    DateTime,
-
-    // custom is for custom ffi
-    // defined types
-    // Table for table type, 
-    // found in hash map
-    // ----------------------
-    // 
-    // ---- ffi/types.rs ----
-    // enum MyFFIType { ... }
-    // 
-    // impl fmt::Display for Day {
-    // fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result { ... }
-    // 
-    // ---- my_schema.rs ----
-    // user MyFFIType
-    //      ^^^^^^^^^
-    //     custom type
-    Custom,  
-    // posts Vec<Posts>
-    //           ^^^^^
-    //         table type
-    Table    
 }
 
 //

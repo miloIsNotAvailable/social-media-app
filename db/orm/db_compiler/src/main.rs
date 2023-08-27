@@ -18,7 +18,7 @@ pub mod schema {
 pub use schema::{ Parser, Pairs, Rule, IdentParser };
 
 mod db_parse;
-use crate::db_parse::parser::parse_model;
+use crate::db_parse::parser::{ Schema };
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -49,7 +49,8 @@ fn main() -> std::io::Result<()> {
     let pairs = IdentParser::parse(Rule::schema, &contents)
     .unwrap_or_else(|e| panic!("{}", e));
 
-    parse_model( pairs );
+    let mut s = Schema::new();
+    s.parse_model( pairs );
 
     Ok( () )
 }
