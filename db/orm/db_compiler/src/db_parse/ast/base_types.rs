@@ -58,7 +58,7 @@ pub enum BaseTypeNames {
     // user MyFFIType
     //      ^^^^^^^^^
     //     custom type
-    Custom,  
+    Custom( String ),  
     // posts Vec<Posts>
     //           ^^^^^
     //         table type
@@ -72,7 +72,7 @@ impl BaseTypeNames {
             "DateTime" => { BaseTypeNames::DateTime },
             "Int"      => { BaseTypeNames::Int },
             "Bool"     => { BaseTypeNames::Bool },
-            _          => { BaseTypeNames::Custom }
+            e          => { BaseTypeNames::Custom( e.to_string() ) }
         }
     }
 }

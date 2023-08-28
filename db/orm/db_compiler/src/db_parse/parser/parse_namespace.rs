@@ -1,7 +1,7 @@
 // ---- std and file imports ----
 //
-use crate::schema::{ Rule, Pairs, Pair };
-use crate::db_parse::ast::{ Model, ModelDeclaration };
+use crate::schema::{ Rule, Pairs };
+use crate::db_parse::ast::{ ModelDeclaration };
 use crate::db_parse::parser::{ Schema };
 //
 // ---- t-t-t-that's it folks ----

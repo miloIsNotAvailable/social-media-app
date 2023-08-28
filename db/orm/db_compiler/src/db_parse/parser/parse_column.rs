@@ -52,7 +52,11 @@ impl Schema {
                 // posts Vec<Posts>;
                 //       ^^^^^^^^^^
                 //
-                Rule::base_type => {},
+                Rule::base_type => { 
+                    parsed_column.base_type = Some(
+                        self.parse_base_type( pair.into_inner() )
+                    ) 
+                },
     
                 // directives run before the insert 
                 // and select queries

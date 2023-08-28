@@ -22,9 +22,6 @@ use crate::db_parse::parser::{ Schema };
 
 use std::fs::File;
 use std::io::prelude::*;
-use std::fs::OpenOptions;
-
-use std::fmt;
 
 #[wasm_bindgen]
 extern "C" {

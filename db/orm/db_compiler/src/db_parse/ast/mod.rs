@@ -1,6 +1,6 @@
 // ----     boring file mod declarations     ----
 // 
-mod base_types;
+pub mod base_types;
 //
 // ---- no more boring file mod declarations ----
 
@@ -86,9 +86,10 @@ pub struct ArgumentsList {
 //
 #[derive( Debug, Clone )]
 pub struct BaseType {
-    pub name:     BaseTypeNames,
-    pub generic:  Box<BaseType>,
-    pub argument: Argument
+    pub name:      BaseTypeNames,
+    pub generic:   Option<Box<BaseType>>,
+    pub function:  Option<Function>,
+    pub argument:  Option<Argument>
 }
 
 //

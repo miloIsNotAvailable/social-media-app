@@ -3,6 +3,7 @@
 mod parse_model_declaration;
 mod parse_namespace;
 mod parse_column;
+mod parse_base_type;
 //
 // ---- no more boring file mod declarations ----
 
@@ -10,10 +11,9 @@ mod parse_column;
 
 // ---- std and file imports ----
 //
-use crate::schema::{ Rule, Pairs, Pair };
-use crate::db_parse::ast::{ Model, ModelDeclaration };
+use crate::schema::{ Rule, Pairs };
+use crate::db_parse::ast::{ Model };
 use std::collections::HashMap;
-use crate::db_parse::parser::parse_model_declaration as parse_model;
 //
 // ---- t-t-t-that's it folks ----
 

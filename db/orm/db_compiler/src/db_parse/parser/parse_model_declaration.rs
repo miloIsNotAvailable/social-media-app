@@ -1,9 +1,7 @@
 // ---- std and file imports ----
 //
-use std::collections::HashMap;
-
-use crate::schema::{ Rule, Pairs, Pair };
-use crate::db_parse::ast::{ Model, ModelDeclaration, Column };
+use crate::schema::{ Rule, Pairs };
+use crate::db_parse::ast::{ Model };
 use crate::db_parse::parser::{ Schema };
 //
 // ---- t-t-t-that's it folks ----
