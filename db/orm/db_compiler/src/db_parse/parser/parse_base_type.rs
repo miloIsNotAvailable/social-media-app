@@ -65,11 +65,11 @@ impl Schema {
                 Rule::generic  => { 
                     
                     //
-                    // - generic          # you're here
-                    //     - TYPE_OPEN    # type close "<"
-                    //     - base_type    # base type repeats
-                    //     - TYPE_CLOSE   # type close ">"
-                    // - ...              # other properties
+                    // - generic            # you're here
+                    //     - TYPE_OPEN      # type close "<"
+                    //     - arguments_list # base type argument list
+                    //     - TYPE_CLOSE     # type close ">"
+                    // - ...                # other properties
                     //
                     parsed_base_type.generic = Some(
                         
@@ -77,18 +77,9 @@ impl Schema {
                         // - base_type    # you're here
                         // - ...
                         //
-                        Box::new( self.parse_base_type( pair.into_inner() ) )
+                        self.parse_arguments_list( pair.into_inner() )
                     );
                 },
-                
-                // used for syntax only
-                //
-                // username Vec<String>;
-                //             ^^    ^^
-                Rule::TYPE_OPEN => {},
-                Rule::TYPE_CLOSE => {},
-
-
 
                 // panic on unknown type 
                 // and end compilation

@@ -87,7 +87,7 @@ pub struct ArgumentsList {
 #[derive( Debug, Clone )]
 pub struct BaseType {
     pub name:      BaseTypeNames,
-    pub generic:   Option<Box<BaseType>>,
+    pub generic:   Option<ArgumentsList>,
     pub function:  Option<Function>,
     pub argument:  Option<Argument>
 }
