@@ -113,6 +113,6 @@ pub struct Argument {
 //
 #[derive( Debug, Clone )]
 pub struct Function {
-    pub name:           String,
-    pub arguments_list: ArgumentsList
+    pub name:           Option<String>,
+    pub arguments_list: Option<ArgumentsList>
 }

@@ -5,6 +5,7 @@ mod parse_namespace;
 mod parse_column;
 mod parse_base_type;
 mod parse_arguments_list;
+mod parse_function;
 //
 // ---- no more boring file mod declarations ----
 

@@ -55,7 +55,13 @@ impl Schema {
                 // username String::length( 10 );
                 //                  ^^^^^^^^^^^^
                 //
-                Rule::function => {},
+                Rule::function => {
+                    parsed_base_type.function = Some(
+                        self.parse_function(
+                            pair.into_inner()
+                        )
+                    );
+                },
 
                 // generic is just a base_type
                 //
@@ -77,7 +83,7 @@ impl Schema {
                         // - base_type    # you're here
                         // - ...
                         //
-                        self.parse_arguments_list( pair.into_inner() )
+                        self.parse_arguments_list( pair )
                     );
                 },
 

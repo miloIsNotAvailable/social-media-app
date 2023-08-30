@@ -3,7 +3,7 @@ public::User {
     id  PrimaryKey<String>;
     // directives, work just like graphql directives
     email String @validate;
-    username String::unique();
+    username String::length( 26 );
     createdAt DateTime;
     posts Vec<Posts>;
 }
