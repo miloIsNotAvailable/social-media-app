@@ -36,6 +36,9 @@ impl Schema {
                 // username String::length( 256 );
                 //                  ^^^^^^
                 //
+                // name String::unique();
+                //              ^^^^^^
+                //
                 Rule::name => { 
                     parsed_function.name = Some( 
                         pair.as_span().as_str().to_string() 
