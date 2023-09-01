@@ -66,7 +66,7 @@ impl Schema {
             }
         }
 
-        println!( "{:?}", parsed_function );
-        parsed_function.clone()
+        // println!( "{:?}", parsed_function );
+        parsed_function
     }
 }

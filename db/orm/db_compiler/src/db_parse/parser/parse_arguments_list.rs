@@ -27,7 +27,7 @@ impl Schema {
                 // post_id ForeignKey<String, User::id>;
                 //                   ^^^^^^^^^^^^^^^^^^
                 //
-                Rule::arguments_list => { 
+                Rule::base_type => { 
                     
                     // - base_type  # you're here
                     //    - ...     # base_type args 
@@ -36,8 +36,6 @@ impl Schema {
                         self.parse_base_type( 
                             pair
                             .into_inner()
-                            .next().expect("REASON")
-                            .into_inner() 
                         ) 
                     ); 
                 },

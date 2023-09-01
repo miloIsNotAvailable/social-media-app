@@ -77,14 +77,23 @@ impl Schema {
                     //     - TYPE_CLOSE     # type close ">"
                     // - ...                # other properties
                     //
-                    parsed_base_type.generic = Some(
-                        
-                        //
-                        // - base_type    # you're here
-                        // - ...
-                        //
-                        self.parse_arguments_list( pair )
-                    );
+
+                    for p in pair.clone().into_inner() {
+                        match p.as_rule() {
+                            Rule::arguments_list => { 
+                                parsed_base_type.generic = Some(
+                                    self.parse_arguments_list( p )
+                                ); 
+                            },
+                            // used for syntax only
+                            //
+                            // username Vec<String>;
+                            //             ^^    ^^
+                            Rule::TYPE_OPEN => {},
+                            Rule::TYPE_CLOSE => {},
+                            _ => panic!()
+                        }
+                    }
                 },
 
                 // panic on unknown type 
