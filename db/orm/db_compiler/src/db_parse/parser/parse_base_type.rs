@@ -63,7 +63,14 @@ impl Schema {
                     );
                 },
 
-                // generic is just a base_type
+                //
+                // post_id  ForeignKey<String, User::id>;
+                //                             ^^^^^^^^
+                //
+                Rule::argument => {
+                    parsed_base_type.argument = self.parse_argument( pair.into_inner() );
+                },
+
                 //
                 // username Vec<String>;
                 //              ^^^^^^
@@ -98,7 +105,7 @@ impl Schema {
 
                 // panic on unknown type 
                 // and end compilation
-                _ => println!( "hello" )
+                _ => panic!()
             }
         }
 
