@@ -56,6 +56,24 @@ pub struct Schema {
     pub parsed_tables: HashMap<String, Model>
 }
 
+// impl traits for each struct
+pub trait Generation {
+    // this will generate rust structs that 
+    // then will be compiled to wasm
+    // with js' pg librsry for querying 
+    // each rust class will have it's own 
+    // function for generating queries etc.
+    //
+    generate_rust_classes( &self ) {}
+    
+    // this will generate sql migrations etc.
+    // for updating schema
+    //
+    generate_sql_tables( &self ) {}
+    // generates ts types for each sql table
+    generate_ts_types( &self ) {}
+}
+
 impl Schema {
 
     // initiates a new Schema struct
