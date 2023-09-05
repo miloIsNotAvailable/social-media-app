@@ -15,7 +15,7 @@ mod parse_argument;
 // ---- std and file imports ----
 //
 use crate::schema::{ Rule, Pairs };
-use crate::db_parse::ast::{ Model };
+use crate::db_parse::ast::{ Model, Generation };
 use std::collections::HashMap;
 //
 // ---- t-t-t-that's it folks ----
@@ -56,25 +56,34 @@ pub struct Schema {
     pub parsed_tables: HashMap<String, Model>
 }
 
-// impl traits for each struct
-pub trait Generation {
-    // this will generate rust structs that 
-    // then will be compiled to wasm
-    // with js' pg librsry for querying 
-    // each rust class will have it's own 
-    // function for generating queries etc.
-    //
-    generate_rust_classes( &self ) {}
+// // impl traits for each struct
+// pub trait Generation {
+//     // this will generate rust structs that 
+//     // then will be compiled to wasm
+//     // with js' pg librsry for querying 
+//     // each rust class will have it's own 
+//     // function for generating queries etc.
+//     //
+//     generate_rust_classes( &self ) {}
     
-    // this will generate sql migrations etc.
-    // for updating schema
-    //
-    generate_sql_tables( &self ) {}
-    // generates ts types for each sql table
-    generate_ts_types( &self ) {}
-}
+//     // this will generate sql migrations etc.
+//     // for updating schema
+//     //
+//     generate_sql_tables( &self ) {}
+//     // generates ts types for each sql table
+//     generate_ts_types( &self ) {}
+// }
 
 impl Schema {
+
+    pub fn generate_rust_enums( &self ) {
+        for ( table_name, details ) in &self.parsed_tables {
+            println!( "parsing table {:?}", table_name );
+
+            let parsed_enum = details.generate_rust_classes();
+            println!( "{}", parsed_enum );
+        }
+    }
 
     // initiates a new Schema struct
     // by assigning a hash table to it 

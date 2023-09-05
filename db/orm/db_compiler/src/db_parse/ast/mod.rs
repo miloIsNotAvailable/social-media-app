@@ -12,6 +12,24 @@ use crate::db_parse::ast::base_types::{ BaseTypeNames };
 //
 // ---- t-t-t-that's it folks ----
 
+// impl traits for each struct
+pub trait Generation {
+    // this will generate rust structs that 
+    // then will be compiled to wasm
+    // with js' pg librsry for querying 
+    // each rust class will have it's own 
+    // function for generating queries etc.
+    //
+    fn generate_rust_classes( &self ) -> String;
+    
+    // this will generate sql migrations etc.
+    // for updating schema
+    //
+    fn generate_sql_tables( &self ) {}
+    // generates ts types for each sql table
+    fn generate_ts_types( &self ) {}
+}
+
 // defines the whole Model's struct
 // complete with namespace and name
 // and columns
@@ -20,6 +38,17 @@ pub struct Model {
     
     pub model_declaration: Option<ModelDeclaration>,
     pub columns:           Vec<Column>,
+}
+
+impl Generation for Model {
+    fn generate_rust_classes( &self ) -> String {
+        match &self.model_declaration {
+            Some( dec ) => {
+                dec.generate_rust_classes()
+            },
+            None => panic!( "no model declaration" )
+        }
+    }
 }
 
 //
@@ -31,6 +60,24 @@ pub struct Model {
 pub struct ModelDeclaration {
     pub database: String,
     pub name:     String,
+}
+
+impl Generation for ModelDeclaration {
+    // generate rust enum for
+    // each table
+    // 
+    // include the Declaration enum
+    // pub enum User {
+    //     Declaration( "User", "public" ),
+    //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    // } 
+    //
+    fn generate_rust_classes( &self ) -> String {
+
+        format!( "pub enum {} {{\n {} \n}}",
+        self.name,
+        format!( "\tDeclaration( {:?}, {:?} ),\n", self.name, self.database) )
+    }
 }
 
 // single Column in model struct

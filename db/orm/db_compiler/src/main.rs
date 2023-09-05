@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+use crate::db_parse::ast::Generation;
 
 extern crate pest;
 #[macro_use]
@@ -49,5 +50,6 @@ fn main() -> std::io::Result<()> {
     let mut s = Schema::new();
     s.parse_model( pairs );
 
+    s.generate_rust_enums();
     Ok( () )
 }
