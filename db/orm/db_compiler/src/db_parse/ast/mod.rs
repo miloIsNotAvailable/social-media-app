@@ -96,6 +96,35 @@ pub struct Column {
     pub directives: Option<Vec<Directive>>,
 }
 
+impl Generation for Column {
+    // generate rust enum for
+    // each table
+    // 
+    // include the Declaration enum
+    // pub enum User {
+    //     Column( SqlString::length( 256 ), None,     false ),
+    //             ^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^      ^^^^^
+    //             base type                 directive optional
+    // } 
+    //
+    fn generate_rust_classes( &self ) -> String {
+
+        let mut parsed_type: String = String::from( "" );
+
+        match &self.base_type {
+            Some( type_ ) => {
+                parsed_type = format!( "{}{}",
+                    self.base_type.name,
+                    self.function.name
+                );
+            },
+            None => panic!( "type not found" )
+        }
+
+        format!( "Column({})", parsed_type )
+    }  
+}
+
 // directives run before the insert 
 // and select queries
 // --------------------------------
