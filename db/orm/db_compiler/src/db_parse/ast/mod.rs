@@ -1,6 +1,7 @@
 // ----     boring file mod declarations     ----
 // 
 pub mod base_types;
+pub mod sql_string;
 //
 // ---- no more boring file mod declarations ----
 
@@ -42,6 +43,10 @@ pub struct Model {
 
 impl Generation for Model {
     fn generate_rust_classes( &self ) -> String {
+        
+        // let e = self.columns.iter().map( |col| col.generate_rust_classes() ).collect();
+        // println!( "es: {:?}", self.columns[0].generate_rust_classes() );
+
         match &self.model_declaration {
             Some( dec ) => {
                 dec.generate_rust_classes()
@@ -111,18 +116,21 @@ impl Generation for Column {
 
         let mut parsed_type: String = String::from( "" );
 
-        match &self.base_type {
-            Some( type_ ) => {
-                parsed_type = format!( "{}{}",
-                    self.base_type.name,
-                    self.function.name
-                );
-            },
-            None => panic!( "type not found" )
-        }
+        // println!( "{}",
+        //     format!( "Column({})", 
+        //         self.base_type
+        //         .as_ref()
+        //         .expect( "FUCL" )
+        //         .generate_rust_classes() 
+        // ) );
 
-        format!( "Column({})", parsed_type )
-    }  
+        format!( "Column({})", 
+            self.base_type
+            .as_ref()
+            .expect( "FUCL" )
+            .generate_rust_classes() 
+        )
+    }     
 }
 
 // directives run before the insert 
@@ -168,6 +176,27 @@ pub struct BaseType {
     pub argument:  Option<Argument>
 }
 
+impl Generation for BaseType {
+
+    fn generate_rust_classes( &self ) -> String {
+
+        let mut parsed_function = self.function
+        .as_ref()
+        .expect("REASON")
+        .generate_rust_classes();
+        // let mut parsed_arg = self.argument.unwrap();
+
+        // let mut parsed_generic = self.argument.unwrap();
+
+        format!( "Types({}, {})", 
+            BaseTypeNames::generate_rust( &self.name ),
+            parsed_function,
+            // parsed_function.generate_rust_classes() || String::from( "None" ),
+            // parsed_argument.generate_rust_classes() || String::from( "None" ),
+        )
+    }  
+}
+
 //
 // authorId ForeignKey<String, User::id>;
 // ^^^^^^^^ ^^^^^^^^^^ ^^^^^^  ^^^^  ^^
@@ -191,4 +220,13 @@ pub struct Argument {
 pub struct Function {
     pub name:           Option<String>,
     pub arguments_list: Option<ArgumentsList>
+}
+
+impl Generation for Function {
+    fn generate_rust_classes( &self ) -> String {
+        match &self.name {
+            Some( n ) => { format!( "{}()", n ) },
+            None => String::from( "None" )
+        }
+    }
 }

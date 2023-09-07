@@ -1,3 +1,5 @@
+use crate::db_parse::ast::sql_string::{ SqlString };
+
 //
 // maps string types from the schema
 // to and enum
@@ -73,6 +75,17 @@ impl BaseTypeNames {
             "Int"      => { BaseTypeNames::Int },
             "Bool"     => { BaseTypeNames::Bool },
             e          => { BaseTypeNames::Custom( e.to_string() ) }
+        }
+    }
+
+    pub fn generate_rust( string_type: &BaseTypeNames ) -> String {
+        match string_type {
+            Self::String      => { String::from("SqlString" )},
+            Self::DateTime    => { String::from("SqlDateTime" )},
+            Self::Int         => { String::from("SqlInt" )},
+            Self::Bool        => { String::from("SqlBool" )},
+            Self::Custom( e ) => { String::from(format!("SqlCustom( {} )", e.to_string())) },
+            _ => String::from( "" )
         }
     }
 }
