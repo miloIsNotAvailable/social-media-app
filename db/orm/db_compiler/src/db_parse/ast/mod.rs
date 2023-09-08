@@ -44,8 +44,8 @@ pub struct Model {
 impl Generation for Model {
     fn generate_rust_classes( &self ) -> String {
         
-        // let e = self.columns.iter().map( |col| col.generate_rust_classes() ).collect();
-        // println!( "es: {:?}", self.columns[0].generate_rust_classes() );
+        let e: Vec<String> = self.columns.iter().map( |col| col.generate_rust_classes() ).collect();
+        println!( "es: {:?}", e );
 
         match &self.model_declaration {
             Some( dec ) => {
@@ -180,17 +180,19 @@ impl Generation for BaseType {
 
     fn generate_rust_classes( &self ) -> String {
 
-        let mut parsed_function = self.function
-        .as_ref()
-        .expect("REASON")
-        .generate_rust_classes();
+        let mut parsed_function = String::from( "None" );
         // let mut parsed_arg = self.argument.unwrap();
 
         // let mut parsed_generic = self.argument.unwrap();
 
+        match &self.function {
+            Some( f ) => { parsed_function = f.generate_rust_classes(); },
+            None      => {}
+        }
+
         format!( "Types({}, {})", 
             BaseTypeNames::generate_rust( &self.name ),
-            parsed_function,
+            parsed_function.clone(),
             // parsed_function.generate_rust_classes() || String::from( "None" ),
             // parsed_argument.generate_rust_classes() || String::from( "None" ),
         )
