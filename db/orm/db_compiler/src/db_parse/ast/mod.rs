@@ -178,19 +178,25 @@ pub struct BaseType {
 
 impl Generation for BaseType {
 
+    //
+    // Column( SqlString, length,   None,              None )
+    //         ^^^^^^^^^  ^^^^^^    ^^^^               ^^^^
+    //         type       function function arguments, directive
+    //
     fn generate_rust_classes( &self ) -> String {
 
         let mut parsed_function = String::from( "None" );
-        // let mut parsed_arg = self.argument.unwrap();
-
-        // let mut parsed_generic = self.argument.unwrap();
 
         match &self.function {
             Some( f ) => { parsed_function = f.generate_rust_classes(); },
             None      => {}
         }
 
-        format!( "Types({}, {})", 
+        // parse Column enum arguments
+        // Column( SqlString, function, None, None )
+        //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        //
+        format!( "{}, {}", 
             BaseTypeNames::generate_rust( &self.name ),
             parsed_function.clone(),
             // parsed_function.generate_rust_classes() || String::from( "None" ),
@@ -225,6 +231,10 @@ pub struct Function {
 }
 
 impl Generation for Function {
+    //
+    // Column( SqlString, length, None, None )
+    //                    ^^^^^^
+    //
     fn generate_rust_classes( &self ) -> String {
         match &self.name {
             Some( n ) => { format!( "{}()", n ) },
