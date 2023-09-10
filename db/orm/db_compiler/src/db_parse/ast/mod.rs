@@ -185,10 +185,12 @@ impl Generation for BaseType {
     //
     fn generate_rust_classes( &self ) -> String {
 
-        let mut parsed_function = String::from( "None" );
+        let mut parsed_function = String::from( "" );
 
         match &self.function {
-            Some( f ) => { parsed_function = f.generate_rust_classes(); },
+            Some( f ) => { 
+                parsed_function = format!( "::{}", f.generate_rust_classes() ); 
+            },
             None      => {}
         }
 
@@ -196,7 +198,7 @@ impl Generation for BaseType {
         // Column( SqlString, function, None, None )
         //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         //
-        format!( "{}, {}", 
+        format!( "{}{}", 
             BaseTypeNames::generate_rust( &self.name ),
             parsed_function.clone(),
             // parsed_function.generate_rust_classes() || String::from( "None" ),
@@ -236,9 +238,28 @@ impl Generation for Function {
     //                    ^^^^^^
     //
     fn generate_rust_classes( &self ) -> String {
+
+        let mut parsed_argument_list: String = String::from( "" );
+        let mut parsed_name: String = String::from( "None" );        
+
         match &self.name {
-            Some( n ) => { format!( "{}()", n ) },
-            None => String::from( "None" )
+            Some( n ) => { parsed_name = format!( "{}", n ) },
+            None => {}
         }
+
+        match &self.arguments_list {
+            Some( n ) => {
+                parsed_argument_list = 
+                format!( "({})", 
+                         n.base_type
+                        .iter()
+                        .map( |x| format!( "{}", x.generate_rust_classes() ) )
+                        .collect::<Vec<String>>()
+                        .join( ", " ) );
+            },
+            None => {}
+        }
+
+        format!( "{}{}", parsed_name, parsed_argument_list )
     }
 }
