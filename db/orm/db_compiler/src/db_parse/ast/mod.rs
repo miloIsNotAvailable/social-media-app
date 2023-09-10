@@ -44,15 +44,29 @@ pub struct Model {
 impl Generation for Model {
     fn generate_rust_classes( &self ) -> String {
         
-        let e: Vec<String> = self.columns.iter().map( |col| col.generate_rust_classes() ).collect();
-        println!( "es: {:?}", e );
-
         match &self.model_declaration {
             Some( dec ) => {
-                dec.generate_rust_classes()
+                format!(
+                    "{} {{ {},\n{} }}",
+                    dec.generate_enum_declaration(),
+                    dec.generate_rust_classes(),
+                    self.generate_columns_declaration()
+                )
             },
             None => panic!( "no model declaration" )
         }
+    }
+}
+
+impl Model {
+    pub fn generate_columns_declaration( &self ) -> String {
+        
+        let parsed_columns = self.columns
+                             .iter()
+                             .map( |col| col.generate_rust_classes() )
+                             .collect::<Vec<String>>().join( ", " );
+
+        format!( "Columns( Vec::from( {} ) )", parsed_columns )
     }
 }
 
@@ -79,9 +93,17 @@ impl Generation for ModelDeclaration {
     //
     fn generate_rust_classes( &self ) -> String {
 
-        format!( "pub enum {} {{\n {} \n}}",
-        self.name,
-        format!( "\tDeclaration( {:?}, {:?} ),\n", self.name, self.database) )
+        format!( "\tDeclaration( {:?}, {:?} ),\n", 
+            self.name, 
+            self.database 
+        )
+    }
+}
+
+impl ModelDeclaration {
+    pub fn generate_enum_declaration( &self ) -> String {
+        
+        format!( "pub enum {}", self.name )
     }
 }
 
