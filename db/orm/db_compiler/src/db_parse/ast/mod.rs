@@ -43,11 +43,11 @@ pub struct Model {
 
 impl Generation for Model {
     fn generate_rust_classes( &self ) -> String {
-        
+
         match &self.model_declaration {
             Some( dec ) => {
                 format!(
-                    "{} {{ {},\n{} }}",
+                    "{} {{ \n{},\n{} }}",
                     dec.generate_enum_declaration(),
                     dec.generate_rust_classes(),
                     self.generate_columns_declaration()
@@ -66,7 +66,7 @@ impl Model {
                              .map( |col| col.generate_rust_classes() )
                              .collect::<Vec<String>>().join( ", " );
 
-        format!( "Columns( Vec::from( {} ) )", parsed_columns )
+        format!( "\tColumns( Vec::from( {} ) )", parsed_columns )
     }
 }
 
@@ -93,7 +93,7 @@ impl Generation for ModelDeclaration {
     //
     fn generate_rust_classes( &self ) -> String {
 
-        format!( "\tDeclaration( {:?}, {:?} ),\n", 
+        format!( "\tDeclaration( {:?}, {:?} )", 
             self.name, 
             self.database 
         )
@@ -137,14 +137,6 @@ impl Generation for Column {
     fn generate_rust_classes( &self ) -> String {
 
         let mut parsed_type: String = String::from( "" );
-
-        // println!( "{}",
-        //     format!( "Column({})", 
-        //         self.base_type
-        //         .as_ref()
-        //         .expect( "FUCL" )
-        //         .generate_rust_classes() 
-        // ) );
 
         format!( "Column({})", 
             self.base_type
@@ -261,7 +253,7 @@ impl Generation for Function {
     //
     fn generate_rust_classes( &self ) -> String {
 
-        let mut parsed_argument_list: String = String::from( "" );
+        let mut parsed_argument_list: String = String::from( "None" );
         let mut parsed_name: String = String::from( "None" );        
 
         match &self.name {
@@ -271,6 +263,11 @@ impl Generation for Function {
 
         match &self.arguments_list {
             Some( n ) => {
+                
+                // map through base types
+                // and add "()" so it becomes
+                // ie. 26 -> ( 26 )
+                //
                 parsed_argument_list = 
                 format!( "({})", 
                          n.base_type
@@ -282,6 +279,9 @@ impl Generation for Function {
             None => {}
         }
 
+        //
+        // returns name + ([arguments])
+        //
         format!( "{}{}", parsed_name, parsed_argument_list )
     }
 }
