@@ -1,6 +1,9 @@
 # Social Media App
 this is a weird combination of twitter and reddit, made just for fun and to try out new stuff such as graphs in postgresql for recommendation algorithms, custom compiler with type generation for sql, and nested routing & form actions in react router.
 
+# Notes
+the original ORM uses code in db/orm/ast it works, albeit I decied I wanna make it better/write cleaner code for it and use a custom schema and query language kinda like GraphQL, the code for the new compiler can be found in db_compiler, note: it is still under development
+
 # Features
 - Custom Prisma-esque ORM: The app utilizes a custom ORM inspired by Prisma for efficient database interactions. It provides type and SQL code generation for easy integration with the database.
 
