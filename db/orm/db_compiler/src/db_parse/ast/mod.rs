@@ -200,10 +200,18 @@ impl Generation for BaseType {
     fn generate_rust_classes( &self ) -> String {
 
         let mut parsed_function = String::from( "" );
+        // let mut parsed_argument = String::from( "" );
 
         match &self.function {
             Some( f ) => { 
                 parsed_function = format!( "::{}", f.generate_rust_classes() ); 
+            },
+            None      => {}
+        }
+
+        match &self.argument {
+            Some( a ) => { 
+                parsed_function = format!( "::{}", a.generate_rust_classes() ); 
             },
             None      => {}
         }
@@ -229,6 +237,12 @@ impl Generation for BaseType {
 #[derive( Debug, Clone )]
 pub struct Argument {
     pub name: String
+}
+
+impl Generation for Argument {
+    fn generate_rust_classes( &self ) -> String {
+        format!( "{}", self.name )
+    }
 }
 
 //
