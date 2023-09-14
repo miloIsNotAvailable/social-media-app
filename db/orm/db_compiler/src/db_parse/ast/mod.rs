@@ -138,12 +138,18 @@ impl Generation for Column {
 
         let mut parsed_type: String = String::from( "" );
 
-        format!( "Column({})", 
-            self.base_type
-            .as_ref()
-            .expect( "FUCL" )
-            .generate_rust_classes() 
-        )
+        match &self.name {
+            Some( n ) => {
+                format!( "Column({:?}, {})",
+                    n,
+                    self.base_type
+                    .as_ref()
+                    .expect( "yikes" )
+                    .generate_rust_classes() 
+                )
+            },
+            None => panic!( "no column name" )
+        }
     }     
 }
 
